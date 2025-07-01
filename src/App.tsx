@@ -15,7 +15,6 @@ import {
   List,
   ActionIcon,
   SimpleGrid,
-  Progress,
   ThemeIcon,
   Image,
   Flex,
