@@ -520,19 +520,6 @@ function App() {
                     >
                       {skill.category.replace("-", " ")}
                     </Text>
-
-                    <Progress
-                      value={skill.proficiency}
-                      color={getSkillColor(skill.category)}
-                      size="sm"
-                      radius="xl"
-                      mb="xs"
-                      animated
-                    />
-
-                    <Text ta="center" size="xs" c="dimmed">
-                      {skill.proficiency}%
-                    </Text>
                   </Card>
                 </motion.div>
               ))}

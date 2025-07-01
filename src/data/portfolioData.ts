@@ -280,16 +280,16 @@ export const projects: Project[] = [
 
 export const skills: Skill[] = [
   // Frontend
-  { name: "React", category: "frontend", proficiency: 95 },
-  { name: "TypeScript", category: "frontend", proficiency: 90 },
-  { name: "Next.js", category: "frontend", proficiency: 85 },
-  { name: "Tailwind CSS", category: "frontend", proficiency: 90 },
+  { name: "React", category: "frontend", proficiency: 0 },
+  { name: "TypeScript", category: "frontend", proficiency: 0 },
+  { name: "Next.js", category: "frontend", proficiency: 0 },
+  { name: "Tailwind CSS", category: "frontend", proficiency: 0 },
 
-  { name: "Flutter", category: "mobile", proficiency: 90 },
-  { name: "Dart", category: "mobile", proficiency: 88 },
+  { name: "Flutter", category: "mobile", proficiency: 0 },
+  { name: "Dart", category: "mobile", proficiency: 0 },
 
-  { name: "Git", category: "tools", proficiency: 90 },
-  { name: "Figma", category: "tools", proficiency: 80 },
+  { name: "Git", category: "tools", proficiency: 0 },
+  { name: "Figma", category: "tools", proficiency: 0 },
 ];
 
 export const contactInfo: ContactInfo = {
