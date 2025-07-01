@@ -110,7 +110,7 @@ function App() {
   };
   const handleDownloadCV = () => {
     const link = document.createElement("a");
-    link.href = "assets/file/Nazem Resume.pdf";
+    link.href = " file/ Nazem-Resume.pdf";
     link.download = "Nazem_Almsouti_CV.pdf";
     document.body.appendChild(link);
     link.click();
@@ -199,7 +199,7 @@ function App() {
                     }}
                   >
                     <img
-                      src={"assets/file/Nazem Resume.pdf"}
+                      src={" images/nazem.jpg"}
                       alt="Nazem Almsouti"
                       style={{
                         width: "100%",

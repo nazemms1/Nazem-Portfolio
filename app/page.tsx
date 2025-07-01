@@ -111,8 +111,12 @@ export default function Portfolio() {
                   },
                 }}
               />
-              <div className="absolute inset-2 bg-slate-900 rounded-full flex items-center justify-center">
-                <User className="w-16 h-16 text-blue-400" />
+              <div className="absolute inset-1 bg-slate-900 rounded-full overflow-hidden">
+                <img
+                  src="/images/nazem.jpg" // ✅ صحيح - يبدأ بـ /
+                  alt="Nazem Almsسسسouti"
+                  className="w-full h-full object-cover rounded-full"
+                />
               </div>
             </div>
           </motion.div>
