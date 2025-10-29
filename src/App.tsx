@@ -570,13 +570,29 @@ function App() {
                   >
                     <Grid>
                       <Grid.Col span={{ base: 12, lg: 8 }}>
-                        <Title order={3} c="blue.4" mb="xs">
-                          {exp.title}
-                        </Title>
-                        <Title order={4} c="gray.2" mb="md">
-                          {exp.company}
-                        </Title>
+                        <Group align="center" gap="sm" mb="md">
+                          {exp.logo && (
+                            <Image
+                              src={exp.logo}
+                              alt={exp.company}
+                              width={40}
+                              height={40}
+                              radius="sm"
+                              fit="contain"
+                              style={{ background: "white", borderRadius: 8 }}
+                            />
+                          )}
+                          <div>
+                            <Title order={3} c="blue.4" mb={4}>
+                              {exp.title}
+                            </Title>
+                            <Title order={4} c="gray.2">
+                              {exp.company}
+                            </Title>
+                          </div>
+                        </Group>
                       </Grid.Col>
+
                       <Grid.Col span={{ base: 12, lg: 4 }}>
                         <Stack gap="xs">
                           <Group gap="xs">

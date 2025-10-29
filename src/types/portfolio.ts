@@ -6,6 +6,7 @@ export interface Experience {
   location: string
   type: "Fulltime" | "Freelance" | "Contract"
   description: string[]
+  logo:string
   technologies?: string[]
 }
 

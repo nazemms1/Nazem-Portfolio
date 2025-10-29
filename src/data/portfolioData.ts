@@ -7,12 +7,35 @@ import type {
 
 export const experiences: Experience[] = [
   {
+    id: "pharaon-2025",
+    title: "Software Engineer | Frontend Developer",
+    company: "Pharaon Group (SAWA)",
+    period: "Jul 2025 – Present",
+    location: "Free zone, Syria",
+    type: "Fulltime",
+    logo: "/images/pharaon.svg", // 👈 صورة الشركة
+    description: [
+      "Developing and maintaining modern web frontends with React and TypeScript",
+      "Implementing responsive UI/UX components with focus on performance and accessibility",
+      "Integrating REST APIs and managing state with Redux for scalable frontend architecture",
+      "Collaborating with backend team to deliver seamless features and optimize data flow",
+    ],
+    technologies: [
+      "React",
+      "TypeScript",
+      "Redux",
+      "REST APIs",
+      "TailwindCSS / Mantine",
+    ],
+  },
+  {
     id: "soutify-2025",
     title: "Software Engineer | Frontend Developer",
     company: "Soutify",
     period: "Jan 2025 – Jul 2025",
     location: "Remotely, KSA",
     type: "Fulltime",
+    logo: "",
     description: [
       "Developed web frontend (React + TypeScript) for multilingual sentiment classification platform powered by transformer and LLM models",
       "Built React-based frontend for multi-role data labeling platform with task switching, role management, and smooth UX flows",
@@ -36,6 +59,7 @@ export const experiences: Experience[] = [
     period: "May 2024 – Present",
     location: "Remote",
     type: "Freelance",
+    logo: "", // 👈 صورة الشركة
     description: [
       "Developing custom web and mobile applications for various international clients",
       "Specializing in React, TypeScript, and Flutter development with focus on performance optimization",
