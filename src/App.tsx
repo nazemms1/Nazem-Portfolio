@@ -19,6 +19,7 @@ import {
   Image,
   Flex,
   Box,
+  Tabs,
 } from "@mantine/core";
 import {
   IconDownload,
@@ -32,24 +33,26 @@ import {
   IconBriefcase,
   IconCode,
   IconDeviceMobile,
-  IconServer,
-  IconTool,
-  IconUsers,
   IconExternalLink,
   IconSparkles,
   IconRocket,
   IconAward,
+  IconBrandReact,
+  IconHeart,
 } from "@tabler/icons-react";
 
-import AnimatedBackground from "./components/AnimatedBackground";
+import ParticleBackground from "./components/ParticleBackground";
 import Navigation from "./components/Navigation";
+import TypeWriter from "./components/TypeWriter";
+import ContactForm from "./components/ContactForm";
+import SkillCard from "./components/SkillCard";
 import {
   experiences,
   projects,
   skills,
   contactInfo,
 } from "./data/portfolioData";
-import type { Skill } from "./types/portfolio";
+import { useState } from "react";
 
 export const theme = createTheme({
   primaryColor: "cyan",
@@ -77,7 +80,13 @@ export const theme = createTheme({
 });
 
 // Floating Animation Component
-const FloatingElement = ({ children, delay = 0 }: any) => (
+const FloatingElement = ({
+  children,
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+}) => (
   <motion.div
     animate={{
       y: [-10, 10, -10],
@@ -93,57 +102,85 @@ const FloatingElement = ({ children, delay = 0 }: any) => (
   </motion.div>
 );
 
+// Stats Counter Component
+const StatsCounter = ({
+  value,
+  label,
+  icon: Icon,
+  color,
+}: {
+  value: string;
+  label: string;
+  icon: React.ElementType;
+  color: string;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.5 }}
+    whileInView={{ opacity: 1, scale: 1 }}
+    transition={{ type: "spring", stiffness: 200, damping: 20 }}
+    viewport={{ once: true }}
+  >
+    <Card
+      padding="lg"
+      radius="xl"
+      style={{
+        background: "rgba(13, 17, 23, 0.8)",
+        backdropFilter: "blur(20px)",
+        border: `1px solid rgba(6, 182, 212, 0.2)`,
+        textAlign: "center",
+      }}
+    >
+      <ThemeIcon size={50} radius="xl" variant="light" color={color} mb="sm">
+        <Icon size={26} />
+      </ThemeIcon>
+      <Text
+        size="xl"
+        fw={800}
+        variant="gradient"
+        gradient={{ from: "cyan", to: "blue" }}
+      >
+        {value}
+      </Text>
+      <Text size="sm" c="dimmed">
+        {label}
+      </Text>
+    </Card>
+  </motion.div>
+);
+
 function App() {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+  const [activeSkillTab, setActiveSkillTab] = useState<string | null>(
+    "frontend"
+  );
 
   const handleContactClick = (): void => {
     window.location.href = `mailto:${contactInfo.email}`;
   };
 
-  const getSkillIcon = (category: Skill["category"]) => {
-    switch (category) {
-      case "frontend":
-        return <IconCode size={24} />;
-      case "mobile":
-        return <IconDeviceMobile size={24} />;
-      case "backend":
-        return <IconServer size={24} />;
-      case "tools":
-        return <IconTool size={24} />;
-      case "soft-skills":
-        return <IconUsers size={24} />;
-      default:
-        return <IconCode size={24} />;
-    }
-  };
-
-  const getSkillColor = (category: Skill["category"]): string => {
-    switch (category) {
-      case "frontend":
-        return "cyan";
-      case "mobile":
-        return "teal";
-      case "backend":
-        return "indigo";
-      case "tools":
-        return "violet";
-      case "soft-skills":
-        return "pink";
-      default:
-        return "gray";
-    }
-  };
-
   const handleDownloadCV = () => {
     const link = document.createElement("a");
-    link.href = " file/Nazem-Resume.pdf";
+    link.href = "/file/Nazem-Resume.pdf";
     link.download = "Nazem_Almsouti_CV.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
+
+  const typingTexts = [
+    "Software Engineer",
+    "Frontend Developer",
+    "Mobile Developer",
+    "React Specialist",
+    "Flutter Developer",
+  ];
+
+  const filteredSkills =
+    activeSkillTab === "all"
+      ? skills
+      : skills.filter((skill) => skill.category === activeSkillTab);
 
   return (
     <MantineProvider theme={theme} defaultColorScheme="dark">
@@ -157,35 +194,10 @@ function App() {
           position: "relative",
         }}
       >
-        {/* Gradient Orbs Background */}
-        <div
-          style={{
-            position: "fixed",
-            top: "-10%",
-            left: "-5%",
-            width: "40%",
-            height: "40%",
-            background:
-              "radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%)",
-            filter: "blur(60px)",
-            zIndex: 0,
-          }}
-        />
-        <div
-          style={{
-            position: "fixed",
-            bottom: "-10%",
-            right: "-5%",
-            width: "40%",
-            height: "40%",
-            background:
-              "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)",
-            filter: "blur(60px)",
-            zIndex: 0,
-          }}
-        />
-        <AnimatedBackground />
+        {/* Particle Background */}
+        <ParticleBackground />
         <Navigation />
+
         {/* Hero Section */}
         <section
           id="home"
@@ -207,17 +219,24 @@ function App() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
                   >
-                    {/* <FloatingElement>
+                    <motion.div
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                    >
                       <Badge
                         size="lg"
-                        variant="dot"
-                        color="cyan"
+                        variant="gradient"
+                        gradient={{ from: "cyan", to: "blue" }}
                         mb="xl"
                         leftSection={<IconSparkles size={16} />}
+                        style={{
+                          boxShadow: "0 4px 20px rgba(6, 182, 212, 0.3)",
+                        }}
                       >
                         Available for Opportunities
                       </Badge>
-                    </FloatingElement> */}
+                    </motion.div>
 
                     <Title
                       order={1}
@@ -230,28 +249,40 @@ function App() {
                       }}
                     >
                       Hi, I'm{" "}
-                      <span
+                      <motion.span
                         style={{
                           background:
                             "linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%)",
                           WebkitBackgroundClip: "text",
                           WebkitTextFillColor: "transparent",
                           backgroundClip: "text",
+                          display: "inline-block",
+                        }}
+                        animate={{
+                          backgroundPosition: ["0%", "100%", "0%"],
+                        }}
+                        transition={{
+                          duration: 5,
+                          repeat: Infinity,
+                          ease: "linear",
                         }}
                       >
                         Nazem Almsouti
-                      </span>
+                      </motion.span>
                     </Title>
 
                     <Title
                       order={2}
-                      size="2rem"
+                      size="1.8rem"
                       c="dimmed"
                       mb="xl"
                       fw={500}
-                      style={{ letterSpacing: "-0.01em" }}
+                      style={{
+                        letterSpacing: "-0.01em",
+                        minHeight: "2.5rem",
+                      }}
                     >
-                      Software Engineer & Front-End Developer
+                      <TypeWriter texts={typingTexts} speed={80} />
                     </Title>
 
                     <Text
@@ -269,7 +300,7 @@ function App() {
 
                     <Group gap="md" mb="xl">
                       <motion.div
-                        whileHover={{ scale: 1.05 }}
+                        whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                       >
                         <Button
@@ -286,7 +317,7 @@ function App() {
                         </Button>
                       </motion.div>
                       <motion.div
-                        whileHover={{ scale: 1.05 }}
+                        whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                       >
                         <Button
@@ -303,20 +334,26 @@ function App() {
 
                     <Group gap="lg">
                       {[
-                        { icon: IconCode, label: "Frontend" },
-                        { icon: IconDeviceMobile, label: "Mobile" },
+                        { icon: IconCode, label: "Frontend", color: "cyan" },
+                        {
+                          icon: IconDeviceMobile,
+                          label: "Mobile",
+                          color: "teal",
+                        },
+                        // { icon: IconRocket, label: "AI/ML", color: "violet" },
                       ].map((item, i) => (
                         <motion.div
                           key={i}
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.8 + i * 0.1 }}
+                          whileHover={{ scale: 1.1 }}
                         >
                           <Group gap="xs">
                             <ThemeIcon
                               size="sm"
                               variant="light"
-                              color="cyan"
+                              color={item.color}
                               radius="xl"
                             >
                               <item.icon size={14} />
@@ -379,7 +416,7 @@ function App() {
                           }}
                         >
                           <img
-                            src={" images/nazem.jpg"}
+                            src={"/images/nazem.jpg"}
                             alt="Nazem Almsouti"
                             style={{
                               width: "100%",
@@ -398,16 +435,18 @@ function App() {
                           style={{
                             position: "absolute",
                             top: "10%",
-                            left: "-10%",
+                            left: "-15%",
                           }}
+                          whileHover={{ scale: 1.1 }}
                         >
                           <Card
                             padding="md"
                             radius="lg"
                             style={{
-                              background: "rgba(13, 17, 23, 0.9)",
+                              background: "rgba(13, 17, 23, 0.95)",
                               backdropFilter: "blur(20px)",
                               border: "1px solid rgba(6, 182, 212, 0.3)",
+                              boxShadow: "0 8px 32px rgba(6, 182, 212, 0.2)",
                             }}
                           >
                             <Group gap="xs">
@@ -417,7 +456,7 @@ function App() {
                                   Experience
                                 </Text>
                                 <Text fw={700} c="cyan">
-                                  1 Years
+                                  1+ Years
                                 </Text>
                               </div>
                             </Group>
@@ -431,16 +470,18 @@ function App() {
                           style={{
                             position: "absolute",
                             bottom: "15%",
-                            right: "-10%",
+                            right: "-15%",
                           }}
+                          whileHover={{ scale: 1.1 }}
                         >
                           <Card
                             padding="md"
                             radius="lg"
                             style={{
-                              background: "rgba(13, 17, 23, 0.9)",
+                              background: "rgba(13, 17, 23, 0.95)",
                               backdropFilter: "blur(20px)",
                               border: "1px solid rgba(139, 92, 246, 0.3)",
+                              boxShadow: "0 8px 32px rgba(139, 92, 246, 0.2)",
                             }}
                           >
                             <Group gap="xs">
@@ -450,7 +491,43 @@ function App() {
                                   Projects
                                 </Text>
                                 <Text fw={700} c="violet">
-                                  7 Done
+                                  {projects.length}+ Done
+                                </Text>
+                              </div>
+                            </Group>
+                          </Card>
+                        </motion.div>
+
+                        {/* New floating stat */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 1.4, duration: 0.6 }}
+                          style={{
+                            position: "absolute",
+                            bottom: "-5%",
+                            left: "20%",
+                          }}
+                          whileHover={{ scale: 1.1 }}
+                        >
+                          <Card
+                            padding="md"
+                            radius="lg"
+                            style={{
+                              background: "rgba(13, 17, 23, 0.95)",
+                              backdropFilter: "blur(20px)",
+                              border: "1px solid rgba(20, 184, 166, 0.3)",
+                              boxShadow: "0 8px 32px rgba(20, 184, 166, 0.2)",
+                            }}
+                          >
+                            <Group gap="xs">
+                              <IconCode color="#14b8a6" size={20} />
+                              <div>
+                                <Text size="xs" c="dimmed">
+                                  Technologies
+                                </Text>
+                                <Text fw={700} c="teal">
+                                  {skills.length}+
                                 </Text>
                               </div>
                             </Group>
@@ -482,6 +559,7 @@ function App() {
             </motion.div>
           </Container>
         </section>
+
         {/* About Section */}
         <section id="about" style={{ padding: "8rem 0", position: "relative" }}>
           <Container size="lg">
@@ -527,6 +605,34 @@ function App() {
                   Combining technical expertise with creative problem-solving
                 </Text>
               </Box>
+
+              {/* Stats Row */}
+              <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="lg" mb={60}>
+                <StatsCounter
+                  value="1+"
+                  label="Years Experience"
+                  icon={IconAward}
+                  color="cyan"
+                />
+                <StatsCounter
+                  value={`${projects.length}+`}
+                  label="Projects Completed"
+                  icon={IconRocket}
+                  color="violet"
+                />
+                <StatsCounter
+                  value={`${skills.length}+`}
+                  label="Technologies"
+                  icon={IconCode}
+                  color="teal"
+                />
+                <StatsCounter
+                  value="100%"
+                  label="Client Satisfaction"
+                  icon={IconHeart}
+                  color="pink"
+                />
+              </SimpleGrid>
 
               <Grid gutter={40}>
                 <Grid.Col span={{ base: 12, md: 6 }}>
@@ -623,6 +729,57 @@ function App() {
                         <IconMapPin size={20} color="#06b6d4" />
                         <Text c="dimmed">{contactInfo.location}</Text>
                       </Group>
+
+                      {/* Social Links */}
+                      <Group gap="sm" mt="md">
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <ActionIcon
+                            component="a"
+                            href={contactInfo.linkedin}
+                            target="_blank"
+                            size={45}
+                            radius="xl"
+                            variant="light"
+                            color="blue"
+                          >
+                            <IconBrandLinkedin size={22} />
+                          </ActionIcon>
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: -5 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <ActionIcon
+                            component="a"
+                            href={contactInfo.github}
+                            target="_blank"
+                            size={45}
+                            radius="xl"
+                            variant="light"
+                            color="gray"
+                          >
+                            <IconBrandGithub size={22} />
+                          </ActionIcon>
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <ActionIcon
+                            component="a"
+                            href={`mailto:${contactInfo.email}`}
+                            size={45}
+                            radius="xl"
+                            variant="light"
+                            color="cyan"
+                          >
+                            <IconMail size={22} />
+                          </ActionIcon>
+                        </motion.div>
+                      </Group>
                     </Stack>
                   </motion.div>
                 </Grid.Col>
@@ -630,8 +787,12 @@ function App() {
             </motion.div>
           </Container>
         </section>
+
         {/* Skills Section */}
-        <section style={{ padding: "8rem 0", position: "relative" }}>
+        <section
+          id="skills"
+          style={{ padding: "8rem 0", position: "relative" }}
+        >
           <Container size="lg">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -669,72 +830,86 @@ function App() {
                 </Text>
               </Box>
 
-              <SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 5 }} spacing="lg">
-                {skills.map((skill, index) => (
-                  <motion.div
-                    key={skill.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                    viewport={{ once: true }}
+              {/* Skill Category Tabs */}
+              <Tabs
+                value={activeSkillTab}
+                onChange={setActiveSkillTab}
+                variant="pills"
+                radius="xl"
+                mb={40}
+                styles={{
+                  root: {
+                    display: "flex",
+                    justifyContent: "center",
+                  },
+                  list: {
+                    background: "rgba(6, 182, 212, 0.05)",
+                    padding: "8px",
+                    borderRadius: "20px",
+                    border: "1px solid rgba(6, 182, 212, 0.1)",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                  },
+                  tab: {
+                    fontWeight: 500,
+                    transition: "all 0.3s ease",
+                    "&[data-active]": {
+                      background:
+                        "linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)",
+                      boxShadow: "0 4px 20px rgba(6, 182, 212, 0.4)",
+                    },
+                  },
+                }}
+              >
+                <Tabs.List>
+                  <Tabs.Tab
+                    value="frontend"
+                    leftSection={<IconBrandReact size={16} />}
                   >
-                    <motion.div
-                      whileHover={{ y: -8, scale: 1.05 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <Card
-                        padding="lg"
-                        radius="xl"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, rgba(6, 182, 212, 0.03) 0%, rgba(59, 130, 246, 0.03) 100%)",
-                          border: "1px solid rgba(6, 182, 212, 0.1)",
-                          backdropFilter: "blur(20px)",
-                          cursor: "pointer",
-                          transition: "all 0.3s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.borderColor =
-                            "rgba(6, 182, 212, 0.4)";
-                          e.currentTarget.style.background =
-                            "linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.borderColor =
-                            "rgba(6, 182, 212, 0.1)";
-                          e.currentTarget.style.background =
-                            "linear-gradient(135deg, rgba(6, 182, 212, 0.03) 0%, rgba(59, 130, 246, 0.03) 100%)";
-                        }}
-                      >
-                        <Stack align="center" gap="sm">
-                          <ThemeIcon
-                            size={50}
-                            radius="xl"
-                            variant="light"
-                            color={getSkillColor(skill.category)}
-                          >
-                            {getSkillIcon(skill.category)}
-                          </ThemeIcon>
-                          <Text fw={600} ta="center">
-                            {skill.name}
-                          </Text>
-                          <Badge
-                            size="xs"
-                            variant="light"
-                            color={getSkillColor(skill.category)}
-                          >
-                            {skill.category.replace("-", " ")}
-                          </Badge>
-                        </Stack>
-                      </Card>
-                    </motion.div>
-                  </motion.div>
-                ))}
-              </SimpleGrid>
+                    Frontend
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    value="mobile"
+                    leftSection={<IconDeviceMobile size={16} />}
+                  >
+                    Mobile
+                  </Tabs.Tab>
+
+                  {/* <Tabs.Tab
+                    value="tools"
+                    leftSection={<IconSettings size={16} />}
+                  >
+                    Tools
+                  </Tabs.Tab> */}
+                  <Tabs.Tab
+                    value="soft-skills"
+                    leftSection={<IconHeart size={16} />}
+                  >
+                    Soft Skills
+                  </Tabs.Tab>
+                </Tabs.List>
+              </Tabs>
+
+              <motion.div
+                key={activeSkillTab}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <SimpleGrid
+                  cols={{ base: 2, sm: 3, md: 4, lg: 5 }}
+                  spacing="lg"
+                >
+                  {filteredSkills.map((skill, index) => (
+                    <SkillCard key={skill.name} skill={skill} index={index} />
+                  ))}
+                </SimpleGrid>
+              </motion.div>
             </motion.div>
           </Container>
         </section>
-        {/* Experience Section */}
+
+        {/* Experience Section with Timeline */}
         <section
           id="experience"
           style={{ padding: "8rem 0", position: "relative" }}
@@ -776,149 +951,224 @@ function App() {
                 </Text>
               </Box>
 
-              <Stack gap={30}>
-                {experiences.map((exp, index) => (
-                  <motion.div
-                    key={exp.id}
-                    initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                  >
+              {/* Timeline Experience */}
+              <div style={{ position: "relative" }}>
+                {/* Timeline Line */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: 0,
+                    bottom: 0,
+                    width: "2px",
+                    background:
+                      "linear-gradient(180deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%)",
+                    transform: "translateX(-50%)",
+                    display: "none",
+                  }}
+                  className="timeline-line"
+                />
+
+                <Stack gap={30}>
+                  {experiences.map((exp, index) => (
                     <motion.div
-                      whileHover={{ x: 10 }}
-                      transition={{ type: "spring", stiffness: 300 }}
+                      key={exp.id}
+                      initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: index * 0.15 }}
+                      viewport={{ once: true }}
                     >
-                      <Card
-                        padding="xl"
-                        radius="xl"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%)",
-                          border: "1px solid rgba(6, 182, 212, 0.2)",
-                          backdropFilter: "blur(20px)",
-                          position: "relative",
-                          overflow: "hidden",
-                        }}
+                      <motion.div
+                        whileHover={{ x: 10, scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 300 }}
                       >
-                        {/* Hover Effect Overlay */}
-                        <div
+                        <Card
+                          padding="xl"
+                          radius="xl"
                           style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            height: "4px",
                             background:
-                              "linear-gradient(90deg, #06b6d4, #3b82f6, #8b5cf6)",
+                              "linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%)",
+                            border: "1px solid rgba(6, 182, 212, 0.2)",
+                            backdropFilter: "blur(20px)",
+                            position: "relative",
+                            overflow: "hidden",
                           }}
-                        />
-
-                        <Grid gutter="xl">
-                          <Grid.Col span={{ base: 12, md: 8 }}>
-                            <Group mb="md">
-                              {exp.logo && (
-                                <Image
-                                  src={exp.logo}
-                                  alt={exp.company}
-                                  width={50}
-                                  height={50}
-                                  radius="md"
-                                  fit="contain"
-                                  style={{
-                                    background: "white",
-                                    padding: "8px",
-                                  }}
-                                />
-                              )}
-                              <div>
-                                <Title order={3} size="h3" c="cyan">
-                                  {exp.title}
-                                </Title>
-                                <Text size="lg" fw={500}>
-                                  {exp.company}
-                                </Text>
-                              </div>
-                            </Group>
-                          </Grid.Col>
-
-                          <Grid.Col span={{ base: 12, md: 4 }}>
-                            <Stack gap="xs">
-                              <Badge
-                                size="lg"
-                                variant="light"
-                                color={
-                                  exp.type === "Fulltime" ? "teal" : "cyan"
-                                }
-                              >
-                                {exp.type}
-                              </Badge>
-                              <Group gap="xs">
-                                <IconCalendar size={16} color="#06b6d4" />
-                                <Text size="sm" c="dimmed">
-                                  {exp.period}
-                                </Text>
-                              </Group>
-                              <Group gap="xs">
-                                <IconMapPin size={16} color="#06b6d4" />
-                                <Text size="sm" c="dimmed">
-                                  {exp.location}
-                                </Text>
-                              </Group>
-                            </Stack>
-                          </Grid.Col>
-                        </Grid>
-
-                        <List
-                          spacing="sm"
-                          mt="xl"
-                          mb="xl"
-                          icon={
-                            <ThemeIcon
-                              size={20}
-                              radius="xl"
-                              variant="light"
-                              color="cyan"
-                            >
-                              <IconSparkles size={12} />
-                            </ThemeIcon>
-                          }
                         >
-                          {exp.description.map((item, i) => (
-                            <List.Item key={i} style={{ lineHeight: 1.7 }}>
-                              <Text c="dimmed">{item}</Text>
-                            </List.Item>
-                          ))}
-                        </List>
+                          {/* Top gradient bar */}
+                          <motion.div
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              height: "4px",
+                              background:
+                                "linear-gradient(90deg, #06b6d4, #3b82f6, #8b5cf6)",
+                            }}
+                            initial={{ scaleX: 0 }}
+                            whileInView={{ scaleX: 1 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            viewport={{ once: true }}
+                          />
 
-                        {exp.technologies && (
-                          <div>
-                            <Text size="sm" fw={600} c="cyan" mb="sm">
-                              Technologies:
-                            </Text>
-                            <Flex wrap="wrap" gap="xs">
-                              {exp.technologies.map((tech, i) => (
+                          {/* Timeline dot */}
+                          <motion.div
+                            style={{
+                              position: "absolute",
+                              top: "50%",
+                              left: "-30px",
+                              width: "20px",
+                              height: "20px",
+                              borderRadius: "50%",
+                              background:
+                                "linear-gradient(135deg, #06b6d4, #3b82f6)",
+                              border: "3px solid #0D1117",
+                              transform: "translateY(-50%)",
+                              boxShadow: "0 0 20px rgba(6, 182, 212, 0.5)",
+                            }}
+                            animate={{
+                              boxShadow: [
+                                "0 0 20px rgba(6, 182, 212, 0.5)",
+                                "0 0 30px rgba(6, 182, 212, 0.8)",
+                                "0 0 20px rgba(6, 182, 212, 0.5)",
+                              ],
+                            }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          />
+
+                          <Grid gutter="xl">
+                            <Grid.Col span={{ base: 12, md: 8 }}>
+                              <Group mb="md">
+                                {exp.logo && (
+                                  <motion.div
+                                    whileHover={{ rotate: [0, -5, 5, 0] }}
+                                    transition={{ duration: 0.5 }}
+                                  >
+                                    <Image
+                                      src={exp.logo}
+                                      alt={exp.company}
+                                      width={50}
+                                      height={50}
+                                      radius="md"
+                                      fit="contain"
+                                      style={{
+                                        background: "white",
+                                        padding: "8px",
+                                      }}
+                                    />
+                                  </motion.div>
+                                )}
+                                <div>
+                                  <Title order={3} size="h3" c="cyan">
+                                    {exp.title}
+                                  </Title>
+                                  <Text size="lg" fw={500}>
+                                    {exp.company}
+                                  </Text>
+                                </div>
+                              </Group>
+                            </Grid.Col>
+
+                            <Grid.Col span={{ base: 12, md: 4 }}>
+                              <Stack gap="xs">
                                 <Badge
-                                  key={i}
-                                  variant="light"
-                                  color="cyan"
-                                  size="md"
-                                  style={{ cursor: "default" }}
+                                  size="lg"
+                                  variant="gradient"
+                                  gradient={{
+                                    from:
+                                      exp.type === "Fulltime" ? "teal" : "cyan",
+                                    to:
+                                      exp.type === "Fulltime"
+                                        ? "green"
+                                        : "blue",
+                                  }}
                                 >
-                                  {tech}
+                                  {exp.type}
                                 </Badge>
-                              ))}
-                            </Flex>
-                          </div>
-                        )}
-                      </Card>
+                                <Group gap="xs">
+                                  <IconCalendar size={16} color="#06b6d4" />
+                                  <Text size="sm" c="dimmed">
+                                    {exp.period}
+                                  </Text>
+                                </Group>
+                                <Group gap="xs">
+                                  <IconMapPin size={16} color="#06b6d4" />
+                                  <Text size="sm" c="dimmed">
+                                    {exp.location}
+                                  </Text>
+                                </Group>
+                              </Stack>
+                            </Grid.Col>
+                          </Grid>
+
+                          <List
+                            spacing="sm"
+                            mt="xl"
+                            mb="xl"
+                            icon={
+                              <ThemeIcon
+                                size={20}
+                                radius="xl"
+                                variant="light"
+                                color="cyan"
+                              >
+                                <IconSparkles size={12} />
+                              </ThemeIcon>
+                            }
+                          >
+                            {exp.description.map((item, i) => (
+                              <motion.div
+                                key={i}
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                transition={{ delay: i * 0.1 }}
+                                viewport={{ once: true }}
+                              >
+                                <List.Item style={{ lineHeight: 1.7 }}>
+                                  <Text c="dimmed">{item}</Text>
+                                </List.Item>
+                              </motion.div>
+                            ))}
+                          </List>
+
+                          {exp.technologies && (
+                            <div>
+                              <Text size="sm" fw={600} c="cyan" mb="sm">
+                                Technologies:
+                              </Text>
+                              <Flex wrap="wrap" gap="xs">
+                                {exp.technologies.map((tech, i) => (
+                                  <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: i * 0.05 }}
+                                    viewport={{ once: true }}
+                                    whileHover={{ scale: 1.1 }}
+                                  >
+                                    <Badge
+                                      variant="light"
+                                      color="cyan"
+                                      size="md"
+                                      style={{ cursor: "default" }}
+                                    >
+                                      {tech}
+                                    </Badge>
+                                  </motion.div>
+                                ))}
+                              </Flex>
+                            </div>
+                          )}
+                        </Card>
+                      </motion.div>
                     </motion.div>
-                  </motion.div>
-                ))}
-              </Stack>
+                  ))}
+                </Stack>
+              </div>
             </motion.div>
           </Container>
         </section>
+
         {/* Projects Section */}
         <section
           id="projects"
@@ -1023,14 +1273,20 @@ function App() {
                               >
                                 <Badge
                                   size="lg"
-                                  variant="filled"
-                                  color={
-                                    project.status === "completed"
-                                      ? "teal"
-                                      : "cyan"
-                                  }
+                                  variant="gradient"
+                                  gradient={{
+                                    from:
+                                      project.status === "completed"
+                                        ? "teal"
+                                        : "cyan",
+                                    to:
+                                      project.status === "completed"
+                                        ? "green"
+                                        : "blue",
+                                  }}
                                   style={{
-                                    backdropFilter: "blur(10px)",
+                                    boxShadow:
+                                      "0 4px 20px rgba(6, 182, 212, 0.3)",
                                   }}
                                 >
                                   {project.status.replace("-", " ")}
@@ -1041,16 +1297,16 @@ function App() {
 
                           <Stack gap="lg" p="xl" style={{ flex: 1 }}>
                             <div>
-                              <Group justify="apart" mb="xs">
+                              <Group justify="space-between" mb="xs">
                                 <Title order={3} size="h3" c="cyan">
                                   {project.title}
                                 </Title>
-                                <Group gap="xs">
-                                  <IconCalendar size={16} color="#06b6d4" />
-                                  <Text size="xs" c="dimmed">
-                                    {project.period}
-                                  </Text>
-                                </Group>
+                              </Group>
+                              <Group gap="xs" mb="sm">
+                                <IconCalendar size={14} color="#06b6d4" />
+                                <Text size="xs" c="dimmed">
+                                  {project.period}
+                                </Text>
                               </Group>
                               <Text c="dimmed" style={{ lineHeight: 1.7 }}>
                                 {project.description}
@@ -1093,20 +1349,24 @@ function App() {
                               </Text>
                               <Flex wrap="wrap" gap="xs">
                                 {project.technologies.map((tech, i) => (
-                                  <Badge
+                                  <motion.div
                                     key={i}
-                                    variant="light"
-                                    color="cyan"
-                                    size="sm"
+                                    whileHover={{ scale: 1.1 }}
                                   >
-                                    {tech}
-                                  </Badge>
+                                    <Badge
+                                      variant="light"
+                                      color="cyan"
+                                      size="sm"
+                                    >
+                                      {tech}
+                                    </Badge>
+                                  </motion.div>
                                 ))}
                               </Flex>
                             </div>
 
                             <Group gap="sm" mt="auto">
-                              {project.demoUrl && (
+                              {project.demoUrl && project.demoUrl !== "#" && (
                                 <motion.div
                                   whileHover={{ scale: 1.05 }}
                                   whileTap={{ scale: 0.95 }}
@@ -1126,26 +1386,29 @@ function App() {
                                   </Button>
                                 </motion.div>
                               )}
-                              {project.githubUrl && (
-                                <motion.div
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  style={{ flex: 1 }}
-                                >
-                                  <Button
-                                    variant="light"
-                                    color="gray"
-                                    size="md"
-                                    leftSection={<IconBrandGithub size={18} />}
-                                    component="a"
-                                    href={project.githubUrl}
-                                    target="_blank"
-                                    fullWidth
+                              {project.githubUrl &&
+                                project.githubUrl !== "#" && (
+                                  <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    style={{ flex: 1 }}
                                   >
-                                    Source
-                                  </Button>
-                                </motion.div>
-                              )}
+                                    <Button
+                                      variant="light"
+                                      color="gray"
+                                      size="md"
+                                      leftSection={
+                                        <IconBrandGithub size={18} />
+                                      }
+                                      component="a"
+                                      href={project.githubUrl}
+                                      target="_blank"
+                                      fullWidth
+                                    >
+                                      Source
+                                    </Button>
+                                  </motion.div>
+                                )}
                             </Group>
                           </Stack>
                         </Card>
@@ -1157,6 +1420,7 @@ function App() {
             </motion.div>
           </Container>
         </section>
+
         {/* Contact Section */}
         <section
           id="contact"
@@ -1199,146 +1463,175 @@ function App() {
                 </Text>
               </Box>
 
-              <Grid gutter={30} mb={50}>
-                {[
-                  {
-                    icon: IconMail,
-                    title: "Email",
-                    value: contactInfo.email,
-                    href: `mailto:${contactInfo.email}`,
-                    color: "cyan",
-                  },
-                  {
-                    icon: IconPhone,
-                    title: "Phone",
-                    value: contactInfo.phone,
-                    href: `tel:${contactInfo.phone}`,
-                    color: "blue",
-                  },
-                  {
-                    icon: IconMapPin,
-                    title: "Location",
-                    value: contactInfo.location,
-                    color: "violet",
-                  },
-                ].map((item, index) => (
-                  <Grid.Col key={index} span={{ base: 12, sm: 4 }}>
+              <Grid gutter={30}>
+                {/* Contact Info Cards */}
+                <Grid.Col span={{ base: 12, md: 5 }}>
+                  <Stack gap="lg">
+                    {[
+                      {
+                        icon: IconMail,
+                        title: "Email",
+                        value: contactInfo.email,
+                        href: `mailto:${contactInfo.email}`,
+                        color: "cyan",
+                      },
+                      {
+                        icon: IconPhone,
+                        title: "Phone",
+                        value: contactInfo.phone,
+                        href: `tel:${contactInfo.phone}`,
+                        color: "blue",
+                      },
+                      {
+                        icon: IconMapPin,
+                        title: "Location",
+                        value: contactInfo.location,
+                        color: "violet",
+                      },
+                    ].map((item, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                        viewport={{ once: true }}
+                      >
+                        <motion.div
+                          whileHover={{ x: 10, scale: 1.02 }}
+                          transition={{ type: "spring", stiffness: 300 }}
+                        >
+                          <Card
+                            component={item.href ? "a" : "div"}
+                            href={item.href}
+                            padding="lg"
+                            radius="xl"
+                            style={{
+                              background:
+                                "linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%)",
+                              border: "1px solid rgba(6, 182, 212, 0.2)",
+                              backdropFilter: "blur(20px)",
+                              textDecoration: "none",
+                              color: "inherit",
+                              cursor: item.href ? "pointer" : "default",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "1rem",
+                            }}
+                          >
+                            <ThemeIcon
+                              size={50}
+                              radius="xl"
+                              variant="light"
+                              color={item.color}
+                            >
+                              <item.icon size={24} />
+                            </ThemeIcon>
+                            <div>
+                              <Text size="sm" c="dimmed">
+                                {item.title}
+                              </Text>
+                              <Text fw={600}>{item.value}</Text>
+                            </div>
+                          </Card>
+                        </motion.div>
+                      </motion.div>
+                    ))}
+
+                    {/* Social Links */}
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ duration: 0.6, delay: 0.4 }}
                       viewport={{ once: true }}
                     >
-                      <motion.div
-                        whileHover={{ y: -8 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                      >
-                        <Card
-                          component={item.href ? "a" : "div"}
-                          href={item.href}
-                          padding="xl"
-                          radius="xl"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%)",
-                            border: "1px solid rgba(6, 182, 212, 0.2)",
-                            backdropFilter: "blur(20px)",
-                            textAlign: "center",
-                            textDecoration: "none",
-                            color: "inherit",
-                            cursor: item.href ? "pointer" : "default",
-                          }}
-                        >
-                          <ThemeIcon
-                            size={60}
-                            radius="xl"
-                            variant="light"
-                            color={item.color}
-                            mb="md"
-                            mx="auto"
+                      <Group gap="md" mt="md">
+                        {[
+                          {
+                            icon: IconBrandLinkedin,
+                            href: contactInfo.linkedin,
+                            color: "blue",
+                            label: "LinkedIn",
+                          },
+                          {
+                            icon: IconBrandGithub,
+                            href: contactInfo.github,
+                            color: "gray",
+                            label: "GitHub",
+                          },
+                          {
+                            icon: IconMail,
+                            href: `mailto:${contactInfo.email}`,
+                            color: "cyan",
+                            label: "Email",
+                          },
+                        ].map((social, index) => (
+                          <motion.div
+                            key={index}
+                            whileHover={{ scale: 1.2, rotate: 5 }}
+                            whileTap={{ scale: 0.9 }}
                           >
-                            <item.icon size={30} />
-                          </ThemeIcon>
-                          <Title order={4} mb="xs">
-                            {item.title}
-                          </Title>
-                          <Text c="dimmed" size="sm">
-                            {item.value}
-                          </Text>
-                        </Card>
-                      </motion.div>
+                            <ActionIcon
+                              component="a"
+                              href={social.href}
+                              target="_blank"
+                              size={55}
+                              radius="xl"
+                              variant="gradient"
+                              gradient={{ from: social.color, to: "blue" }}
+                              style={{
+                                boxShadow: "0 8px 32px rgba(6, 182, 212, 0.3)",
+                              }}
+                            >
+                              <social.icon size={26} />
+                            </ActionIcon>
+                          </motion.div>
+                        ))}
+                      </Group>
                     </motion.div>
-                  </Grid.Col>
-                ))}
-              </Grid>
+                  </Stack>
+                </Grid.Col>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                viewport={{ once: true }}
-              >
-                <Group justify="center" gap="lg">
-                  {[
-                    {
-                      icon: IconMail,
-                      href: `mailto:${contactInfo.email}`,
-                      color: "cyan",
-                      label: "Email",
-                    },
-                    {
-                      icon: IconBrandLinkedin,
-                      href: contactInfo.linkedin,
-                      color: "blue",
-                      label: "LinkedIn",
-                    },
-                    {
-                      icon: IconBrandGithub,
-                      href: contactInfo.github,
-                      color: "gray",
-                      label: "GitHub",
-                    },
-                  ].map((social, index) => (
-                    <motion.div
-                      key={index}
-                      whileHover={{ scale: 1.2, rotate: 5 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <ActionIcon
-                        component="a"
-                        href={social.href}
-                        target="_blank"
-                        size={60}
-                        radius="xl"
-                        variant="gradient"
-                        gradient={{ from: social.color, to: "blue" }}
-                        style={{
-                          boxShadow: "0 8px 32px rgba(6, 182, 212, 0.3)",
-                        }}
-                      >
-                        <social.icon size={28} />
-                      </ActionIcon>
-                    </motion.div>
-                  ))}
-                </Group>
-              </motion.div>
+                {/* Contact Form */}
+                <Grid.Col span={{ base: 12, md: 7 }}>
+                  <ContactForm />
+                </Grid.Col>
+              </Grid>
             </motion.div>
           </Container>
         </section>
+
         {/* Footer */}
         <footer
           style={{
             padding: "3rem 0",
             borderTop: "1px solid rgba(6, 182, 212, 0.1)",
-            background: "rgba(13, 17, 23, 0.5)",
+            background: "rgba(13, 17, 23, 0.8)",
             backdropFilter: "blur(20px)",
           }}
         >
           <Container size="lg">
             <Stack align="center" gap="md">
-              <Text c="dimmed" ta="center">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <Text
+                  size="xl"
+                  fw={700}
+                  variant="gradient"
+                  gradient={{ from: "cyan", to: "blue" }}
+                  ta="center"
+                >
+                  NAZEM.MSOUTI
+                </Text>
+              </motion.div>
+
+              <Text c="dimmed" ta="center" size="sm">
                 © 2025 Nazem Almsouti. Crafted with passion and precision.
               </Text>
+
               <Group gap="xs">
                 <Text size="xs" c="dimmed">
                   Built with
@@ -1349,9 +1642,16 @@ function App() {
                   variant="gradient"
                   gradient={{ from: "cyan", to: "blue" }}
                 >
-                  React · TypeScript · Mantine
+                  React · TypeScript · Mantine · Framer Motion
                 </Text>
               </Group>
+
+              <motion.div
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <IconHeart size={20} color="#06b6d4" />
+              </motion.div>
             </Stack>
           </Container>
         </footer>

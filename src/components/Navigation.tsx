@@ -2,9 +2,17 @@
 
 import type React from "react";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Group, Text, Button, Burger, Drawer, Stack } from "@mantine/core";
+import { motion, AnimatePresence } from "framer-motion";
+import { Group, Text, Button, Burger, Drawer, Stack, ThemeIcon } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import {
+  IconHome,
+  IconUser,
+  IconBriefcase,
+  IconCode,
+  IconMail,
+  IconSparkles,
+} from "@tabler/icons-react";
 
 const Navigation: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("home");
@@ -12,11 +20,12 @@ const Navigation: React.FC = () => {
   const [opened, { open, close }] = useDisclosure(false);
 
   const navItems = [
-    { id: "home", label: "Home" },
-    { id: "about", label: "About" },
-    { id: "experience", label: "Experience" },
-    { id: "projects", label: "Projects" },
-    { id: "contact", label: "Contact" },
+    { id: "home", label: "Home", icon: IconHome },
+    { id: "about", label: "About", icon: IconUser },
+    { id: "skills", label: "Skills", icon: IconSparkles },
+    { id: "experience", label: "Experience", icon: IconBriefcase },
+    { id: "projects", label: "Projects", icon: IconCode },
+    { id: "contact", label: "Contact", icon: IconMail },
   ];
 
   useEffect(() => {
@@ -59,10 +68,10 @@ const Navigation: React.FC = () => {
           left: 0,
           right: 0,
           zIndex: 1000,
-          background: isScrolled ? "rgba(15, 23, 42, 0.95)" : "transparent",
+          background: isScrolled ? "rgba(13, 17, 23, 0.95)" : "transparent",
           backdropFilter: isScrolled ? "blur(20px)" : "none",
           borderBottom: isScrolled
-            ? "1px solid rgba(148, 163, 184, 0.2)"
+            ? "1px solid rgba(6, 182, 212, 0.2)"
             : "none",
           transition: "all 0.3s ease",
           padding: "1rem 0",
@@ -78,29 +87,66 @@ const Navigation: React.FC = () => {
               style={{ cursor: "pointer" }}
               onClick={() => scrollToSection("home")}
             >
-              <Text
-                size="xl"
-                fw={700}
-                variant="gradient"
-                gradient={{ from: "gray.3", to: "blue.4", deg: 45 }}
-              >
-                NAZEM.MSOUTI
-              </Text>
+              <Group gap="xs">
+                <motion.div
+                  animate={{
+                    rotate: [0, 360],
+                  }}
+                  transition={{
+                    duration: 20,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                >
+                  <ThemeIcon
+                    size={35}
+                    radius="xl"
+                    variant="gradient"
+                    gradient={{ from: "cyan", to: "blue" }}
+                  >
+                    <IconCode size={20} />
+                  </ThemeIcon>
+                </motion.div>
+                <Text
+                  size="lg"
+                  fw={700}
+                  variant="gradient"
+                  gradient={{ from: "cyan", to: "blue", deg: 45 }}
+                >
+                  NAZEM.MSOUTI
+                </Text>
+              </Group>
             </motion.div>
 
             <Group gap="xs" visibleFrom="md">
-              {navItems.slice(1).map((item) => (
+              {navItems.slice(1).map((item, index) => (
                 <motion.div
                   key={item.id}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <Button
-                    variant={activeSection === item.id ? "light" : "subtle"}
-                    color={activeSection === item.id ? "blue" : "gray"}
+                    variant={activeSection === item.id ? "gradient" : "subtle"}
+                    gradient={
+                      activeSection === item.id
+                        ? { from: "cyan", to: "blue" }
+                        : undefined
+                    }
+                    color={activeSection === item.id ? undefined : "gray"}
                     size="sm"
                     radius="xl"
                     onClick={() => scrollToSection(item.id)}
+                    leftSection={<item.icon size={16} />}
+                    style={{
+                      boxShadow:
+                        activeSection === item.id
+                          ? "0 4px 20px rgba(6, 182, 212, 0.3)"
+                          : "none",
+                      transition: "all 0.3s ease",
+                    }}
                   >
                     {item.label}
                   </Button>
@@ -111,8 +157,9 @@ const Navigation: React.FC = () => {
             <Burger
               opened={opened}
               onClick={open}
+              color="#06b6d4"
+              size="sm"
               hiddenFrom="md"
-              color="white"
             />
           </Group>
         </div>
@@ -125,23 +172,71 @@ const Navigation: React.FC = () => {
         size="xs"
         styles={{
           content: {
-            background: "rgba(15, 23, 42, 0.95)",
+            background: "rgba(13, 17, 23, 0.98)",
             backdropFilter: "blur(20px)",
+          },
+          header: {
+            background: "transparent",
+          },
+          close: {
+            color: "#06b6d4",
           },
         }}
       >
         <Stack gap="md" p="md">
-          {navItems.map((item) => (
-            <Button
-              key={item.id}
-              variant={activeSection === item.id ? "light" : "subtle"}
-              color={activeSection === item.id ? "blue" : "gray"}
-              fullWidth
-              onClick={() => scrollToSection(item.id)}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Text
+              size="lg"
+              fw={700}
+              variant="gradient"
+              gradient={{ from: "cyan", to: "blue" }}
+              mb="xl"
             >
-              {item.label}
-            </Button>
-          ))}
+              NAZEM.MSOUTI
+            </Text>
+          </motion.div>
+
+          <AnimatePresence>
+            {navItems.map((item, index) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ x: 10 }}
+              >
+                <Button
+                  variant={activeSection === item.id ? "gradient" : "subtle"}
+                  gradient={
+                    activeSection === item.id
+                      ? { from: "cyan", to: "blue" }
+                      : undefined
+                  }
+                  color={activeSection === item.id ? undefined : "gray"}
+                  fullWidth
+                  size="lg"
+                  radius="xl"
+                  onClick={() => scrollToSection(item.id)}
+                  leftSection={<item.icon size={20} />}
+                  style={{
+                    justifyContent: "flex-start",
+                    paddingLeft: "1.5rem",
+                    boxShadow:
+                      activeSection === item.id
+                        ? "0 4px 20px rgba(6, 182, 212, 0.3)"
+                        : "none",
+                  }}
+                >
+                  {item.label}
+                </Button>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </Stack>
       </Drawer>
     </>

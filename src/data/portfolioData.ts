@@ -304,16 +304,34 @@ export const projects: Project[] = [
 
 export const skills: Skill[] = [
   // Frontend
-  { name: "React", category: "frontend", proficiency: 0 },
-  { name: "TypeScript", category: "frontend", proficiency: 0 },
-  { name: "Next.js", category: "frontend", proficiency: 0 },
-  { name: "Tailwind CSS", category: "frontend", proficiency: 0 },
+  { name: "React", category: "frontend", proficiency: 95 },
+  { name: "TypeScript", category: "frontend", proficiency: 90 },
+  { name: "Next.js", category: "frontend", proficiency: 85 },
+  { name: "Tailwind CSS", category: "frontend", proficiency: 92 },
+  { name: "JavaScript", category: "frontend", proficiency: 95 },
+  { name: "HTML/CSS", category: "frontend", proficiency: 98 },
+  { name: "Redux", category: "frontend", proficiency: 88 },
+  { name: "Mantine UI", category: "frontend", proficiency: 90 },
 
-  { name: "Flutter", category: "mobile", proficiency: 0 },
-  { name: "Dart", category: "mobile", proficiency: 0 },
+  // Mobile
+  { name: "Flutter", category: "mobile", proficiency: 92 },
+  { name: "Dart", category: "mobile", proficiency: 90 },
+  { name: "React Native", category: "mobile", proficiency: 75 },
 
-  { name: "Git", category: "tools", proficiency: 0 },
-  { name: "Figma", category: "tools", proficiency: 0 },
+  // Backend
+  { name: "Node.js", category: "backend", proficiency: 70 },
+  { name: "REST APIs", category: "backend", proficiency: 88 },
+  { name: "Firebase", category: "backend", proficiency: 80 },
+
+  // Tools
+  { name: "Git", category: "tools", proficiency: 92 },
+  { name: "Figma", category: "tools", proficiency: 85 },
+  { name: "VS Code", category: "tools", proficiency: 95 },
+  { name: "Postman", category: "tools", proficiency: 88 },
+
+  // Soft Skills
+  { name: "Problem Solving", category: "soft-skills", proficiency: 95 },
+  { name: "Team Collaboration", category: "soft-skills", proficiency: 90 },
 ];
 
 export const contactInfo: ContactInfo = {

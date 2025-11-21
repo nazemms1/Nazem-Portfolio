@@ -3,7 +3,13 @@
 import type React from "react"
 
 import { motion } from "framer-motion"
-import { Code, Smartphone, Server, PenToolIcon as Tool, Users } from "lucide-react"
+import {
+  IconCode,
+  IconDeviceMobile,
+  IconServer,
+  IconTool,
+  IconUsers,
+} from "@tabler/icons-react"
 import type { Skill } from "../types/portfolio"
 
 interface SkillCardProps {
@@ -13,21 +19,21 @@ interface SkillCardProps {
 
 const SkillCard: React.FC<SkillCardProps> = ({ skill, index }) => {
   const getIcon = (category: Skill["category"]) => {
-    const iconProps = { className: "w-6 h-6 text-slate-400" }
+    const iconProps = { className: "w-6 h-6 text-slate-400", size: 24 }
 
     switch (category) {
       case "frontend":
-        return <Code {...iconProps} />
+        return <IconCode {...iconProps} />
       case "mobile":
-        return <Smartphone {...iconProps} />
+        return <IconDeviceMobile {...iconProps} />
       case "backend":
-        return <Server {...iconProps} />
+        return <IconServer {...iconProps} />
       case "tools":
-        return <Tool {...iconProps} />
+        return <IconTool {...iconProps} />
       case "soft-skills":
-        return <Users {...iconProps} />
+        return <IconUsers {...iconProps} />
       default:
-        return <Code {...iconProps} />
+        return <IconCode {...iconProps} />
     }
   }
 
@@ -38,7 +44,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill, index }) => {
       case "mobile":
         return "from-green-500/20 to-emerald-500/20 border-green-500/30"
       case "backend":
-        return "from-purple-500/20 to-violet-500/20 border-purple-500/30"
+        return "from-indigo-500/20 to-violet-500/20 border-indigo-500/30"
       case "tools":
         return "from-orange-500/20 to-amber-500/20 border-orange-500/30"
       case "soft-skills":
@@ -59,7 +65,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill, index }) => {
         transition: { duration: 0.2 },
       }}
       viewport={{ once: true }}
-      className={`relative group bg-gradient-to-br ${getCategoryColor(skill.category)} 
+      className={`relative group bg-gradient-to-br ${getCategoryColor(skill.category)}
                  backdrop-blur-lg border rounded-xl p-6 cursor-pointer
                  hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300`}
     >
