@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { motion } from "framer-motion";
-import { Card, Stack, Text, ThemeIcon, Progress, Group } from "@mantine/core";
+import { Card, Stack, Text, ThemeIcon } from "@mantine/core";
 import {
   IconCode,
   IconDeviceMobile,
@@ -141,29 +141,6 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill, index }) => {
             <Text fw={600} ta="center" size="md">
               {skill.name}
             </Text>
-
-            {skill.proficiency > 0 && (
-              <div style={{ width: "100%" }}>
-                <Group justify="space-between" mb={4}>
-                  <Text size="xs" c="dimmed">
-                    Proficiency
-                  </Text>
-                  <Text size="xs" c={color} fw={600}>
-                    {skill.proficiency}%
-                  </Text>
-                </Group>
-                <Progress
-                  value={skill.proficiency}
-                  color={color}
-                  size="sm"
-                  radius="xl"
-                  animated
-                  style={{
-                    background: "rgba(255, 255, 255, 0.1)",
-                  }}
-                />
-              </div>
-            )}
 
             <Text
               size="xs"

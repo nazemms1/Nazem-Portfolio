@@ -18,6 +18,7 @@ export interface Project {
   features: string[]
   technologies: string[]
   image: string
+  images?: string[]
   demoUrl?: string
   githubUrl?: string
   status: "completed" | "in-progress" | "planned"

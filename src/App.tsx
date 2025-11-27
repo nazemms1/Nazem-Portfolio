@@ -46,6 +46,7 @@ import Navigation from "./components/Navigation";
 import TypeWriter from "./components/TypeWriter";
 import ContactForm from "./components/ContactForm";
 import SkillCard from "./components/SkillCard";
+import ProjectCarousel from "./components/ProjectCarousel";
 import {
   experiences,
   projects,
@@ -1246,22 +1247,22 @@ function App() {
                                 overflow: "hidden",
                               }}
                             >
-                              <motion.div
-                                whileHover={{ scale: 1.1 }}
-                                transition={{ duration: 0.6 }}
-                              >
-                                <Image
-                                  src={project.image || "/placeholder.svg"}
-                                  height={250}
-                                  alt={project.title}
-                                />
-                              </motion.div>
+                              <ProjectCarousel
+                                images={
+                                  project.images && project.images.length > 0
+                                    ? project.images
+                                    : [project.image || "/placeholder.svg"]
+                                }
+                                title={project.title}
+                                height={250}
+                              />
                               <div
                                 style={{
                                   position: "absolute",
                                   inset: 0,
                                   background:
                                     "linear-gradient(to top, rgba(13, 17, 23, 0.9) 0%, transparent 60%)",
+                                  pointerEvents: "none",
                                 }}
                               />
                               <div
@@ -1269,6 +1270,7 @@ function App() {
                                   position: "absolute",
                                   top: 20,
                                   right: 20,
+                                  zIndex: 3,
                                 }}
                               >
                                 <Badge
@@ -1632,26 +1634,10 @@ function App() {
                 © 2025 Nazem Almsouti. Crafted with passion and precision.
               </Text>
 
-              <Group gap="xs">
-                <Text size="xs" c="dimmed">
-                  Built with
-                </Text>
-                <Text
-                  size="xs"
-                  fw={600}
-                  variant="gradient"
-                  gradient={{ from: "cyan", to: "blue" }}
-                >
-                  React · TypeScript · Mantine · Framer Motion
-                </Text>
-              </Group>
-
               <motion.div
                 animate={{ y: [0, -5, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
-              >
-                <IconHeart size={20} color="#06b6d4" />
-              </motion.div>
+              ></motion.div>
             </Stack>
           </Container>
         </footer>
