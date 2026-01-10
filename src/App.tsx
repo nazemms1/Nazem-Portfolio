@@ -163,7 +163,7 @@ function App() {
 
   const handleDownloadCV = () => {
     const link = document.createElement("a");
-    link.href = "/file/Nazem Almsouti cv.pdf";
+    link.href = "/file/Nazem-Almsouti-cv.pdf";
     link.download = "Nazem_Almsouti_CV.pdf";
     document.body.appendChild(link);
     link.click();
