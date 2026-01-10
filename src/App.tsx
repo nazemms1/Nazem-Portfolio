@@ -457,7 +457,7 @@ function App() {
                                   Experience
                                 </Text>
                                 <Text fw={700} c="cyan">
-                                  1+ Years
+                                  2+ Years
                                 </Text>
                               </div>
                             </Group>
@@ -610,7 +610,7 @@ function App() {
               {/* Stats Row */}
               <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="lg" mb={60}>
                 <StatsCounter
-                  value="1+"
+                  value="2+"
                   label="Years Experience"
                   icon={IconAward}
                   color="cyan"

@@ -9,11 +9,11 @@ export const experiences: Experience[] = [
   {
     id: "pharaon-2025",
     title: "Software Engineer | Frontend Developer",
-    company: "Pharaon Group (SAWA)",
+    company: "Pharaon Group (Ultrawares)",
     period: "Jul 2025 – Present",
     location: "Free zone, Syria",
     type: "Fulltime",
-    logo: "/images/pharaon.svg", // 👈 صورة الشركة
+    logo: "/images/pharaon.svg",
     description: [
       "Developing and maintaining modern web frontends with React and TypeScript",
       "Implementing responsive UI/UX components with focus on performance and accessibility",
