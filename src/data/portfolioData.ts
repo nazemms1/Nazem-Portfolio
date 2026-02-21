@@ -72,6 +72,36 @@ export const experiences: Experience[] = [
 
 export const projects: Project[] = [
   {
+    id: "pyramind",
+    title: "Pyramind – Project Management Platform",
+    period: "Jul 2025 – Present",
+    description:
+      "Enterprise-level project management platform developed at Pharaon Group (Ultrawares), built with React and TypeScript. The platform supports agile teams with comprehensive tools for sprint planning, task tracking, and cross-functional collaboration.",
+    features: [
+      "Sprint planning and backlog management with drag-and-drop task organization",
+      "Real-time progress tracking with interactive dashboards and analytics",
+      "Multi-role access control for admins, project managers, and team members",
+      "User stories and acceptance criteria management aligned with business goals",
+      "Daily stand-up, sprint review, and retrospective workflow support",
+      "Cross-functional team coordination with stakeholder visibility",
+      "Agile Scrum framework integration for structured project delivery",
+      "Timely delivery tracking with milestone and deadline management",
+    ],
+    technologies: [
+      "React",
+      "TypeScript",
+      "Redux",
+      "REST APIs",
+      "TailwindCSS",
+      "Mantine UI",
+    ],
+    image: "/images/pyramind.png",
+    images: ["/images/pyramind.png"],
+    status: "in-progress",
+    demoUrl: "https://pyramind.pharaon-group.com/",
+    githubUrl: "#",
+  },
+  {
     id: "sentiment-analysis-platform",
     title: "LUP - Multilingual Sentiment Analysis Platform",
     period: "Jan 2025 - Jul 2025",
@@ -196,6 +226,29 @@ export const projects: Project[] = [
     images: ["/images/b2.png", "/images/b3.png"],
     status: "completed",
     demoUrl: "https://www.baflayburger.com/",
+    githubUrl: "#",
+  },
+  {
+    id: "askon-syria",
+    title: "Askon Syria – Company Landing Page",
+    period: "2025",
+    description:
+      "Professional bilingual landing page for Askon Syria, a Syrian company, built with Next.js. The page showcases the company's services, vision, and contact information with a modern and responsive design supporting both Arabic and English.",
+    features: [
+      "Bilingual support (Arabic & English) with seamless language switching",
+      "Fully responsive design optimized for all screen sizes",
+      "Modern UI/UX design reflecting the company's professional identity",
+      "Services and offerings showcase with clean layout",
+      "Optimized performance using Next.js static generation",
+      "SEO-friendly structure for better search engine visibility",
+      "Smooth animations and transitions for enhanced user experience",
+      "Contact and inquiry section for client engagement",
+    ],
+    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "i18n"],
+    image: "/images/askon.png",
+    images: ["/images/askon.png"],
+    status: "completed",
+    demoUrl: "http://askon-syria.com/en",
     githubUrl: "#",
   },
   {
