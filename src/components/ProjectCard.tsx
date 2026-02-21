@@ -69,8 +69,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
               src={project.image || "https://via.placeholder.com/500x300"}
               height={200}
               alt={project.title}
+              fit="contain"
               style={{
                 transition: "transform 0.7s ease",
+                background: "rgba(15, 23, 42, 0.9)",
               }}
             />
             <div

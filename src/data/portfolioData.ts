@@ -71,6 +71,7 @@ export const experiences: Experience[] = [
 ];
 
 export const projects: Project[] = [
+  // 1. جاري حالياً
   {
     id: "pyramind",
     title: "Pyramind – Project Management Platform",
@@ -95,12 +96,37 @@ export const projects: Project[] = [
       "TailwindCSS",
       "Mantine UI",
     ],
-    image: "/images/pyramind.png",
-    images: ["/images/pyramind.png"],
+    image: "assets/images/pyramind2.png",
+    images: ["/assets/images/pyramind2.png"],
     status: "in-progress",
     demoUrl: "https://pyramind.pharaon-group.com/",
     githubUrl: "#",
   },
+  // 2. أحدث مشروع مكتمل
+  {
+    id: "askon-syria",
+    title: "Askon Syria – Company Landing Page",
+    period: "Jan 2026 - Feb 2026",
+    description:
+      "Professional bilingual landing page for Askon Syria, a Syrian company, built with Next.js. The page showcases the company's services, vision, and contact information with a modern and responsive design supporting both Arabic and English.",
+    features: [
+      "Bilingual support (Arabic & English) with seamless language switching",
+      "Fully responsive design optimized for all screen sizes",
+      "Modern UI/UX design reflecting the company's professional identity",
+      "Services and offerings showcase with clean layout",
+      "Optimized performance using Next.js static generation",
+      "SEO-friendly structure for better search engine visibility",
+      "Smooth animations and transitions for enhanced user experience",
+      "Contact and inquiry section for client engagement",
+    ],
+    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "i18n"],
+    image: "/images/askon.png",
+    images: ["/images/askon.png"],
+    status: "completed",
+    demoUrl: "http://askon-syria.com/en",
+    githubUrl: "#",
+  },
+  // 3. مشروع AI كبير
   {
     id: "sentiment-analysis-platform",
     title: "LUP - Multilingual Sentiment Analysis Platform",
@@ -135,6 +161,7 @@ export const projects: Project[] = [
     demoUrl: "https://app.lup.sa/",
     githubUrl: "#",
   },
+  // 4. Data Labeling - نفس فترة LUP
   {
     id: "data-labeling-platform",
     title: "Multi-Role Data Labeling Platform",
@@ -168,6 +195,7 @@ export const projects: Project[] = [
     demoUrl: "https://label.lup.sa/login",
     githubUrl: "#",
   },
+  // 5. E-Ticketing
   {
     id: "e-ticketing-system",
     title: "E-Ticketing System - Frontend Development",
@@ -200,6 +228,28 @@ export const projects: Project[] = [
     demoUrl: "https://tickets.c-m.com.sa/",
     githubUrl: "#",
   },
+  // 6. MTX Scanner
+  {
+    id: "mtx-scanner",
+    title: "MTX - Event Ticket Scanner App",
+    period: "Mar 2025 – Apr 2025",
+    description:
+      "Comprehensive Flutter mobile application for organizing and facilitating charitable donations across multiple causes, enabling users to support communities through various contribution programs.",
+    features: [
+      "Core donation features: cause browsing, donation processing, and contribution tracking",
+      "Secure payment gateways for seamless financial transactions",
+      "Real-time updates, donation history, and impact tracking",
+      "Community engagement via cause following and donation sharing",
+      "Volunteer coordination and beneficiary management",
+      "Cross-platform compatibility for Android with intuitive UI/UX",
+    ],
+    technologies: ["Flutter", "Dart", "REST APIs", "Payment Gateway", "Git"],
+    image: "/images/flutter-empl.jpg",
+    status: "completed",
+    demoUrl: "https://c-m.com.sa/",
+    githubUrl: "#",
+  },
+  // 7. Baflay Burger
   {
     id: "baflay-burger",
     title: "Baflay Burger Restaurant Website & Management System",
@@ -228,29 +278,7 @@ export const projects: Project[] = [
     demoUrl: "https://www.baflayburger.com/",
     githubUrl: "#",
   },
-  {
-    id: "askon-syria",
-    title: "Askon Syria – Company Landing Page",
-    period: "2025",
-    description:
-      "Professional bilingual landing page for Askon Syria, a Syrian company, built with Next.js. The page showcases the company's services, vision, and contact information with a modern and responsive design supporting both Arabic and English.",
-    features: [
-      "Bilingual support (Arabic & English) with seamless language switching",
-      "Fully responsive design optimized for all screen sizes",
-      "Modern UI/UX design reflecting the company's professional identity",
-      "Services and offerings showcase with clean layout",
-      "Optimized performance using Next.js static generation",
-      "SEO-friendly structure for better search engine visibility",
-      "Smooth animations and transitions for enhanced user experience",
-      "Contact and inquiry section for client engagement",
-    ],
-    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "i18n"],
-    image: "/images/askon.png",
-    images: ["/images/askon.png"],
-    status: "completed",
-    demoUrl: "http://askon-syria.com/en",
-    githubUrl: "#",
-  },
+  // 8. Ketabook
   {
     id: "ketabook",
     title: "Ketabook – Online Bookstore & Publishing Platform",
@@ -271,26 +299,7 @@ export const projects: Project[] = [
     demoUrl: "#",
     githubUrl: "#",
   },
-  {
-    id: "mtx-scanner",
-    title: "MTX - Event Ticket Scanner App",
-    period: "Mar 2025 – Apr 2025",
-    description:
-      "Comprehensive Flutter mobile application for organizing and facilitating charitable donations across multiple causes, enabling users to support communities through various contribution programs.",
-    features: [
-      "Core donation features: cause browsing, donation processing, and contribution tracking",
-      "Secure payment gateways for seamless financial transactions",
-      "Real-time updates, donation history, and impact tracking",
-      "Community engagement via cause following and donation sharing",
-      "Volunteer coordination and beneficiary management",
-      "Cross-platform compatibility for Android with intuitive UI/UX",
-    ],
-    technologies: ["Flutter", "Dart", "REST APIs", "Payment Gateway", "Git"],
-    image: "/images/flutter-empl.jpg",
-    status: "completed",
-    demoUrl: "https://c-m.com.sa/",
-    githubUrl: "#",
-  },
+  // 9. ChatPDF
   {
     id: "chatpdf",
     title: "ChatPDF – Smart PDF Interaction App",
@@ -311,6 +320,7 @@ export const projects: Project[] = [
     demoUrl: "#",
     githubUrl: "#",
   },
+  // 10. Social Aid
   {
     id: "social-aid-gaith",
     title: "Social Aid App (Gaith)",
