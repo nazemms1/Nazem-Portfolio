@@ -71,7 +71,37 @@ export const experiences: Experience[] = [
 ];
 
 export const projects: Project[] = [
-  // 1. جاري حالياً
+  {
+    id: "worksite-tools",
+    title: "WorksiteTools – E-Commerce Management Dashboard",
+    period: "2025 – Present",
+    description:
+      "Enterprise-level e-commerce admin dashboard built with React and TypeScript. The platform provides comprehensive tools for managing products, inventory, orders, distributors, and customer inquiries with full bilingual support (English & Arabic).",
+    features: [
+      "Full product management with bilingual support (EN/AR) and rich text descriptions",
+      "Multi-inventory tracking with product movement and quantity management",
+      "Order lifecycle management from creation to fulfillment with status tracking",
+      "Distributor management with activation codes and order limit controls",
+      "Multi-role access control for admins and distributors",
+      "Dynamic home page section management (featured, new arrivals, best sellers)",
+      "Multi-currency support with real-time exchange rate configuration",
+      "Banner and promotional content management with drag-and-drop ordering",
+    ],
+    technologies: [
+      "React",
+      "TypeScript",
+      "TanStack Query",
+      "REST APIs",
+      "Mantine UI",
+      "Axios",
+    ],
+    image: "assets/images/worksite.png",
+    images: ["/assets/images/worksite.png"],
+    status: "in-progress",
+    demoUrl: "https://dashboard.worksitetool.sy/",
+    githubUrl: "#",
+  },
+
   {
     id: "pyramind",
     title: "Pyramind – Project Management Platform",
@@ -102,7 +132,6 @@ export const projects: Project[] = [
     demoUrl: "https://pyramind.pharaon-group.com/",
     githubUrl: "#",
   },
-  // 2. أحدث مشروع مكتمل
   {
     id: "askon-syria",
     title: "Askon Syria – Company Landing Page",
@@ -120,13 +149,12 @@ export const projects: Project[] = [
       "Contact and inquiry section for client engagement",
     ],
     technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "i18n"],
-    image: "/images/askon.png",
-    images: ["/images/askon.png"],
+    image: "assets/images/askon.png",
+    images: ["assets/images/askon.png"],
     status: "completed",
     demoUrl: "http://askon-syria.com/en",
     githubUrl: "#",
   },
-  // 3. مشروع AI كبير
   {
     id: "sentiment-analysis-platform",
     title: "LUP - Multilingual Sentiment Analysis Platform",
