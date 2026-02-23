@@ -287,8 +287,7 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Skills Section */}
-      <section className="py-20 relative">
+       <section className="py-20 relative">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -315,8 +314,7 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Experience Section */}
-      <section id="experience" className="py-20 relative">
+       <section id="experience" className="py-20 relative">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 50 }}

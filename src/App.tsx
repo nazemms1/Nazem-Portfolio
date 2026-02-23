@@ -450,15 +450,24 @@ function App() {
                               boxShadow: "0 8px 32px rgba(6, 182, 212, 0.2)",
                             }}
                           >
-                            <Group gap="xs">
-                              <IconAward color="#06b6d4" size={20} />
+                            <Group gap="xs" align="flex-start">
+                              <IconAward color="#06b6d4" size={20} style={{ marginTop: 2 }} />
                               <div>
-                                <Text size="xs" c="dimmed">
+                                <Text size="xs" c="dimmed" mb={4}>
                                   Experience
                                 </Text>
-                                <Text fw={700} c="cyan">
-                                  2+ Years
-                                </Text>
+                                <Group gap="xs">
+                                  <IconCode size={13} color="#06b6d4" />
+                                  <Text size="xs" fw={600} c="cyan">
+                                    2yr Web
+                                  </Text>
+                                </Group>
+                                <Group gap="xs">
+                                  <IconDeviceMobile size={13} color="#06b6d4" />
+                                  <Text size="xs" fw={600} c="cyan">
+                                    3yr Mobile
+                                  </Text>
+                                </Group>
                               </div>
                             </Group>
                           </Card>
