@@ -417,7 +417,7 @@ function App() {
                           }}
                         >
                           <img
-                            src={"/images/nazem.jpg"}
+                            src={`${import.meta.env.BASE_URL}images/nazem.jpg`}
                             alt="Nazem Almsouti"
                             style={{
                               width: "100%",
