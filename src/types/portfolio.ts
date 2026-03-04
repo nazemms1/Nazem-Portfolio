@@ -41,8 +41,9 @@ export interface ContactInfo {
 export interface Recommendation {
   id: string
   name: string
-  title: string
-  company: string
+  role: string
+  expertise: string
+  period: string
   message: string
-  avatar?: string
+  linkedin?: string
 }

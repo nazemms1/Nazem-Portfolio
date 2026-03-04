@@ -39,7 +39,6 @@ import {
   IconAward,
   IconBrandReact,
   IconHeart,
-  IconStar,
 } from "@tabler/icons-react";
 
 import ParticleBackground from "./components/ParticleBackground";
@@ -48,13 +47,12 @@ import TypeWriter from "./components/TypeWriter";
 import ContactForm from "./components/ContactForm";
 import SkillCard from "./components/SkillCard";
 import ProjectCarousel from "./components/ProjectCarousel";
-import RecommendationCard from "./components/RecommendationCard";
+import RecommendationsSection from "./components/RecommendationCard";
 import {
   experiences,
   projects,
   skills,
   contactInfo,
-  recommendations,
 } from "./data/portfolioData";
 import { useState } from "react";
 
@@ -157,7 +155,7 @@ function App() {
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
   const [activeSkillTab, setActiveSkillTab] = useState<string | null>(
-    "frontend"
+    "frontend",
   );
 
   const handleContactClick = (): void => {
@@ -454,7 +452,11 @@ function App() {
                             }}
                           >
                             <Group gap="xs" align="flex-start">
-                              <IconAward color="#06b6d4" size={20} style={{ marginTop: 2 }} />
+                              <IconAward
+                                color="#06b6d4"
+                                size={20}
+                                style={{ marginTop: 2 }}
+                              />
                               <div>
                                 <Text size="xs" c="dimmed" mb={4}>
                                   Experience
@@ -1310,24 +1312,47 @@ function App() {
                           </Card.Section>
 
                           <Stack gap="lg" p="xl" style={{ flex: 1 }}>
+                            {/* Title — fixed 2-line height */}
                             <div>
-                              <Group justify="space-between" mb="xs">
-                                <Title order={3} size="h3" c="cyan">
-                                  {project.title}
-                                </Title>
-                              </Group>
+                              <Title
+                                order={3}
+                                size="h3"
+                                c="cyan"
+                                mb="xs"
+                                style={{
+                                  display: "-webkit-box",
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: "vertical",
+                                  overflow: "hidden",
+                                  minHeight: "3.2rem",
+                                }}
+                              >
+                                {project.title}
+                              </Title>
                               <Group gap="xs" mb="sm">
                                 <IconCalendar size={14} color="#06b6d4" />
                                 <Text size="xs" c="dimmed">
                                   {project.period}
                                 </Text>
                               </Group>
-                              <Text c="dimmed" style={{ lineHeight: 1.7 }}>
+                              {/* Description — fixed 3-line height */}
+                              <Text
+                                c="dimmed"
+                                style={{
+                                  lineHeight: 1.7,
+                                  display: "-webkit-box",
+                                  WebkitLineClamp: 3,
+                                  WebkitBoxOrient: "vertical",
+                                  overflow: "hidden",
+                                  minHeight: "5.1rem",
+                                }}
+                              >
                                 {project.description}
                               </Text>
                             </div>
 
-                            <div>
+                            {/* Features — fixed 3-item height */}
+                            <div style={{ minHeight: "6rem" }}>
                               <Text size="sm" fw={600} c="cyan" mb="sm">
                                 Key Features
                               </Text>
@@ -1349,7 +1374,15 @@ function App() {
                                   .slice(0, 3)
                                   .map((feature, i) => (
                                     <List.Item key={i}>
-                                      <Text c="dimmed" size="sm">
+                                      <Text
+                                        c="dimmed"
+                                        size="sm"
+                                        style={{
+                                          overflow: "hidden",
+                                          whiteSpace: "nowrap",
+                                          textOverflow: "ellipsis",
+                                        }}
+                                      >
                                         {feature}
                                       </Text>
                                     </List.Item>
@@ -1357,11 +1390,19 @@ function App() {
                               </List>
                             </div>
 
-                            <div>
+                            {/* Tech Stack — fixed 2-row height */}
+                            <div style={{ minHeight: "4rem" }}>
                               <Text size="sm" fw={600} c="cyan" mb="sm">
                                 Tech Stack
                               </Text>
-                              <Flex wrap="wrap" gap="xs">
+                              <Flex
+                                wrap="wrap"
+                                gap="xs"
+                                style={{
+                                  overflow: "hidden",
+                                  maxHeight: "2.5rem",
+                                }}
+                              >
                                 {project.technologies.map((tech, i) => (
                                   <motion.div
                                     key={i}
@@ -1436,60 +1477,7 @@ function App() {
         </section>
 
         {/* Recommendations Section */}
-        <section
-          id="recommendations"
-          style={{ padding: "8rem 0", position: "relative" }}
-        >
-          <Container size="lg">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true, margin: "-100px" }}
-            >
-              <Box mb={60} style={{ textAlign: "center" }}>
-                <Badge
-                  size="lg"
-                  variant="light"
-                  color="cyan"
-                  mb="md"
-                  leftSection={<IconStar size={16} />}
-                >
-                  Recommendations
-                </Badge>
-                <Title
-                  order={2}
-                  size="3rem"
-                  mb="md"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    fontWeight: 800,
-                  }}
-                >
-                  What People Say
-                </Title>
-                <Text c="dimmed" size="lg" maw={600} mx="auto">
-                  Feedback from colleagues, managers, and clients I've had the
-                  pleasure of working with
-                </Text>
-              </Box>
-
-              <SimpleGrid cols={{ base: 1, sm: 2, lg: 2 }} spacing="xl">
-                {recommendations.map((rec, index) => (
-                  <RecommendationCard
-                    key={rec.id}
-                    recommendation={rec}
-                    index={index}
-                  />
-                ))}
-              </SimpleGrid>
-            </motion.div>
-          </Container>
-        </section>
+        <RecommendationsSection />
 
         {/* Contact Section */}
         <section
