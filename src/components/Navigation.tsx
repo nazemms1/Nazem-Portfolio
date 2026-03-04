@@ -12,6 +12,7 @@ import {
   IconCode,
   IconMail,
   IconSparkles,
+  IconStar,
 } from "@tabler/icons-react";
 
 const Navigation: React.FC = () => {
@@ -25,6 +26,7 @@ const Navigation: React.FC = () => {
     { id: "skills", label: "Skills", icon: IconSparkles },
     { id: "experience", label: "Experience", icon: IconBriefcase },
     { id: "projects", label: "Projects", icon: IconCode },
+    { id: "recommendations", label: "Recommendations", icon: IconStar },
     { id: "contact", label: "Contact", icon: IconMail },
   ];
 

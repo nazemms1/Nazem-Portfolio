@@ -3,6 +3,7 @@ import type {
   Project,
   Skill,
   ContactInfo,
+  Recommendation,
 } from "../types/portfolio";
 
 const base = import.meta.env.BASE_URL;
@@ -280,7 +281,6 @@ export const projects: Project[] = [
     demoUrl: "https://c-m.com.sa/",
     githubUrl: "#",
   },
-  // 7. Baflay Burger
   {
     id: "baflay-burger",
     title: "Baflay Burger Restaurant Website & Management System",
@@ -309,7 +309,6 @@ export const projects: Project[] = [
     demoUrl: "https://www.baflayburger.com/",
     githubUrl: "#",
   },
-  // 8. Ketabook
   {
     id: "ketabook",
     title: "Ketabook – Online Bookstore & Publishing Platform",
@@ -330,7 +329,6 @@ export const projects: Project[] = [
     demoUrl: "#",
     githubUrl: "#",
   },
-  // 9. ChatPDF
   {
     id: "chatpdf",
     title: "ChatPDF – Smart PDF Interaction App",
@@ -351,7 +349,6 @@ export const projects: Project[] = [
     demoUrl: "#",
     githubUrl: "#",
   },
-  // 10. Social Aid
   {
     id: "social-aid-gaith",
     title: "Social Aid App (Gaith)",
@@ -401,7 +398,6 @@ export const projects: Project[] = [
 ];
 
 export const skills: Skill[] = [
-  // Frontend
   { name: "React", category: "frontend", proficiency: 95 },
   { name: "TypeScript", category: "frontend", proficiency: 90 },
   { name: "Next.js", category: "frontend", proficiency: 85 },
@@ -411,25 +407,32 @@ export const skills: Skill[] = [
   { name: "Redux", category: "frontend", proficiency: 88 },
   { name: "Mantine UI", category: "frontend", proficiency: 90 },
 
-  // Mobile
   { name: "Flutter", category: "mobile", proficiency: 92 },
   { name: "Dart", category: "mobile", proficiency: 90 },
   { name: "React Native", category: "mobile", proficiency: 75 },
 
-  // Backend
   { name: "Node.js", category: "backend", proficiency: 70 },
   { name: "REST APIs", category: "backend", proficiency: 88 },
   { name: "Firebase", category: "backend", proficiency: 80 },
 
-  // Tools
   { name: "Git", category: "tools", proficiency: 92 },
   { name: "Figma", category: "tools", proficiency: 85 },
   { name: "VS Code", category: "tools", proficiency: 95 },
   { name: "Postman", category: "tools", proficiency: 88 },
 
-  // Soft Skills
   { name: "Problem Solving", category: "soft-skills", proficiency: 95 },
   { name: "Team Collaboration", category: "soft-skills", proficiency: 90 },
+];
+
+export const recommendations: Recommendation[] = [
+  {
+    id: "rec-1",
+    name: "Judy Alqabbani",
+    title: "Project Manager",
+    company: "Pharaon Group",
+    message:
+      "During our collaboration on the Pyramind project, I had the pleasure of overseeing Nazem Almsouti, and I can state with confidence that he is a superb frontend engineer. He is quick, very talented, and very proactive. He takes the initiative without waiting for guidance and never lets obstacles stand in the way of advancement. Rather than claiming that something is challenging, he always finds a solution. He doesn't need micromanagement, is adaptable, and is a pleasure to work with. He is quick to grasp requirements, meticulous, and regularly completes excellent work on schedule. His dedication, work ethic, and sense of ownership are genuinely remarkable. He would be a great asset to any team.",
+  },
 ];
 
 export const contactInfo: ContactInfo = {

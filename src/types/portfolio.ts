@@ -37,3 +37,12 @@ export interface ContactInfo {
   linkedin?: string
   github?: string
 }
+
+export interface Recommendation {
+  id: string
+  name: string
+  title: string
+  company: string
+  message: string
+  avatar?: string
+}

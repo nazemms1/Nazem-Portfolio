@@ -39,6 +39,7 @@ import {
   IconAward,
   IconBrandReact,
   IconHeart,
+  IconStar,
 } from "@tabler/icons-react";
 
 import ParticleBackground from "./components/ParticleBackground";
@@ -47,11 +48,13 @@ import TypeWriter from "./components/TypeWriter";
 import ContactForm from "./components/ContactForm";
 import SkillCard from "./components/SkillCard";
 import ProjectCarousel from "./components/ProjectCarousel";
+import RecommendationCard from "./components/RecommendationCard";
 import {
   experiences,
   projects,
   skills,
   contactInfo,
+  recommendations,
 } from "./data/portfolioData";
 import { useState } from "react";
 
@@ -1428,6 +1431,62 @@ function App() {
                   </Grid.Col>
                 ))}
               </Grid>
+            </motion.div>
+          </Container>
+        </section>
+
+        {/* Recommendations Section */}
+        <section
+          id="recommendations"
+          style={{ padding: "8rem 0", position: "relative" }}
+        >
+          <Container size="lg">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true, margin: "-100px" }}
+            >
+              <Box mb={60} style={{ textAlign: "center" }}>
+                <Badge
+                  size="lg"
+                  variant="light"
+                  color="cyan"
+                  mb="md"
+                  leftSection={<IconStar size={16} />}
+                >
+                  Recommendations
+                </Badge>
+                <Title
+                  order={2}
+                  size="3rem"
+                  mb="md"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    fontWeight: 800,
+                  }}
+                >
+                  What People Say
+                </Title>
+                <Text c="dimmed" size="lg" maw={600} mx="auto">
+                  Feedback from colleagues, managers, and clients I've had the
+                  pleasure of working with
+                </Text>
+              </Box>
+
+              <SimpleGrid cols={{ base: 1, sm: 2, lg: 2 }} spacing="xl">
+                {recommendations.map((rec, index) => (
+                  <RecommendationCard
+                    key={rec.id}
+                    recommendation={rec}
+                    index={index}
+                  />
+                ))}
+              </SimpleGrid>
             </motion.div>
           </Container>
         </section>
