@@ -212,9 +212,9 @@ function App() {
             zIndex: 1,
           }}
         >
-          <Container size="lg">
+          <Container size="xl">
             <motion.div style={{ opacity, scale }}>
-              <Grid align="center" gutter="xl">
+              <Grid align="center" gutter={60}>
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <motion.div
                     initial={{ opacity: 0, x: -50 }}
@@ -375,7 +375,7 @@ function App() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    style={{ position: "relative" }}
+                    style={{ position: "relative", padding: "2rem 3rem" }}
                   >
                     <FloatingElement delay={0.5}>
                       <div
@@ -417,16 +417,117 @@ function App() {
                             padding: "8px",
                           }}
                         >
-                          <img
-                            src={`${import.meta.env.BASE_URL}images/nazem.jpg`}
-                            alt="Nazem Almsouti"
+                          {/* Avatar — no image dependency */}
+                          <div
                             style={{
                               width: "100%",
-                              height: "auto",
+                              aspectRatio: "4 / 3",
                               borderRadius: "16px",
-                              display: "block",
+                              background:
+                                "radial-gradient(ellipse at 40% 40%, #0c1e2e 0%, #0D1117 70%)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              position: "relative",
+                              overflow: "hidden",
                             }}
-                          />
+                          >
+                            {/* Grid texture */}
+                            <div
+                              style={{
+                                position: "absolute",
+                                inset: 0,
+                                backgroundImage:
+                                  "linear-gradient(rgba(6,182,212,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.03) 1px, transparent 1px)",
+                                backgroundSize: "28px 28px",
+                              }}
+                            />
+
+                            {/* Ambient glow */}
+                            <div
+                              style={{
+                                position: "absolute",
+                                width: "50%",
+                                height: "70%",
+                                borderRadius: "50%",
+                                background:
+                                  "radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%)",
+                                filter: "blur(28px)",
+                              }}
+                            />
+
+                            {/* Outer spinning dashed ring */}
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+                              style={{
+                                position: "absolute",
+                                width: "62%",
+                                height: "85%",
+                                borderRadius: "50%",
+                                border: "1.5px dashed rgba(6,182,212,0.2)",
+                              }}
+                            />
+
+                            {/* Inner counter-spinning ring */}
+                            <motion.div
+                              animate={{ rotate: -360 }}
+                              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                              style={{
+                                position: "absolute",
+                                width: "46%",
+                                height: "63%",
+                                borderRadius: "50%",
+                                border: "1.5px dashed rgba(139,92,246,0.18)",
+                              }}
+                            />
+
+                            {/* Central initials circle */}
+                            <div
+                              style={{
+                                position: "relative",
+                                width: "140px",
+                                height: "140px",
+                                borderRadius: "50%",
+                                background:
+                                  "linear-gradient(145deg, rgba(6,182,212,0.1) 0%, rgba(139,92,246,0.08) 100%)",
+                                border: "1.5px solid rgba(6,182,212,0.35)",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                boxShadow:
+                                  "0 0 40px rgba(6,182,212,0.15), inset 0 0 24px rgba(6,182,212,0.05)",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  fontSize: "2.4rem",
+                                  fontWeight: 800,
+                                  letterSpacing: "0.04em",
+                                  background:
+                                    "linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%)",
+                                  WebkitBackgroundClip: "text",
+                                  WebkitTextFillColor: "transparent",
+                                  backgroundClip: "text",
+                                  lineHeight: 1,
+                                }}
+                              >
+                                NA
+                              </span>
+                              <span
+                                style={{
+                                  fontSize: "0.55rem",
+                                  color: "rgba(6,182,212,0.5)",
+                                  letterSpacing: "0.14em",
+                                  marginTop: "6px",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                Dev · Mobile
+                              </span>
+                            </div>
+                          </div>
                         </div>
 
                         {/* Floating Stats */}
@@ -437,7 +538,7 @@ function App() {
                           style={{
                             position: "absolute",
                             top: "10%",
-                            left: "-15%",
+                            left: "-20%",
                           }}
                           whileHover={{ scale: 1.1 }}
                         >
@@ -485,7 +586,7 @@ function App() {
                           style={{
                             position: "absolute",
                             bottom: "15%",
-                            right: "-15%",
+                            right: "-20%",
                           }}
                           whileHover={{ scale: 1.1 }}
                         >
