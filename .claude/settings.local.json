@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm install:*)",
       "WebFetch(domain:bisher01.github.io)",
-      "WebFetch(domain:nazemms1.github.io)"
+      "WebFetch(domain:nazemms1.github.io)",
+      "Bash(npm run:*)"
     ]
   }
 }

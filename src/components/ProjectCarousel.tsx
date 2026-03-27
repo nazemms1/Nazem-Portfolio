@@ -1,8 +1,8 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { Image, ActionIcon } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
@@ -18,23 +18,83 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
   height = 250,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useTransform(mouseY, [-height / 2, height / 2], [3, -3]);
+  const rotateY = useTransform(mouseX, [-200, 200], [-5, 5]);
 
-  const nextSlide = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentIndex((prev) => (prev + 1) % images.length);
+  // Auto-advance if multiple images
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const id = setInterval(() => {
+      setDirection(1);
+      setCurrentIndex((p) => (p + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(id);
+  }, [images.length]);
+
+  const goTo = (next: number, dir: number, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setDirection(dir);
+    setCurrentIndex(next);
   };
 
-  const prevSlide = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left - rect.width / 2);
+    mouseY.set(e.clientY - rect.top - rect.height / 2);
   };
 
-  // If only one image, show it without controls
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  const slideVariants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? "100%" : "-100%",
+      opacity: 0,
+      scale: 1.04,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (dir: number) => ({
+      x: dir > 0 ? "-100%" : "100%",
+      opacity: 0,
+      scale: 0.96,
+    }),
+  };
+
   if (images.length === 1) {
     return (
-      <div style={{ position: "relative", overflow: "hidden" }}>
-        <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.6 }}>
-          <Image src={images[0]} height={height} alt={title} />
+      <div
+        ref={containerRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{ position: "relative", overflow: "hidden", height: `${height}px` }}
+      >
+        <motion.div
+          style={{ rotateX, rotateY, transformPerspective: 800, height: "100%" }}
+          transition={{ type: "spring", stiffness: 150, damping: 20 }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.06 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            style={{ height: "100%" }}
+          >
+            <Image
+              src={images[0]}
+              height={height}
+              alt={title}
+              fit="cover"
+              style={{ width: "100%", height: "100%", display: "block" }}
+            />
+          </motion.div>
         </motion.div>
       </div>
     );
@@ -42,121 +102,121 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
 
   return (
     <div
-      style={{
-        position: "relative",
-        overflow: "hidden",
-        height: `${height}px`,
-      }}
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ position: "relative", overflow: "hidden", height: `${height}px` }}
     >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
-          transition={{ duration: 0.3 }}
-          style={{ height: "100%" }}
+      <motion.div
+        style={{ rotateX, rotateY, transformPerspective: 900, height: "100%" }}
+        transition={{ type: "spring", stiffness: 150, damping: 20 }}
+      >
+        <AnimatePresence mode="popLayout" custom={direction}>
+          <motion.div
+            key={currentIndex}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+            style={{ position: "absolute", inset: 0 }}
+          >
+            <Image
+              src={images[currentIndex] || "/placeholder.svg"}
+              height={height}
+              alt={`${title} — ${currentIndex + 1}`}
+              fit="cover"
+              style={{ width: "100%", height: "100%", display: "block" }}
+            />
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Prev/Next — only visible on hover */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 10px",
+          pointerEvents: "none",
+          zIndex: 2,
+        }}
+      >
+        <ActionIcon
+          onClick={(e) => goTo((currentIndex - 1 + images.length) % images.length, -1, e)}
+          size="lg"
+          radius="xl"
+          variant="filled"
+          color="dark"
+          style={{
+            pointerEvents: "all",
+            background: "rgba(13,17,23,0.75)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.1)",
+          }}
         >
-          <Image
-            src={images[currentIndex] || "/placeholder.svg"}
-            height={height}
-            alt={`${title} - ${currentIndex + 1}`}
-            fit="cover"
+          <IconChevronLeft size={18} />
+        </ActionIcon>
+
+        <ActionIcon
+          onClick={(e) => goTo((currentIndex + 1) % images.length, 1, e)}
+          size="lg"
+          radius="xl"
+          variant="filled"
+          color="dark"
+          style={{
+            pointerEvents: "all",
+            background: "rgba(13,17,23,0.75)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.1)",
+          }}
+        >
+          <IconChevronRight size={18} />
+        </ActionIcon>
+      </motion.div>
+
+      {/* Dot indicators */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 10,
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          gap: "6px",
+          zIndex: 3,
+        }}
+      >
+        {images.map((_, index) => (
+          <motion.button
+            key={index}
+            onClick={(e) => {
+              e.stopPropagation();
+              goTo(index, index > currentIndex ? 1 : -1);
+            }}
+            animate={{
+              width: currentIndex === index ? 20 : 6,
+              background: currentIndex === index ? "#06b6d4" : "rgba(255,255,255,0.35)",
+            }}
+            style={{
+              height: "6px",
+              borderRadius: "3px",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
+            whileHover={{ scale: 1.3 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ duration: 0.25 }}
           />
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Navigation Buttons */}
-      {images.length > 1 && (
-        <>
-          <ActionIcon
-            onClick={prevSlide}
-            size="lg"
-            radius="xl"
-            variant="filled"
-            color="cyan"
-            style={{
-              position: "absolute",
-              left: 10,
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 2,
-              opacity: 0.9,
-              transition: "opacity 0.3s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = "1";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = "0.9";
-            }}
-          >
-            <IconChevronLeft size={20} />
-          </ActionIcon>
-
-          <ActionIcon
-            onClick={nextSlide}
-            size="lg"
-            radius="xl"
-            variant="filled"
-            color="cyan"
-            style={{
-              position: "absolute",
-              right: 10,
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 2,
-              opacity: 0.9,
-              transition: "opacity 0.3s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = "1";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = "0.9";
-            }}
-          >
-            <IconChevronRight size={20} />
-          </ActionIcon>
-
-          {/* Indicators */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: 10,
-              left: "50%",
-              transform: "translateX(-50%)",
-              display: "flex",
-              gap: "8px",
-              zIndex: 2,
-            }}
-          >
-            {images.map((_, index) => (
-              <motion.button
-                key={index}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentIndex(index);
-                }}
-                style={{
-                  width: currentIndex === index ? "24px" : "8px",
-                  height: "8px",
-                  borderRadius: "4px",
-                  border: "none",
-                  background:
-                    currentIndex === index
-                      ? "#06b6d4"
-                      : "rgba(255, 255, 255, 0.5)",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                }}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-              />
-            ))}
-          </div>
-        </>
-      )}
+        ))}
+      </div>
     </div>
   );
 };
