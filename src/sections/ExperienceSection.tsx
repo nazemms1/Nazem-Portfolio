@@ -15,7 +15,6 @@ import {
   Image,
 } from "@mantine/core";
 import {
-  IconSparkles,
   IconCalendar,
   IconMapPin,
   IconBriefcase,

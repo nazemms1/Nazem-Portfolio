@@ -27,8 +27,7 @@ export interface Project {
 export interface Skill {
   name: string
   category: "frontend" | "mobile" | "backend" | "tools" | "soft-skills"
-  proficiency: number
-}
+ }
 
 export interface ContactInfo {
   email: string

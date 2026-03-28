@@ -453,30 +453,30 @@ export const projects: Project[] = [
 ];
 
 export const skills: Skill[] = [
-  { name: "React", category: "frontend", proficiency: 95 },
-  { name: "TypeScript", category: "frontend", proficiency: 90 },
-  { name: "Next.js", category: "frontend", proficiency: 85 },
-  { name: "Tailwind CSS", category: "frontend", proficiency: 92 },
-  { name: "JavaScript", category: "frontend", proficiency: 95 },
-  { name: "HTML/CSS", category: "frontend", proficiency: 98 },
-  { name: "Redux", category: "frontend", proficiency: 88 },
-  { name: "Mantine UI", category: "frontend", proficiency: 90 },
+  { name: "React", category: "frontend" },
+  { name: "TypeScript", category: "frontend" },
+  { name: "Next.js", category: "frontend" },
+  { name: "Tailwind CSS", category: "frontend" },
+  { name: "JavaScript", category: "frontend" },
+  { name: "HTML/CSS", category: "frontend" },
+  { name: "Redux", category: "frontend" },
+  { name: "Mantine UI", category: "frontend" },
 
-  { name: "Flutter", category: "mobile", proficiency: 92 },
-  { name: "Dart", category: "mobile", proficiency: 90 },
-  { name: "React Native", category: "mobile", proficiency: 75 },
+  { name: "Flutter", category: "mobile" },
+  { name: "Dart", category: "mobile" },
+  { name: "React Native", category: "mobile" },
 
-  { name: "Node.js", category: "backend", proficiency: 70 },
-  { name: "REST APIs", category: "backend", proficiency: 88 },
-  { name: "Firebase", category: "backend", proficiency: 80 },
+  { name: "Node.js", category: "backend" },
+  { name: "REST APIs", category: "backend" },
+  { name: "Firebase", category: "backend" },
 
-  { name: "Git", category: "tools", proficiency: 92 },
-  { name: "Figma", category: "tools", proficiency: 85 },
-  { name: "VS Code", category: "tools", proficiency: 95 },
-  { name: "Postman", category: "tools", proficiency: 88 },
+  { name: "Git", category: "tools" },
+  { name: "Figma", category: "tools" },
+  { name: "VS Code", category: "tools" },
+  { name: "Postman", category: "tools" },
 
-  { name: "Problem Solving", category: "soft-skills", proficiency: 95 },
-  { name: "Team Collaboration", category: "soft-skills", proficiency: 90 },
+  { name: "Problem Solving", category: "soft-skills" },
+  { name: "Team Collaboration", category: "soft-skills" },
 ];
 
 export const recommendations: Recommendation[] = [

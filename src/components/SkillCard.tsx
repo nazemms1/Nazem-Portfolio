@@ -3,7 +3,7 @@
 import type React from "react";
 import { useRef } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { Card, Stack, Text, ThemeIcon, Box } from "@mantine/core";
+import { Card, Stack, Text, ThemeIcon,   } from "@mantine/core";
 import {
   IconCode,
   IconDeviceMobile,
@@ -18,7 +18,16 @@ interface SkillCardProps {
   index: number;
 }
 
-const categoryConfig: Record<Skill["category"], { color: string; hex: string; from: string; to: string; icon: React.ReactNode }> = {
+const categoryConfig: Record<
+  Skill["category"],
+  {
+    color: string;
+    hex: string;
+    from: string;
+    to: string;
+    icon: React.ReactNode;
+  }
+> = {
   frontend: {
     color: "cyan",
     hex: "#06b6d4",
@@ -115,7 +124,8 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill, index }) => {
             transition: "box-shadow 0.3s ease, border-color 0.3s ease",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.boxShadow = `0 12px 40px rgba(${cfg.hex === "#06b6d4" ? "6,182,212" : cfg.hex === "#8b5cf6" ? "139,92,246" : cfg.hex === "#6366f1" ? "99,102,241" : cfg.hex === "#14b8a6" ? "20,184,166" : "236,72,153"},0.25)`;
+            (e.currentTarget as HTMLElement).style.boxShadow =
+              `0 12px 40px rgba(${cfg.hex === "#06b6d4" ? "6,182,212" : cfg.hex === "#8b5cf6" ? "139,92,246" : cfg.hex === "#6366f1" ? "99,102,241" : cfg.hex === "#14b8a6" ? "20,184,166" : "236,72,153"},0.25)`;
             (e.currentTarget as HTMLElement).style.borderColor = cfg.hex + "50";
           }}
           onMouseLeave={(e) => {
@@ -139,8 +149,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill, index }) => {
             transition={{ duration: 0.3 }}
           />
 
-          {/* Proficiency bar at bottom */}
-          <div
+           <div
             style={{
               position: "absolute",
               bottom: 0,
@@ -157,8 +166,12 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill, index }) => {
                 borderRadius: "1px",
               }}
               initial={{ width: 0 }}
-              whileInView={{ width: `${skill.proficiency}%` }}
-              transition={{ duration: 1, delay: index * 0.05 + 0.3, ease: "easeOut" }}
+              whileInView={{ width: `${100}%` }}
+              transition={{
+                duration: 1,
+                delay: index * 0.05 + 0.3,
+                ease: "easeOut",
+              }}
               viewport={{ once: true }}
             />
           </div>
@@ -181,30 +194,14 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill, index }) => {
               </ThemeIcon>
             </motion.div>
 
-            <Text fw={700} ta="center" size="sm" style={{ letterSpacing: "0.01em" }}>
+            <Text
+              fw={700}
+              ta="center"
+              size="sm"
+              style={{ letterSpacing: "0.01em" }}
+            >
               {skill.name}
             </Text>
-
-            {/* Proficiency percentage */}
-            <Box
-              style={{
-                padding: "3px 10px",
-                background: `${cfg.hex}15`,
-                border: `1px solid ${cfg.hex}30`,
-                borderRadius: "999px",
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-              }}
-            >
-              <Text
-                size="xs"
-                fw={700}
-                style={{ color: cfg.hex }}
-              >
-                {skill.proficiency}%
-              </Text>
-            </Box>
           </Stack>
         </Card>
       </motion.div>

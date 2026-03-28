@@ -2,7 +2,12 @@
 
 import type React from "react";
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import { Image, ActionIcon } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
@@ -76,10 +81,19 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
         ref={containerRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        style={{ position: "relative", overflow: "hidden", height: `${height}px` }}
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          height: `${height}px`,
+        }}
       >
         <motion.div
-          style={{ rotateX, rotateY, transformPerspective: 800, height: "100%" }}
+          style={{
+            rotateX,
+            rotateY,
+            transformPerspective: 800,
+            height: "100%",
+          }}
           transition={{ type: "spring", stiffness: 150, damping: 20 }}
         >
           <motion.div
@@ -92,7 +106,12 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
               height={height}
               alt={title}
               fit="cover"
-              style={{ width: "100%", height: "100%", display: "block" }}
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "block",
+                objectFit: "cover",
+              }}
             />
           </motion.div>
         </motion.div>
@@ -105,7 +124,11 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ position: "relative", overflow: "hidden", height: `${height}px` }}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        height: `${height}px`,
+      }}
     >
       <motion.div
         style={{ rotateX, rotateY, transformPerspective: 900, height: "100%" }}
@@ -127,7 +150,12 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
               height={height}
               alt={`${title} — ${currentIndex + 1}`}
               fit="cover"
-              style={{ width: "100%", height: "100%", display: "block" }}
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "block",
+                objectFit: "contain",
+              }}
             />
           </motion.div>
         </AnimatePresence>
@@ -149,7 +177,9 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
         }}
       >
         <ActionIcon
-          onClick={(e) => goTo((currentIndex - 1 + images.length) % images.length, -1, e)}
+          onClick={(e) =>
+            goTo((currentIndex - 1 + images.length) % images.length, -1, e)
+          }
           size="lg"
           radius="xl"
           variant="filled"
@@ -202,7 +232,8 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
             }}
             animate={{
               width: currentIndex === index ? 20 : 6,
-              background: currentIndex === index ? "#06b6d4" : "rgba(255,255,255,0.35)",
+              background:
+                currentIndex === index ? "#06b6d4" : "rgba(255,255,255,0.35)",
             }}
             style={{
               height: "6px",

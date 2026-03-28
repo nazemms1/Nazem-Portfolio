@@ -65,8 +65,7 @@ export default function SkillsSection() {
 
   return (
     <section id="skills" style={{ padding: "8rem 0", position: "relative" }}>
-      {/* Background glow */}
-      <div
+       <div
         style={{
           position: "absolute",
           top: "20%",
