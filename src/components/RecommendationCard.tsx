@@ -173,8 +173,7 @@ export function RecommendationsSection() {
                         width: "52px",
                         height: "52px",
                         borderRadius: "50%",
-                        background:
-                          "linear-gradient(135deg, #06b6d4, #3b82f6)",
+                        background: "linear-gradient(135deg, #06b6d4, #3b82f6)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",

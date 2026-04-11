@@ -43,7 +43,8 @@ export default function AboutSection() {
           width: "500px",
           height: "400px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)",
           filter: "blur(80px)",
           pointerEvents: "none",
         }}
@@ -81,7 +82,8 @@ export default function AboutSection() {
                 fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
                 fontWeight: 900,
                 letterSpacing: "-0.02em",
-                background: "linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%)",
+                background:
+                  "linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -102,10 +104,30 @@ export default function AboutSection() {
             viewport={{ once: true }}
           >
             <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="lg" mb={60}>
-              <StatsCounter value="2+" label="Years Experience" icon={IconAward} color="cyan" />
-              <StatsCounter value={`${projects.length}+`} label="Projects Completed" icon={IconRocket} color="violet" />
-              <StatsCounter value={`${skills.length}+`} label="Technologies" icon={IconCode} color="teal" />
-              <StatsCounter value="100%" label="Client Satisfaction" icon={IconHeart} color="pink" />
+              <StatsCounter
+                value="2+"
+                label="Years Experience"
+                icon={IconAward}
+                color="cyan"
+              />
+              <StatsCounter
+                value={`${projects.length}+`}
+                label="Projects Completed"
+                icon={IconRocket}
+                color="violet"
+              />
+              <StatsCounter
+                value={`${skills.length}+`}
+                label="Technologies"
+                icon={IconCode}
+                color="teal"
+              />
+              <StatsCounter
+                value="100%"
+                label="Client Satisfaction"
+                icon={IconHeart}
+                color="pink"
+              />
             </SimpleGrid>
           </motion.div>
 
@@ -115,7 +137,11 @@ export default function AboutSection() {
               <motion.div
                 initial={{ opacity: 0, x: -40 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.65, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+                transition={{
+                  duration: 0.65,
+                  delay: 0.15,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
                 viewport={{ once: true }}
                 style={{ height: "100%" }}
               >
@@ -128,7 +154,8 @@ export default function AboutSection() {
                     padding="xl"
                     radius="xl"
                     style={{
-                      background: "linear-gradient(145deg, rgba(13,17,23,0.97) 0%, rgba(18,23,32,0.98) 100%)",
+                      background:
+                        "linear-gradient(145deg, rgba(13,17,23,0.97) 0%, rgba(18,23,32,0.98) 100%)",
                       border: "1px solid rgba(6,182,212,0.22)",
                       boxShadow: "0 8px 40px rgba(0,0,0,0.3)",
                       height: "100%",
@@ -137,10 +164,12 @@ export default function AboutSection() {
                       transition: "box-shadow 0.35s ease",
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.boxShadow = "0 0 40px rgba(6,182,212,0.18), 0 20px 60px rgba(0,0,0,0.4)";
+                      (e.currentTarget as HTMLElement).style.boxShadow =
+                        "0 0 40px rgba(6,182,212,0.18), 0 20px 60px rgba(0,0,0,0.4)";
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 40px rgba(0,0,0,0.3)";
+                      (e.currentTarget as HTMLElement).style.boxShadow =
+                        "0 8px 40px rgba(0,0,0,0.3)";
                     }}
                   >
                     {/* Top accent */}
@@ -170,12 +199,19 @@ export default function AboutSection() {
                         <IconSchool size={30} />
                       </ThemeIcon>
                       <div>
-                        <Title order={3} size="h2">Education</Title>
-                        <Text c="cyan" size="sm" fw={500}>Academic Background</Text>
+                        <Title order={3} size="h2">
+                          Education
+                        </Title>
+                        <Text c="cyan" size="sm" fw={500}>
+                          Academic Background
+                        </Text>
                       </div>
                     </Group>
 
-                    <Divider mb="lg" style={{ borderColor: "rgba(6,182,212,0.12)" }} />
+                    <Divider
+                      mb="lg"
+                      style={{ borderColor: "rgba(6,182,212,0.12)" }}
+                    />
 
                     <Stack gap="md">
                       <div>
@@ -191,7 +227,9 @@ export default function AboutSection() {
                       </div>
                       <Group gap="xs">
                         <IconCalendar size={18} color="#06b6d4" />
-                        <Text size="sm" c="cyan" fw={600}>2018 – 2024</Text>
+                        <Text size="sm" c="cyan" fw={600}>
+                          2018 – 2024
+                        </Text>
                       </Group>
                     </Stack>
 
@@ -223,7 +261,11 @@ export default function AboutSection() {
               <motion.div
                 initial={{ opacity: 0, x: 40 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.65, delay: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+                transition={{
+                  duration: 0.65,
+                  delay: 0.25,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
                 viewport={{ once: true }}
                 style={{ height: "100%" }}
               >
@@ -236,7 +278,8 @@ export default function AboutSection() {
                     padding="xl"
                     radius="xl"
                     style={{
-                      background: "linear-gradient(145deg, rgba(13,17,23,0.97) 0%, rgba(18,23,32,0.98) 100%)",
+                      background:
+                        "linear-gradient(145deg, rgba(13,17,23,0.97) 0%, rgba(18,23,32,0.98) 100%)",
                       border: "1px solid rgba(139,92,246,0.22)",
                       boxShadow: "0 8px 40px rgba(0,0,0,0.3)",
                       height: "100%",
@@ -245,10 +288,12 @@ export default function AboutSection() {
                       transition: "box-shadow 0.35s ease",
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.boxShadow = "0 0 40px rgba(139,92,246,0.18), 0 20px 60px rgba(0,0,0,0.4)";
+                      (e.currentTarget as HTMLElement).style.boxShadow =
+                        "0 0 40px rgba(139,92,246,0.18), 0 20px 60px rgba(0,0,0,0.4)";
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 40px rgba(0,0,0,0.3)";
+                      (e.currentTarget as HTMLElement).style.boxShadow =
+                        "0 8px 40px rgba(0,0,0,0.3)";
                     }}
                   >
                     {/* Top accent */}
@@ -278,12 +323,19 @@ export default function AboutSection() {
                         <IconBriefcase size={30} />
                       </ThemeIcon>
                       <div>
-                        <Title order={3} size="h2">About</Title>
-                        <Text c="violet" size="sm" fw={500}>Who I Am</Text>
+                        <Title order={3} size="h2">
+                          About
+                        </Title>
+                        <Text c="violet" size="sm" fw={500}>
+                          Who I Am
+                        </Text>
                       </div>
                     </Group>
 
-                    <Divider mb="lg" style={{ borderColor: "rgba(139,92,246,0.12)" }} />
+                    <Divider
+                      mb="lg"
+                      style={{ borderColor: "rgba(139,92,246,0.12)" }}
+                    />
 
                     <Stack gap="lg">
                       <Text size="md" style={{ lineHeight: 1.85 }}>
@@ -291,26 +343,44 @@ export default function AboutSection() {
                         <Text component="span" fw={700} c="cyan" inherit>
                           Software Engineer
                         </Text>{" "}
-                        specializing in creating exceptional digital experiences through modern
-                        web and mobile technologies.
+                        specializing in creating exceptional digital experiences
+                        through modern web and mobile technologies.
                       </Text>
 
                       <Text size="sm" c="dimmed" style={{ lineHeight: 1.85 }}>
-                        With expertise in React, TypeScript, and Flutter, I transform complex
-                        challenges into elegant solutions — integrating AI technologies and
-                        building scalable, user-centric applications.
+                        With expertise in React, TypeScript, and Flutter, I
+                        transform complex challenges into elegant solutions —
+                        integrating AI technologies and building scalable,
+                        user-centric applications.
                       </Text>
 
                       <Group gap="xs">
                         <IconMapPin size={18} color="#8b5cf6" />
-                        <Text c="dimmed" size="sm">{contactInfo.location}</Text>
+                        <Text c="dimmed" size="sm">
+                          {contactInfo.location}
+                        </Text>
                       </Group>
 
                       <Group gap="sm" mt="xs">
                         {[
-                          { icon: IconBrandLinkedin, href: contactInfo.linkedin, color: "blue", gradient: { from: "blue", to: "cyan" } },
-                          { icon: IconBrandGithub, href: contactInfo.github, color: "gray", gradient: { from: "gray", to: "dark" } },
-                          { icon: IconMail, href: `mailto:${contactInfo.email}`, color: "cyan", gradient: { from: "cyan", to: "teal" } },
+                          {
+                            icon: IconBrandLinkedin,
+                            href: contactInfo.linkedin,
+                            color: "blue",
+                            gradient: { from: "blue", to: "cyan" },
+                          },
+                          {
+                            icon: IconBrandGithub,
+                            href: contactInfo.github,
+                            color: "gray",
+                            gradient: { from: "gray", to: "dark" },
+                          },
+                          {
+                            icon: IconMail,
+                            href: `mailto:${contactInfo.email}`,
+                            color: "cyan",
+                            gradient: { from: "cyan", to: "teal" },
+                          },
                         ].map((social, i) => (
                           <motion.div
                             key={i}
@@ -325,7 +395,9 @@ export default function AboutSection() {
                               radius="xl"
                               variant="gradient"
                               gradient={social.gradient}
-                              style={{ boxShadow: "0 8px 28px rgba(6,182,212,0.25)" }}
+                              style={{
+                                boxShadow: "0 8px 28px rgba(6,182,212,0.25)",
+                              }}
                             >
                               <social.icon size={22} />
                             </ActionIcon>
