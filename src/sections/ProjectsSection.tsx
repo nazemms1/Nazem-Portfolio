@@ -14,7 +14,7 @@ import {
   ThemeIcon,
   Flex,
   Button,
-  Divider,
+  Avatar,
 } from "@mantine/core";
 import {
   IconSparkles,
@@ -25,283 +25,163 @@ import {
   IconChevronUp,
   IconCode,
   IconDeviceMobile,
+  IconBriefcase,
+  IconMapPin,
+  IconArrowUpRight,
 } from "@tabler/icons-react";
 import ProjectCarousel from "../components/ProjectCarousel";
-import { projects } from "../data/portfolioData";
+import { projects, experiences } from "../data/portfolioData";
 
-// Per-project accent based on tech stack
+// ─── Per-project accent ───────────────────────────────────────────────────────
 function getProjectAccent(project: (typeof projects)[0]) {
   const techs = project.technologies.join(" ").toLowerCase();
-  if (techs.includes("flutter") || techs.includes("dart")) {
-    return {
-      primary: "#818cf8", // indigo
-      secondary: "#6366f1",
-      glow: "rgba(99,102,241,0.18)",
-      border: "rgba(129,140,248,0.25)",
-      badgeFrom: "indigo",
-      badgeTo: "violet",
-      icon: IconDeviceMobile,
-    };
-  }
-  if (techs.includes("next") || techs.includes("i18n")) {
-    return {
-      primary: "#34d399", // emerald
-      secondary: "#10b981",
-      glow: "rgba(16,185,129,0.15)",
-      border: "rgba(52,211,153,0.25)",
-      badgeFrom: "teal",
-      badgeTo: "green",
-      icon: IconCode,
-    };
-  }
-  if (techs.includes("ai") || techs.includes("llm") || techs.includes("nlp")) {
-    return {
-      primary: "#f472b6", // pink
-      secondary: "#ec4899",
-      glow: "rgba(236,72,153,0.15)",
-      border: "rgba(244,114,182,0.25)",
-      badgeFrom: "pink",
-      badgeTo: "violet",
-      icon: IconSparkles,
-    };
-  }
-  // Default: cyan-blue
-  return {
-    primary: "#06b6d4",
-    secondary: "#3b82f6",
-    glow: "rgba(6,182,212,0.15)",
-    border: "rgba(6,182,212,0.25)",
-    badgeFrom: "cyan",
-    badgeTo: "blue",
-    icon: IconCode,
-  };
+  if (techs.includes("flutter") || techs.includes("dart"))
+    return { primary: "#818cf8", secondary: "#6366f1", glow: "rgba(99,102,241,0.16)", border: "rgba(129,140,248,0.22)", badgeFrom: "indigo", badgeTo: "violet", icon: IconDeviceMobile };
+  if (techs.includes("next") || techs.includes("i18n"))
+    return { primary: "#34d399", secondary: "#10b981", glow: "rgba(16,185,129,0.14)", border: "rgba(52,211,153,0.22)", badgeFrom: "teal", badgeTo: "green", icon: IconCode };
+  if (techs.includes("ai") || techs.includes("llm") || techs.includes("nlp"))
+    return { primary: "#f472b6", secondary: "#ec4899", glow: "rgba(236,72,153,0.14)", border: "rgba(244,114,182,0.22)", badgeFrom: "pink", badgeTo: "violet", icon: IconSparkles };
+  return { primary: "#06b6d4", secondary: "#3b82f6", glow: "rgba(6,182,212,0.14)", border: "rgba(6,182,212,0.22)", badgeFrom: "cyan", badgeTo: "blue", icon: IconCode };
 }
 
 const statusConfig = {
   completed: { label: "Completed", from: "teal", to: "green" },
-  "in-progress": { label: "In Progress", from: "amber", to: "orange" },
+  "in-progress": { label: "In Progress", from: "yellow", to: "orange" },
 };
 
-// Featured (first 2) get a wide spotlight card
-function SpotlightCard({
-  project,
-  index,
-}: {
-  project: (typeof projects)[0];
-  index: number;
-}) {
+// ─── Company themes ───────────────────────────────────────────────────────────
+const companyTheme = {
+  pharaon:  { accent: "#06b6d4", glow: "rgba(6,182,212,0.1)",   border: "rgba(6,182,212,0.18)",   badgeFrom: "cyan",   badgeTo: "blue"  },
+  soutify:  { accent: "#a78bfa", glow: "rgba(167,139,250,0.1)", border: "rgba(167,139,250,0.18)", badgeFrom: "violet", badgeTo: "pink"  },
+  freelance:{ accent: "#34d399", glow: "rgba(52,211,153,0.1)",  border: "rgba(52,211,153,0.18)",  badgeFrom: "teal",   badgeTo: "green" },
+};
+
+// ─── Spotlight card ───────────────────────────────────────────────────────────
+function SpotlightCard({ project, flip }: { project: (typeof projects)[0]; flip?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const accent = getProjectAccent(project);
-  const status =
-    statusConfig[project.status as keyof typeof statusConfig] ??
-    statusConfig["completed"];
-  const isEven = index % 2 === 0;
+  const status = statusConfig[project.status as keyof typeof statusConfig] ?? statusConfig.completed;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 60 }}
+      initial={{ opacity: 0, y: 48 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.7,
-        delay: index * 0.15,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       viewport={{ once: true, margin: "-60px" }}
     >
-      <motion.div
-        whileHover={{ y: -6 }}
-        transition={{ type: "spring", stiffness: 250, damping: 25 }}
-      >
+      <motion.div whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 280, damping: 28 }}>
         <Card
           padding={0}
           radius="xl"
           style={{
-            background: `linear-gradient(135deg, rgba(13,17,23,0.95) 0%, rgba(21,26,35,0.98) 100%)`,
+            background: "rgba(13,17,23,0.95)",
             border: `1px solid ${accent.border}`,
-            boxShadow: `0 0 0 0px ${accent.glow}, 0 20px 60px rgba(0,0,0,0.4)`,
+            boxShadow: `0 24px 64px rgba(0,0,0,0.45)`,
             overflow: "hidden",
             transition: "box-shadow 0.4s ease, border-color 0.4s ease",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.boxShadow =
-              `0 0 40px ${accent.glow}, 0 30px 80px rgba(0,0,0,0.5)`;
-            (e.currentTarget as HTMLElement).style.borderColor =
-              accent.primary + "60";
+            (e.currentTarget as HTMLElement).style.boxShadow = `0 0 48px ${accent.glow}, 0 32px 80px rgba(0,0,0,0.5)`;
+            (e.currentTarget as HTMLElement).style.borderColor = accent.primary + "55";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.boxShadow =
-              `0 0 0px ${accent.glow}, 0 20px 60px rgba(0,0,0,0.4)`;
+            (e.currentTarget as HTMLElement).style.boxShadow = `0 24px 64px rgba(0,0,0,0.45)`;
             (e.currentTarget as HTMLElement).style.borderColor = accent.border;
           }}
         >
-          {/* Accent top bar */}
+          {/* Top accent line */}
           <motion.div
-            style={{
-              height: "3px",
-              background: `linear-gradient(90deg, ${accent.primary}, ${accent.secondary})`,
-            }}
-            initial={{ scaleX: 0, transformOrigin: isEven ? "left" : "right" }}
+            style={{ height: "3px", background: `linear-gradient(90deg, ${accent.primary}, ${accent.secondary}, transparent)` }}
+            initial={{ scaleX: 0, transformOrigin: "left" }}
             whileInView={{ scaleX: 1 }}
-            transition={{ duration: 0.9, delay: 0.3 }}
+            transition={{ duration: 1, delay: 0.2 }}
             viewport={{ once: true }}
           />
 
-          <Grid gutter={0} style={{ minHeight: "340px" }}>
-            {/* Image side */}
+          <Grid gutter={0} style={{ minHeight: "380px" }}>
+            {/* Image */}
             <Grid.Col
               span={{ base: 12, md: 5 }}
-              order={{ base: 1, md: isEven ? 1 : 2 }}
-              style={{ position: "relative", minHeight: "280px" }}
+              order={{ base: 1, md: flip ? 2 : 1 }}
+              style={{ position: "relative", minHeight: "300px" }}
             >
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  overflow: "hidden",
-                }}
-              >
+              <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
                 <ProjectCarousel
-                  images={
-                    project.images && project.images.length > 0
-                      ? project.images
-                      : [project.image || "/placeholder.svg"]
-                  }
+                  images={project.images?.length ? project.images : [project.image || "/placeholder.svg"]}
                   title={project.title}
-                  height={340}
+                  height={380}
                   fill
                 />
-                {/* Gradient fade into content */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: isEven
-                      ? "linear-gradient(to right, transparent 60%, rgba(13,17,23,0.95) 100%)"
-                      : "linear-gradient(to left, transparent 60%, rgba(13,17,23,0.95) 100%)",
-                    pointerEvents: "none",
-                  }}
-                />
-                {/* Status badge */}
-                <div
-                  style={{ position: "absolute", top: 16, left: 16, zIndex: 3 }}
-                >
-                  <Badge
-                    size="md"
-                    variant="gradient"
-                    gradient={{ from: status.from, to: status.to }}
-                    style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.4)" }}
-                  >
+                {/* Fade into content */}
+                <div style={{
+                  position: "absolute", inset: 0, pointerEvents: "none",
+                  background: flip
+                    ? "linear-gradient(to left, transparent 50%, rgba(13,17,23,0.97) 95%)"
+                    : "linear-gradient(to right, transparent 50%, rgba(13,17,23,0.97) 95%)",
+                }} />
+                {/* Bottom fade on mobile */}
+                <div style={{
+                  position: "absolute", inset: 0, pointerEvents: "none",
+                  background: "linear-gradient(to top, rgba(13,17,23,0.97) 0%, transparent 40%)",
+                }} />
+                <div style={{ position: "absolute", top: 16, left: 16, zIndex: 3 }}>
+                  <Badge size="sm" variant="gradient" gradient={{ from: status.from, to: status.to }}
+                    style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.5)", letterSpacing: "0.03em" }}>
                     {status.label}
                   </Badge>
                 </div>
               </div>
             </Grid.Col>
 
-            {/* Content side */}
-            <Grid.Col
-              span={{ base: 12, md: 7 }}
-              order={{ base: 2, md: isEven ? 2 : 1 }}
-            >
-              <Stack
-                gap="md"
-                p="xl"
-                style={{ height: "100%", justifyContent: "center" }}
-              >
-                {/* Period */}
+            {/* Content */}
+            <Grid.Col span={{ base: 12, md: 7 }} order={{ base: 2, md: flip ? 1 : 2 }}>
+              <Stack gap="lg" p={{ base: "xl", md: "2rem 2.5rem" }} style={{ height: "100%", justifyContent: "center" }}>
+
                 <Group gap="xs">
-                  <IconCalendar size={13} color={accent.primary} />
-                  <Text size="xs" c="dimmed">
-                    {project.period}
-                  </Text>
+                  <IconCalendar size={12} color={accent.primary} style={{ opacity: 0.8 }} />
+                  <Text size="xs" c="dimmed" style={{ letterSpacing: "0.03em" }}>{project.period}</Text>
                 </Group>
 
-                {/* Title */}
-                <Title
-                  order={3}
-                  size="h2"
-                  style={{
-                    color: accent.primary,
-                    lineHeight: 1.25,
-                    fontWeight: 800,
-                  }}
-                >
-                  {project.title}
-                </Title>
-
-                {/* Description */}
-                <Text c="dimmed" size="sm" style={{ lineHeight: 1.8 }}>
-                  {project.description}
-                </Text>
-
-                {/* Features — toggleable */}
                 <div>
-                  <Group gap="xs" mb="sm">
-                    <Text size="sm" fw={700} style={{ color: accent.primary }}>
+                  <Title
+                    order={3}
+                    style={{ color: "white", lineHeight: 1.2, fontWeight: 800, fontSize: "clamp(1.25rem, 2vw, 1.6rem)", marginBottom: "0.75rem" }}
+                  >
+                    {project.title}
+                  </Title>
+                  <Text c="dimmed" size="sm" style={{ lineHeight: 1.85 }}>
+                    {project.description}
+                  </Text>
+                </div>
+
+                {/* Features */}
+                <div>
+                  <Group gap="xs" mb="sm" align="center">
+                    <Text size="xs" fw={600} style={{ color: accent.primary, textTransform: "uppercase", letterSpacing: "0.07em" }}>
                       Key Features
                     </Text>
                     <motion.button
                       onClick={() => setExpanded((v) => !v)}
                       style={{
-                        background: "none",
-                        border: `1px solid ${accent.border}`,
-                        borderRadius: "999px",
-                        padding: "2px 10px",
-                        cursor: "pointer",
-                        color: accent.primary,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        fontSize: "0.72rem",
+                        background: `${accent.primary}14`, border: `1px solid ${accent.border}`,
+                        borderRadius: "999px", padding: "2px 10px", cursor: "pointer",
+                        color: accent.primary, display: "flex", alignItems: "center", gap: "3px", fontSize: "0.7rem",
                       }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                     >
-                      {expanded ? (
-                        <>
-                          <IconChevronUp size={11} /> Less
-                        </>
-                      ) : (
-                        <>
-                          <IconChevronDown size={11} /> All{" "}
-                          {project.features.length}
-                        </>
-                      )}
+                      {expanded ? <><IconChevronUp size={10} /> Less</> : <><IconChevronDown size={10} /> +{project.features.length - 4} more</>}
                     </motion.button>
                   </Group>
 
                   <AnimatePresence initial={false}>
                     <List
-                      size="sm"
-                      spacing={4}
-                      icon={
-                        <ThemeIcon
-                          size={16}
-                          radius="xl"
-                          variant="light"
-                          color={status.from}
-                        >
-                          <IconSparkles size={9} />
-                        </ThemeIcon>
-                      }
+                      size="sm" spacing={6}
+                      icon={<ThemeIcon size={16} radius="xl" variant="light" color={status.from} style={{ marginTop: 1 }}><IconSparkles size={8} /></ThemeIcon>}
                     >
-                      {(expanded
-                        ? project.features
-                        : project.features.slice(0, 4)
-                      ).map((f, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: i * 0.04 }}
-                        >
+                      {(expanded ? project.features : project.features.slice(0, 4)).map((f, i) => (
+                        <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.035 }}>
                           <List.Item>
-                            <Text
-                              c="dimmed"
-                              size="sm"
-                              style={{ lineHeight: 1.6 }}
-                            >
-                              {f}
-                            </Text>
+                            <Text c="dimmed" size="sm" style={{ lineHeight: 1.65 }}>{f}</Text>
                           </List.Item>
                         </motion.div>
                       ))}
@@ -309,84 +189,32 @@ function SpotlightCard({
                   </AnimatePresence>
                 </div>
 
-                {/* Tech stack */}
-                <div>
-                  <Text
-                    size="xs"
-                    fw={700}
-                    c="dimmed"
-                    mb="xs"
-                    style={{
-                      textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                    }}
-                  >
-                    Stack
-                  </Text>
-                  <Flex wrap="wrap" gap={6}>
-                    {project.technologies.map((tech, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, scale: 0.7 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: i * 0.04 + 0.2 }}
-                        viewport={{ once: true }}
-                        whileHover={{ scale: 1.1, y: -2 }}
-                      >
-                        <Badge
-                          variant="light"
-                          size="sm"
-                          style={{
-                            background: `rgba(${accent.primary === "#06b6d4" ? "6,182,212" : accent.primary === "#818cf8" ? "129,140,248" : accent.primary === "#34d399" ? "52,211,153" : "244,114,182"},0.1)`,
-                            color: accent.primary,
-                            border: `1px solid ${accent.border}`,
-                          }}
-                        >
-                          {tech}
-                        </Badge>
-                      </motion.div>
-                    ))}
-                  </Flex>
-                </div>
+                {/* Stack */}
+                <Flex wrap="wrap" gap={6}>
+                  {project.technologies.map((tech, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, scale: 0.75 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03 + 0.1 }} viewport={{ once: true }} whileHover={{ y: -2 }}>
+                      <Badge variant="light" size="sm" style={{ background: `${accent.primary}12`, color: accent.primary, border: `1px solid ${accent.border}`, fontWeight: 500 }}>
+                        {tech}
+                      </Badge>
+                    </motion.div>
+                  ))}
+                </Flex>
 
-                {/* Actions */}
-                <Group gap="sm" mt="xs">
+                {/* CTA */}
+                <Group gap="sm">
                   {project.demoUrl && project.demoUrl !== "#" && (
-                    <motion.div
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Button
-                        size="sm"
-                        variant="gradient"
-                        gradient={{
-                          from: accent.badgeFrom,
-                          to: accent.badgeTo,
-                        }}
-                        leftSection={<IconExternalLink size={15} />}
-                        component="a"
-                        href={project.demoUrl}
-                        target="_blank"
-                        style={{ boxShadow: `0 8px 24px ${accent.glow}` }}
-                      >
+                    <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.96 }}>
+                      <Button size="sm" variant="gradient" gradient={{ from: accent.badgeFrom, to: accent.badgeTo }}
+                        leftSection={<IconExternalLink size={14} />} component="a" href={project.demoUrl} target="_blank"
+                        style={{ boxShadow: `0 8px 24px ${accent.glow}` }}>
                         Live Demo
                       </Button>
                     </motion.div>
                   )}
                   {project.githubUrl && project.githubUrl !== "#" && (
-                    <motion.div
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Button
-                        size="sm"
-                        variant="light"
-                        color="gray"
-                        leftSection={<IconBrandGithub size={15} />}
-                        component="a"
-                        href={project.githubUrl}
-                        target="_blank"
-                      >
+                    <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.96 }}>
+                      <Button size="sm" variant="subtle" color="gray" leftSection={<IconBrandGithub size={14} />}
+                        component="a" href={project.githubUrl} target="_blank">
                         Source
                       </Button>
                     </motion.div>
@@ -401,273 +229,111 @@ function SpotlightCard({
   );
 }
 
-// Compact grid card for remaining projects
-function GridCard({
-  project,
-  index,
-}: {
-  project: (typeof projects)[0];
-  index: number;
-}) {
-  const [expanded, setExpanded] = useState(false);
+// ─── Grid card ────────────────────────────────────────────────────────────────
+function GridCard({ project, index }: { project: (typeof projects)[0]; index: number }) {
   const accent = getProjectAccent(project);
-  const status =
-    statusConfig[project.status as keyof typeof statusConfig] ??
-    statusConfig["completed"];
+  const status = statusConfig[project.status as keyof typeof statusConfig] ?? statusConfig.completed;
+  const hasDemo = project.demoUrl && project.demoUrl !== "#";
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{
-        duration: 0.55,
-        delay: (index % 4) * 0.1,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.55, delay: (index % 3) * 0.09, ease: [0.22, 1, 0.36, 1] }}
       viewport={{ once: true, margin: "-40px" }}
       style={{ height: "100%" }}
     >
-      <motion.div
-        whileHover={{ y: -8 }}
-        transition={{ type: "spring", stiffness: 300, damping: 22 }}
-        style={{ height: "100%" }}
-      >
+      <motion.div whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 320, damping: 24 }} style={{ height: "100%" }}>
         <Card
           padding={0}
           radius="xl"
           style={{
-            background:
-              "linear-gradient(145deg, rgba(13,17,23,0.97) 0%, rgba(18,23,32,0.98) 100%)",
+            background: "rgba(13,17,23,0.96)",
             border: `1px solid ${accent.border}`,
-            boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
-            overflow: "hidden",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.28)",
+            overflow: "hidden", height: "100%", display: "flex", flexDirection: "column",
             transition: "box-shadow 0.35s ease, border-color 0.35s ease",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.boxShadow =
-              `0 0 32px ${accent.glow}, 0 16px 48px rgba(0,0,0,0.45)`;
-            (e.currentTarget as HTMLElement).style.borderColor =
-              accent.primary + "50";
+            (e.currentTarget as HTMLElement).style.boxShadow = `0 0 36px ${accent.glow}, 0 20px 48px rgba(0,0,0,0.4)`;
+            (e.currentTarget as HTMLElement).style.borderColor = accent.primary + "44";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.boxShadow =
-              "0 8px 32px rgba(0,0,0,0.3)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(0,0,0,0.28)";
             (e.currentTarget as HTMLElement).style.borderColor = accent.border;
           }}
         >
-          {/* Accent bar */}
+          {/* Top accent line */}
           <motion.div
-            style={{
-              height: "2px",
-              background: `linear-gradient(90deg, ${accent.primary}, ${accent.secondary})`,
-            }}
-            initial={{ scaleX: 0 }}
+            style={{ height: "2px", background: `linear-gradient(90deg, ${accent.primary}, ${accent.secondary}, transparent)`, flexShrink: 0 }}
+            initial={{ scaleX: 0, transformOrigin: "left" }}
             whileInView={{ scaleX: 1 }}
-            transition={{ duration: 0.7, delay: (index % 4) * 0.08 + 0.3 }}
+            transition={{ duration: 0.8, delay: (index % 3) * 0.07 + 0.25 }}
             viewport={{ once: true }}
           />
 
           {/* Image */}
-          <Card.Section
-            style={{ position: "relative", overflow: "hidden",  }}
-          >
+          <Card.Section style={{ position: "relative", overflow: "hidden", flexShrink: 0 }}>
             <ProjectCarousel
-              images={
-                project.images && project.images.length > 0
-                  ? project.images
-                  : [project.image || "/placeholder.svg"]
-              }
+              images={project.images?.length ? project.images : [project.image || "/placeholder.svg"]}
               title={project.title}
-              height={200}
+              height={195}
             />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(to top, rgba(13,17,23,0.92) 0%, transparent 55%)",
-                pointerEvents: "none",
-              }}
-            />
-            <div
-              style={{ position: "absolute", top: 12, right: 12, zIndex: 3 }}
-            >
-              <Badge
-                size="sm"
-                variant="gradient"
-                gradient={{ from: status.from, to: status.to }}
-              >
-                {status.label}
-              </Badge>
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(13,17,23,0.95) 0%, rgba(13,17,23,0.1) 55%)", pointerEvents: "none" }} />
+
+            {/* Status + demo link overlay */}
+            <div style={{ position: "absolute", top: 12, left: 12, zIndex: 3 }}>
+              <Badge size="xs" variant="gradient" gradient={{ from: status.from, to: status.to }}>{status.label}</Badge>
             </div>
+            {hasDemo && (
+              <motion.a
+                href={project.demoUrl} target="_blank"
+                style={{
+                  position: "absolute", top: 12, right: 12, zIndex: 3,
+                  width: 32, height: 32, borderRadius: "50%",
+                  background: `${accent.primary}22`, border: `1px solid ${accent.border}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: accent.primary, textDecoration: "none",
+                }}
+                whileHover={{ scale: 1.15, background: `${accent.primary}40` }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <IconArrowUpRight size={15} />
+              </motion.a>
+            )}
           </Card.Section>
 
           <Stack gap="sm" p="lg" style={{ flex: 1 }}>
-            {/* Period */}
-            <Group gap={6}>
-              <IconCalendar size={12} color={accent.primary} />
-              <Text size="xs" c="dimmed">
-                {project.period}
-              </Text>
+            <Group gap={5}>
+              <IconCalendar size={11} color={accent.primary} style={{ opacity: 0.75 }} />
+              <Text size="xs" c="dimmed" style={{ letterSpacing: "0.02em" }}>{project.period}</Text>
             </Group>
 
-            {/* Title */}
             <Title
               order={4}
               style={{
-                color: accent.primary,
-                lineHeight: 1.3,
-                fontWeight: 700,
-                fontSize: "1rem",
-                minHeight: "2.6rem",
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
+                color: "white", lineHeight: 1.3, fontWeight: 700, fontSize: "0.95rem",
+                display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden",
               }}
             >
               {project.title}
             </Title>
 
-            {/* Description */}
-            <Text
-              c="dimmed"
-              size="xs"
-              style={{
-                lineHeight: 1.7,
-                display: "-webkit-box",
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}
-            >
+            <Text c="dimmed" size="xs" style={{ lineHeight: 1.75, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden", flex: 1 }}>
               {project.description}
             </Text>
 
-            <Divider style={{ borderColor: accent.border }} />
-
-            {/* Features */}
-            <div>
-              <Group gap={6} mb="xs">
-                <Text size="xs" fw={700} style={{ color: accent.primary }}>
-                  Features
-                </Text>
-                <motion.button
-                  onClick={() => setExpanded((v) => !v)}
-                  style={{
-                    background: "none",
-                    border: `1px solid ${accent.border}`,
-                    borderRadius: "999px",
-                    padding: "1px 8px",
-                    cursor: "pointer",
-                    color: accent.primary,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "3px",
-                    fontSize: "0.68rem",
-                  }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {expanded ? (
-                    <IconChevronUp size={10} />
-                  ) : (
-                    <IconChevronDown size={10} />
-                  )}
-                  {expanded ? "Less" : `+${project.features.length - 2} more`}
-                </motion.button>
-              </Group>
-
-              <List
-                size="xs"
-                spacing={3}
-                icon={
-                  <ThemeIcon
-                    size={14}
-                    radius="xl"
-                    variant="light"
-                    color={status.from}
-                  >
-                    <IconSparkles size={8} />
-                  </ThemeIcon>
-                }
-              >
-                {(expanded
-                  ? project.features
-                  : project.features.slice(0, 2)
-                ).map((f, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    <List.Item>
-                      <Text c="dimmed" size="xs" style={{ lineHeight: 1.6 }}>
-                        {f}
-                      </Text>
-                    </List.Item>
-                  </motion.div>
-                ))}
-              </List>
-            </div>
-
-            {/* Tech */}
-            <Flex wrap="wrap" gap={5} mt="auto">
+            {/* Tech badges */}
+            <Flex wrap="wrap" gap={5} mt="auto" pt="xs" style={{ borderTop: `1px solid ${accent.border}` }}>
               {project.technologies.slice(0, 4).map((tech, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.04 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.1 }}
-                >
-                  <Badge
-                    variant="light"
-                    size="xs"
-                    style={{
-                      background: `rgba(6,182,212,0.07)`,
-                      color: accent.primary,
-                      border: `1px solid ${accent.border}`,
-                    }}
-                  >
-                    {tech}
-                  </Badge>
-                </motion.div>
+                <Badge key={i} variant="light" size="xs" style={{ background: `${accent.primary}10`, color: accent.primary, border: `1px solid ${accent.border}`, fontWeight: 500 }}>
+                  {tech}
+                </Badge>
               ))}
               {project.technologies.length > 4 && (
-                <Badge variant="light" size="xs" color="gray">
-                  +{project.technologies.length - 4}
-                </Badge>
+                <Badge variant="light" size="xs" color="gray">+{project.technologies.length - 4}</Badge>
               )}
             </Flex>
-
-            {/* CTA */}
-            {project.demoUrl && project.demoUrl !== "#" && (
-              <motion.div
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                <Button
-                  variant="gradient"
-                  gradient={{ from: accent.badgeFrom, to: accent.badgeTo }}
-                  size="xs"
-                  leftSection={<IconExternalLink size={13} />}
-                  component="a"
-                  href={project.demoUrl}
-                  target="_blank"
-                  fullWidth
-                  mt="xs"
-                  style={{ boxShadow: `0 6px 20px ${accent.glow}` }}
-                >
-                  Live Demo
-                </Button>
-              </motion.div>
-            )}
           </Stack>
         </Card>
       </motion.div>
@@ -675,35 +341,136 @@ function GridCard({
   );
 }
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.08 },
-  },
-};
+// ─── Company header ───────────────────────────────────────────────────────────
+function CompanyHeader({ companyKey, groupIndex }: { companyKey: keyof typeof companyTheme; groupIndex: number }) {
+  const theme = companyTheme[companyKey];
+  const exp = experiences.find((e) =>
+    companyKey === "pharaon" ? e.id === "pharaon-2025" :
+    companyKey === "soutify" ? e.id === "soutify-2025" :
+    e.id === "freelancer-2024"
+  );
+  if (!exp) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: groupIndex * 0.04, ease: "easeOut" }}
+      viewport={{ once: true, margin: "-60px" }}
+    >
+      {/* Full-width rule with company accent */}
+      <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "2rem" }}>
+        <div style={{ flex: 1, height: "1px", background: `linear-gradient(to right, ${theme.accent}40, transparent)` }} />
+        <Badge size="md" variant="light" style={{ background: `${theme.accent}14`, color: theme.accent, border: `1px solid ${theme.border}`, letterSpacing: "0.06em", textTransform: "uppercase", fontWeight: 700, fontSize: "0.7rem" }}>
+          {exp.type === "Freelance" ? "Freelance & Client Work" : exp.type}
+        </Badge>
+        <div style={{ flex: 1, height: "1px", background: `linear-gradient(to left, ${theme.accent}40, transparent)` }} />
+      </div>
+
+      {/* Company identity block */}
+      <Group gap="xl" mb={40} align="flex-start">
+        {/* Logo */}
+        {exp.logo ? (
+          <Avatar src={exp.logo} size={64} radius="lg"
+            style={{ border: `2px solid ${theme.border}`, background: "rgba(255,255,255,0.03)", flexShrink: 0 }} />
+        ) : (
+          <Avatar size={64} radius="lg"
+            style={{ border: `2px solid ${theme.border}`, background: `${theme.accent}14`, flexShrink: 0 }}>
+            <IconBriefcase size={28} color={theme.accent} />
+          </Avatar>
+        )}
+
+        <Stack gap={4}>
+          <Title order={2} style={{ color: "white", fontWeight: 900, fontSize: "clamp(1.5rem, 3vw, 2rem)", lineHeight: 1.15 }}>
+            {exp.company}
+          </Title>
+          <Text size="sm" style={{ color: theme.accent, fontWeight: 500, opacity: 0.9 }}>{exp.title}</Text>
+          <Group gap="lg" mt={4} wrap="wrap">
+            <Group gap={5}>
+              <IconCalendar size={13} color={theme.accent} style={{ opacity: 0.7 }} />
+              <Text size="xs" c="dimmed">{exp.period}</Text>
+            </Group>
+            <Group gap={5}>
+              <IconMapPin size={13} color={theme.accent} style={{ opacity: 0.7 }} />
+              <Text size="xs" c="dimmed">{exp.location}</Text>
+            </Group>
+          </Group>
+        </Stack>
+      </Group>
+    </motion.div>
+  );
+}
+
+// ─── Company group ────────────────────────────────────────────────────────────
+function CompanyGroup({ companyKey, groupProjects, groupIndex }: { companyKey: keyof typeof companyTheme; groupProjects: typeof projects; groupIndex: number }) {
+  const theme = companyTheme[companyKey];
+  const [spotlight, ...rest] = groupProjects;
+
+  return (
+    <Box mb={96}>
+      <CompanyHeader companyKey={companyKey} groupIndex={groupIndex} />
+
+      {/* Spotlight */}
+      <Box mb={rest.length > 0 ? 32 : 0}>
+        <SpotlightCard project={spotlight} flip={groupIndex % 2 !== 0} />
+      </Box>
+
+      {/* Grid */}
+      {rest.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          viewport={{ once: true }}
+        >
+          <Grid gutter={20} mt={4}>
+            {rest.map((project, i) => (
+              <Grid.Col key={project.id} span={{ base: 12, sm: 6, lg: 4 }}>
+                <GridCard project={project} index={i} />
+              </Grid.Col>
+            ))}
+          </Grid>
+        </motion.div>
+      )}
+
+      {/* Section end separator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+        viewport={{ once: true }}
+        style={{ display: "flex", alignItems: "center", gap: "1rem", marginTop: "4rem" }}
+      >
+        <div style={{ flex: 1, height: "1px", background: `linear-gradient(to right, transparent, ${theme.accent}25, transparent)` }} />
+        <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap", letterSpacing: "0.05em" }}>
+          {groupProjects.length} project{groupProjects.length !== 1 ? "s" : ""}
+        </Text>
+        <div style={{ flex: 1, height: "1px", background: `linear-gradient(to right, transparent, ${theme.accent}25, transparent)` }} />
+      </motion.div>
+    </Box>
+  );
+}
+
+// ─── Section ──────────────────────────────────────────────────────────────────
+const groups: { key: keyof typeof companyTheme; label: string }[] = [
+  { key: "pharaon",  label: "Pharaon Group" },
+  { key: "soutify",  label: "Soutify" },
+  { key: "freelance", label: "Freelance" },
+];
 
 export default function ProjectsSection() {
-  const featuredProjects = projects.slice(0, 2);
-  const gridProjects = projects.slice(2);
+  const grouped = groups.map(({ key }) => ({ key, items: projects.filter((p) => p.company === key) }));
+  const total = projects.length;
 
   return (
     <section id="projects" style={{ padding: "8rem 0", position: "relative" }}>
-      {/* Section background glow */}
-      <div
-        style={{
-          position: "absolute",
-          top: "20%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "800px",
-          height: "600px",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(ellipse, rgba(6,182,212,0.04) 0%, transparent 70%)",
-          filter: "blur(80px)",
-          pointerEvents: "none",
-        }}
-      />
+      {/* Ambient glow */}
+      <div style={{
+        position: "absolute", top: "10%", left: "50%", transform: "translateX(-50%)",
+        width: "1000px", height: "600px", borderRadius: "50%",
+        background: "radial-gradient(ellipse, rgba(6,182,212,0.035) 0%, transparent 65%)",
+        filter: "blur(60px)", pointerEvents: "none",
+      }} />
 
       <Container size="lg" style={{ position: "relative" }}>
         {/* Header */}
@@ -713,98 +480,67 @@ export default function ProjectsSection() {
           transition={{ duration: 0.7, ease: "easeOut" }}
           viewport={{ once: true, margin: "-80px" }}
         >
-          <Box mb={70} style={{ textAlign: "center" }}>
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 200, damping: 18 }}
-              viewport={{ once: true }}
+          <Box mb={80} style={{ textAlign: "center" }}>
+            <Badge
+              size="lg"
+              variant="gradient"
+              gradient={{ from: "cyan", to: "blue" }}
+              mb="lg"
+              leftSection={<IconSparkles size={14} />}
+              style={{ boxShadow: "0 4px 20px rgba(6,182,212,0.3)" }}
             >
-              <Badge
-                size="lg"
-                variant="gradient"
-                gradient={{ from: "cyan", to: "blue" }}
-                mb="md"
-                leftSection={<IconSparkles size={16} />}
-                style={{ boxShadow: "0 4px 20px rgba(6,182,212,0.35)" }}
-              >
-                Portfolio
-              </Badge>
-            </motion.div>
+              Portfolio
+            </Badge>
 
             <Title
               order={2}
               mb="md"
               style={{
-                fontSize: "clamp(2.2rem, 5vw, 3.5rem)",
+                fontSize: "clamp(2rem, 5vw, 3.2rem)",
                 fontWeight: 900,
-                letterSpacing: "-0.02em",
-                background:
-                  "linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%)",
+                letterSpacing: "-0.025em",
+                background: "linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
                 lineHeight: 1.1,
               }}
             >
-              Featured Projects
+              Work by Company
             </Title>
-            <Text
-              c="dimmed"
-              size="lg"
-              maw={550}
-              mx="auto"
-              style={{ lineHeight: 1.7 }}
-            >
-              {projects.length} projects across web, mobile, and AI — showcasing
-              full-stack thinking and production-grade quality
+
+            <Text c="dimmed" size="md" maw={500} mx="auto" style={{ lineHeight: 1.75 }}>
+              {total} projects across {groups.length} engagements — organized by the company and context they were built in
             </Text>
+
+            {/* Summary pills */}
+            <Group gap="md" justify="center" mt={32}>
+              {groups.map(({ key, label }) => {
+                const t = companyTheme[key];
+                const count = grouped.find((g) => g.key === key)?.items.length ?? 0;
+                return (
+                  <motion.div key={key} whileHover={{ y: -2 }} transition={{ type: "spring", stiffness: 300 }}>
+                    <Group gap={6} style={{
+                      background: `${t.accent}0e`, border: `1px solid ${t.border}`,
+                      borderRadius: "999px", padding: "6px 16px",
+                    }}>
+                      <div style={{ width: 7, height: 7, borderRadius: "50%", background: t.accent }} />
+                      <Text size="sm" style={{ color: t.accent, fontWeight: 600 }}>{label}</Text>
+                      <Text size="xs" c="dimmed">· {count}</Text>
+                    </Group>
+                  </motion.div>
+                );
+              })}
+            </Group>
           </Box>
         </motion.div>
 
-        {/* Spotlight — first 2 */}
-        <Stack gap={40} mb={70}>
-          {featuredProjects.map((project, index) => (
-            <SpotlightCard key={project.id} project={project} index={index} />
-          ))}
-        </Stack>
-
-        {/* Divider */}
-        <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          whileInView={{ opacity: 1, scaleX: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <Group gap="lg" mb={50} style={{ justifyContent: "center" }}>
-            <Divider style={{ flex: 1, borderColor: "rgba(6,182,212,0.15)" }} />
-            <Text
-              size="sm"
-              c="dimmed"
-              fw={500}
-              style={{ whiteSpace: "nowrap" }}
-            >
-              More Projects
-            </Text>
-            <Divider style={{ flex: 1, borderColor: "rgba(6,182,212,0.15)" }} />
-          </Group>
-        </motion.div>
-
-        {/* Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
-        >
-          <Grid gutter={24}>
-            {gridProjects.map((project, index) => (
-              <Grid.Col key={project.id} span={{ base: 12, sm: 6, lg: 4 }}>
-                <GridCard project={project} index={index} />
-              </Grid.Col>
-            ))}
-          </Grid>
-        </motion.div>
+        {/* Groups */}
+        {grouped.map(({ key, items }, i) =>
+          items.length > 0 ? (
+            <CompanyGroup key={key} companyKey={key} groupProjects={items} groupIndex={i} />
+          ) : null
+        )}
       </Container>
     </section>
   );

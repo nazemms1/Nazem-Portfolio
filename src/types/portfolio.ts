@@ -22,6 +22,7 @@ export interface Project {
   demoUrl?: string
   githubUrl?: string
   status: "completed" | "in-progress" | "planned"
+  company: "pharaon" | "soutify" | "freelance"
 }
 
 export interface Skill {
