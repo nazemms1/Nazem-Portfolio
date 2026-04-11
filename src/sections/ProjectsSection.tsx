@@ -155,8 +155,8 @@ function SpotlightCard({
             >
               <div
                 style={{
-                  position: "relative",
-                  height: "100%",
+                  position: "absolute",
+                  inset: 0,
                   overflow: "hidden",
                 }}
               >
@@ -168,6 +168,7 @@ function SpotlightCard({
                   }
                   title={project.title}
                   height={340}
+                  fill
                 />
                 {/* Gradient fade into content */}
                 <div

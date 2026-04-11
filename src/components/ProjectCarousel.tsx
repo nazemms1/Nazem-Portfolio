@@ -8,19 +8,21 @@ import {
   useMotionValue,
   useTransform,
 } from "framer-motion";
-import { Image, ActionIcon } from "@mantine/core";
+import { ActionIcon } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
 interface ProjectCarouselProps {
   images: string[];
   title: string;
   height?: number;
+  fill?: boolean;
 }
 
 const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
   images,
   title,
   height = 250,
+  fill = false,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -84,7 +86,7 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
         style={{
           position: "relative",
           overflow: "hidden",
-          height: `${height}px`,
+          height: fill ? "100%" : `${height}px`,
         }}
       >
         <motion.div
@@ -101,18 +103,37 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
             transition={{ duration: 0.5, ease: "easeOut" }}
             style={{ height: "100%" }}
           >
-            <Image
-              src={images[0]}
-              height={height}
-              alt={title}
-              fit="cover"
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "block",
-                objectFit: "cover",
-              }}
-            />
+            {images[0].endsWith(".svg") ? (
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "rgba(255,255,255,0.04)",
+                  padding: "2rem",
+                  boxSizing: "border-box",
+                }}
+              >
+                <img
+                  src={images[0]}
+                  alt={title}
+                  style={{ width: "100%", height: "auto", display: "block" }}
+                />
+              </div>
+            ) : (
+              <img
+                src={images[0]}
+                alt={title}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
+                  objectFit: "cover",
+                }}
+              />
+            )}
           </motion.div>
         </motion.div>
       </div>
@@ -127,7 +148,7 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
       style={{
         position: "relative",
         overflow: "hidden",
-        height: `${height}px`,
+        height: fill ? "100%" : `${height}px`,
       }}
     >
       <motion.div
@@ -145,16 +166,14 @@ const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
             transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
             style={{ position: "absolute", inset: 0 }}
           >
-            <Image
+            <img
               src={images[currentIndex] || "/placeholder.svg"}
-              height={height}
               alt={`${title} — ${currentIndex + 1}`}
-              fit="cover"
               style={{
                 width: "100%",
                 height: "100%",
                 display: "block",
-                objectFit: "contain",
+                objectFit: "cover",
               }}
             />
           </motion.div>
