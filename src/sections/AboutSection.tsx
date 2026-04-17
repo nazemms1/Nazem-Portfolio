@@ -1,404 +1,119 @@
 import { motion } from "framer-motion";
-import {
-  Container,
-  Title,
-  Text,
-  Box,
-  Badge,
-  SimpleGrid,
-  Grid,
-  Card,
-  Group,
-  Stack,
-  ThemeIcon,
-  ActionIcon,
-  Divider,
-} from "@mantine/core";
-import {
-  IconSparkles,
-  IconAward,
-  IconRocket,
-  IconCode,
-  IconHeart,
-  IconBriefcase,
-  IconCalendar,
-  IconMapPin,
-  IconBrandLinkedin,
-  IconBrandGithub,
-  IconMail,
-  IconSchool,
-} from "@tabler/icons-react";
+import { Container, Title, Text, Box, Badge, SimpleGrid, Grid, Card, Group, Stack, ThemeIcon, ActionIcon, Divider } from "@mantine/core";
+import { IconSparkles, IconAward, IconRocket, IconCode, IconHeart, IconBriefcase, IconCalendar, IconMapPin, IconBrandLinkedin, IconBrandGithub, IconMail, IconSchool } from "@tabler/icons-react";
 import StatsCounter from "../components/StatsCounter";
 import { projects, skills, contactInfo } from "../data/portfolioData";
+
+const NAVY   = "#1d4ed8";
+const BLUE   = "#3b82f6";
+const BLUE_L = "#93c5fd";
+const INDIGO = "#4f46e5";
 
 export default function AboutSection() {
   return (
     <section id="about" style={{ padding: "8rem 0", position: "relative" }}>
-      {/* Background glow */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "10%",
-          right: "-5%",
-          width: "500px",
-          height: "400px",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)",
-          filter: "blur(80px)",
-          pointerEvents: "none",
-        }}
-      />
+      <div style={{ position: "absolute", bottom: "10%", right: "-5%", width: "500px", height: "400px", borderRadius: "50%", background: `radial-gradient(circle, ${NAVY}08 0%, transparent 70%)`, filter: "blur(80px)", pointerEvents: "none" }} />
 
       <Container size="lg" style={{ position: "relative" }}>
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          viewport={{ once: true, margin: "-100px" }}
-        >
+        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} viewport={{ once: true, margin: "-100px" }}>
+
           <Box mb={60} style={{ textAlign: "center" }}>
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 200, damping: 18 }}
-              viewport={{ once: true }}
-            >
-              <Badge
-                size="lg"
-                variant="gradient"
-                gradient={{ from: "blue", to: "cyan" }}
-                mb="md"
-                leftSection={<IconSparkles size={16} />}
-                style={{ boxShadow: "0 4px 20px rgba(59,130,246,0.3)" }}
-              >
+            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }}>
+              <Badge size="md" variant="outline" mb="md" leftSection={<IconSparkles size={14} />}
+                style={{ borderColor: `${BLUE}44`, color: BLUE_L, background: `${NAVY}0d`, fontFamily: "'Inter', sans-serif", letterSpacing: "0.06em" }}>
                 About Me
               </Badge>
             </motion.div>
-            <Title
-              order={2}
-              mb="md"
-              style={{
-                fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
-                fontWeight: 900,
-                letterSpacing: "-0.02em",
-                background:
-                  "linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
+            <Title order={2} mb="md" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, letterSpacing: "-0.025em", background: `linear-gradient(120deg, ${BLUE_L} 0%, ${BLUE} 45%, #a5b4fc 100%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", fontSize: "clamp(2.2rem, 5vw, 3.2rem)" }}>
               Building Digital Excellence
             </Title>
-            <Text c="dimmed" size="lg" maw={600} mx="auto">
-              Combining technical expertise with creative problem-solving
-            </Text>
+            <Text style={{ color: "#64748b", fontSize: "1rem" }}>Combining technical expertise with creative problem-solving</Text>
           </Box>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}>
             <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="lg" mb={60}>
-              <StatsCounter
-                value="2+"
-                label="Years Experience"
-                icon={IconAward}
-                color="cyan"
-              />
-              <StatsCounter
-                value={`${projects.length}+`}
-                label="Projects Completed"
-                icon={IconRocket}
-                color="violet"
-              />
-              <StatsCounter
-                value={`${skills.length}+`}
-                label="Technologies"
-                icon={IconCode}
-                color="teal"
-              />
-              <StatsCounter
-                value="100%"
-                label="Client Satisfaction"
-                icon={IconHeart}
-                color="pink"
-              />
+              <StatsCounter value="2+"             label="Years Experience"    icon={IconAward}  color="cyan"   />
+              <StatsCounter value={`${projects.length}+`} label="Projects Completed" icon={IconRocket} color="violet" />
+              <StatsCounter value={`${skills.length}+`}   label="Technologies"       icon={IconCode}   color="teal"   />
+              <StatsCounter value="100%"           label="Client Satisfaction" icon={IconHeart}  color="pink"   />
             </SimpleGrid>
           </motion.div>
 
           <Grid gutter={40}>
-            {/* Education card */}
+            {/* Education */}
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <motion.div
-                initial={{ opacity: 0, x: -40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{
-                  duration: 0.65,
-                  delay: 0.15,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                }}
-                viewport={{ once: true }}
-                style={{ height: "100%" }}
-              >
-                <motion.div
-                  whileHover={{ y: -6 }}
-                  transition={{ type: "spring", stiffness: 280, damping: 22 }}
-                  style={{ height: "100%" }}
-                >
-                  <Card
-                    padding="xl"
-                    radius="xl"
-                    style={{
-                      background:
-                        "linear-gradient(145deg, rgba(13,17,23,0.97) 0%, rgba(18,23,32,0.98) 100%)",
-                      border: "1px solid rgba(6,182,212,0.22)",
-                      boxShadow: "0 8px 40px rgba(0,0,0,0.3)",
-                      height: "100%",
-                      overflow: "hidden",
-                      position: "relative",
-                      transition: "box-shadow 0.35s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.boxShadow =
-                        "0 0 40px rgba(6,182,212,0.18), 0 20px 60px rgba(0,0,0,0.4)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.boxShadow =
-                        "0 8px 40px rgba(0,0,0,0.3)";
-                    }}
-                  >
-                    {/* Top accent */}
-                    <motion.div
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: "3px",
-                        background: "linear-gradient(90deg, #06b6d4, #3b82f6)",
-                      }}
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
-                      transition={{ duration: 0.9, delay: 0.3 }}
-                      viewport={{ once: true }}
-                    />
-
+              <motion.div initial={{ opacity: 0, x: -32 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }} viewport={{ once: true }} style={{ height: "100%" }}>
+                <motion.div whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 280, damping: 22 }} style={{ height: "100%" }}>
+                  <Card padding="xl" radius="xl" style={{ background: "linear-gradient(145deg, rgba(15,23,42,0.97) 0%, rgba(18,25,40,0.98) 100%)", border: `1px solid ${BLUE}22`, boxShadow: "0 8px 40px rgba(0,0,0,0.3)", height: "100%", overflow: "hidden", position: "relative", transition: "box-shadow 0.3s ease" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 0 40px ${NAVY}22, 0 20px 60px rgba(0,0,0,0.4)`; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 40px rgba(0,0,0,0.3)"; }}>
+                    <motion.div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg, ${BLUE}, ${NAVY})` }} initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} transition={{ duration: 0.9, delay: 0.3 }} viewport={{ once: true }} />
                     <Group mb="xl">
-                      <ThemeIcon
-                        size={60}
-                        radius="xl"
-                        variant="gradient"
-                        gradient={{ from: "cyan", to: "blue" }}
-                        style={{ boxShadow: "0 8px 28px rgba(6,182,212,0.3)" }}
-                      >
-                        <IconSchool size={30} />
+                      <ThemeIcon size={56} radius="xl" style={{ background: `linear-gradient(135deg, ${BLUE} 0%, ${NAVY} 100%)`, boxShadow: `0 8px 24px ${NAVY}33`, border: "none" }}>
+                        <IconSchool size={28} />
                       </ThemeIcon>
                       <div>
-                        <Title order={3} size="h2">
-                          Education
-                        </Title>
-                        <Text c="cyan" size="sm" fw={500}>
-                          Academic Background
-                        </Text>
+                        <Title order={3} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Education</Title>
+                        <Text size="sm" fw={500} style={{ color: BLUE_L }}>Academic Background</Text>
                       </div>
                     </Group>
-
-                    <Divider
-                      mb="lg"
-                      style={{ borderColor: "rgba(6,182,212,0.12)" }}
-                    />
-
+                    <Divider mb="lg" style={{ borderColor: `${BLUE}14` }} />
                     <Stack gap="md">
                       <div>
-                        <Text fw={700} size="lg" mb="xs">
-                          Bachelor's in Software Engineering
-                        </Text>
-                        <Text c="dimmed" size="sm" mb={4}>
-                          Artificial Intelligence University (AIU)
-                        </Text>
-                        <Text c="dimmed" size="sm">
-                          Major: Software Engineering
-                        </Text>
+                        <Text fw={700} size="lg" mb="xs">Bachelor's in Software Engineering</Text>
+                        <Text style={{ color: "#64748b" }} size="sm" mb={4}>Artificial Intelligence University (AIU)</Text>
+                        <Text style={{ color: "#64748b" }} size="sm">Major: Software Engineering</Text>
                       </div>
                       <Group gap="xs">
-                        <IconCalendar size={18} color="#06b6d4" />
-                        <Text size="sm" c="cyan" fw={600}>
-                          2018 – 2024
-                        </Text>
+                        <IconCalendar size={17} color={BLUE} />
+                        <Text size="sm" fw={600} style={{ color: BLUE_L }}>2018 – 2024</Text>
                       </Group>
                     </Stack>
-
-                    {/* Watermark */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "1rem",
-                        right: "1.5rem",
-                        fontSize: "5rem",
-                        fontWeight: 900,
-                        color: "#06b6d4",
-                        opacity: 0.03,
-                        lineHeight: 1,
-                        userSelect: "none",
-                        pointerEvents: "none",
-                        fontFamily: "monospace",
-                      }}
-                    >
-                      BSc
-                    </div>
+                    <div style={{ position: "absolute", bottom: "1rem", right: "1.5rem", fontSize: "5rem", fontWeight: 900, color: BLUE, opacity: 0.03, lineHeight: 1, userSelect: "none", pointerEvents: "none", fontFamily: "monospace" }}>BSc</div>
                   </Card>
                 </motion.div>
               </motion.div>
             </Grid.Col>
 
-            {/* Bio card */}
+            {/* Bio */}
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <motion.div
-                initial={{ opacity: 0, x: 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{
-                  duration: 0.65,
-                  delay: 0.25,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                }}
-                viewport={{ once: true }}
-                style={{ height: "100%" }}
-              >
-                <motion.div
-                  whileHover={{ y: -6 }}
-                  transition={{ type: "spring", stiffness: 280, damping: 22 }}
-                  style={{ height: "100%" }}
-                >
-                  <Card
-                    padding="xl"
-                    radius="xl"
-                    style={{
-                      background:
-                        "linear-gradient(145deg, rgba(13,17,23,0.97) 0%, rgba(18,23,32,0.98) 100%)",
-                      border: "1px solid rgba(139,92,246,0.22)",
-                      boxShadow: "0 8px 40px rgba(0,0,0,0.3)",
-                      height: "100%",
-                      overflow: "hidden",
-                      position: "relative",
-                      transition: "box-shadow 0.35s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.boxShadow =
-                        "0 0 40px rgba(139,92,246,0.18), 0 20px 60px rgba(0,0,0,0.4)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.boxShadow =
-                        "0 8px 40px rgba(0,0,0,0.3)";
-                    }}
-                  >
-                    {/* Top accent */}
-                    <motion.div
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: "3px",
-                        background: "linear-gradient(90deg, #8b5cf6, #3b82f6)",
-                      }}
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
-                      transition={{ duration: 0.9, delay: 0.4 }}
-                      viewport={{ once: true }}
-                    />
-
+              <motion.div initial={{ opacity: 0, x: 32 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.25, ease: [0.22, 1, 0.36, 1] }} viewport={{ once: true }} style={{ height: "100%" }}>
+                <motion.div whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 280, damping: 22 }} style={{ height: "100%" }}>
+                  <Card padding="xl" radius="xl" style={{ background: "linear-gradient(145deg, rgba(15,23,42,0.97) 0%, rgba(18,25,40,0.98) 100%)", border: `1px solid ${INDIGO}22`, boxShadow: "0 8px 40px rgba(0,0,0,0.3)", height: "100%", overflow: "hidden", position: "relative", transition: "box-shadow 0.3s ease" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 0 40px ${INDIGO}22, 0 20px 60px rgba(0,0,0,0.4)`; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 40px rgba(0,0,0,0.3)"; }}>
+                    <motion.div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg, #a5b4fc, ${INDIGO})` }} initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} transition={{ duration: 0.9, delay: 0.4 }} viewport={{ once: true }} />
                     <Group mb="xl">
-                      <ThemeIcon
-                        size={60}
-                        radius="xl"
-                        variant="gradient"
-                        gradient={{ from: "violet", to: "blue" }}
-                        style={{ boxShadow: "0 8px 28px rgba(139,92,246,0.3)" }}
-                      >
-                        <IconBriefcase size={30} />
+                      <ThemeIcon size={56} radius="xl" style={{ background: `linear-gradient(135deg, #6366f1 0%, ${INDIGO} 100%)`, boxShadow: `0 8px 24px ${INDIGO}33`, border: "none" }}>
+                        <IconBriefcase size={28} />
                       </ThemeIcon>
                       <div>
-                        <Title order={3} size="h2">
-                          About
-                        </Title>
-                        <Text c="violet" size="sm" fw={500}>
-                          Who I Am
-                        </Text>
+                        <Title order={3} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>About</Title>
+                        <Text size="sm" fw={500} style={{ color: "#a5b4fc" }}>Who I Am</Text>
                       </div>
                     </Group>
-
-                    <Divider
-                      mb="lg"
-                      style={{ borderColor: "rgba(139,92,246,0.12)" }}
-                    />
-
+                    <Divider mb="lg" style={{ borderColor: `${INDIGO}14` }} />
                     <Stack gap="lg">
                       <Text size="md" style={{ lineHeight: 1.85 }}>
                         I'm a passionate{" "}
-                        <Text component="span" fw={700} c="cyan" inherit>
-                          Software Engineer
-                        </Text>{" "}
-                        specializing in creating exceptional digital experiences
-                        through modern web and mobile technologies.
+                        <Text component="span" fw={700} style={{ color: BLUE_L }} inherit>Software Engineer</Text>{" "}
+                        specializing in creating exceptional digital experiences through modern web and mobile technologies.
                       </Text>
-
-                      <Text size="sm" c="dimmed" style={{ lineHeight: 1.85 }}>
-                        With expertise in React, TypeScript, and Flutter, I
-                        transform complex challenges into elegant solutions —
-                        integrating AI technologies and building scalable,
-                        user-centric applications.
+                      <Text size="sm" style={{ color: "#64748b", lineHeight: 1.85 }}>
+                        With expertise in React, TypeScript, and Flutter, I transform complex challenges into elegant solutions — integrating AI technologies and building scalable, user-centric applications.
                       </Text>
-
                       <Group gap="xs">
-                        <IconMapPin size={18} color="#8b5cf6" />
-                        <Text c="dimmed" size="sm">
-                          {contactInfo.location}
-                        </Text>
+                        <IconMapPin size={17} color="#a5b4fc" />
+                        <Text size="sm" style={{ color: "#64748b" }}>{contactInfo.location}</Text>
                       </Group>
-
                       <Group gap="sm" mt="xs">
                         {[
-                          {
-                            icon: IconBrandLinkedin,
-                            href: contactInfo.linkedin,
-                            color: "blue",
-                            gradient: { from: "blue", to: "cyan" },
-                          },
-                          {
-                            icon: IconBrandGithub,
-                            href: contactInfo.github,
-                            color: "gray",
-                            gradient: { from: "gray", to: "dark" },
-                          },
-                          {
-                            icon: IconMail,
-                            href: `mailto:${contactInfo.email}`,
-                            color: "cyan",
-                            gradient: { from: "cyan", to: "teal" },
-                          },
+                          { icon: IconBrandLinkedin, href: contactInfo.linkedin,           bg: `${NAVY}18`,   border: `${BLUE}33`,   color: BLUE_L  },
+                          { icon: IconBrandGithub,   href: contactInfo.github,              bg: "rgba(100,116,139,0.15)", border: "rgba(100,116,139,0.3)", color: "#94a3b8" },
+                          { icon: IconMail,          href: `mailto:${contactInfo.email}`,   bg: `${INDIGO}18`, border: `#6366f133`,   color: "#a5b4fc" },
                         ].map((social, i) => (
-                          <motion.div
-                            key={i}
-                            whileHover={{ scale: 1.15, y: -3 }}
-                            whileTap={{ scale: 0.9 }}
-                          >
-                            <ActionIcon
-                              component="a"
-                              href={social.href}
-                              target="_blank"
-                              size={48}
-                              radius="xl"
-                              variant="gradient"
-                              gradient={social.gradient}
-                              style={{
-                                boxShadow: "0 8px 28px rgba(6,182,212,0.25)",
-                              }}
-                            >
+                          <motion.div key={i} whileHover={{ scale: 1.12, y: -2 }} whileTap={{ scale: 0.92 }}>
+                            <ActionIcon component="a" href={social.href} target="_blank" size={46} radius="xl" style={{ background: social.bg, border: `1px solid ${social.border}`, color: social.color }}>
                               <social.icon size={22} />
                             </ActionIcon>
                           </motion.div>

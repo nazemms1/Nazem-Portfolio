@@ -8,13 +8,9 @@ interface FloatingElementProps {
 export default function FloatingElement({ children, delay = 0 }: FloatingElementProps) {
   return (
     <motion.div
-      animate={{ y: [-10, 10, -10] }}
-      transition={{
-        duration: 6,
-        delay,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
+      animate={{ y: [-8, 8, -8] }}
+      transition={{ duration: 7, delay, repeat: Infinity, ease: "easeInOut" }}
+      style={{ willChange: "transform" }}
     >
       {children}
     </motion.div>

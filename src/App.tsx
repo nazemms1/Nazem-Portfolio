@@ -21,7 +21,7 @@ export default function App() {
       <div
         style={{
           minHeight: "100vh",
-          background: "#0D1117",
+          background: "#09090b",
           color: "white",
           overflow: "hidden",
           position: "relative",

@@ -1,221 +1,103 @@
-"use client";
-
-import type React from "react";
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 
 interface Particle {
   x: number;
   y: number;
-  size: number;
   speedX: number;
   speedY: number;
   opacity: number;
   color: string;
 }
 
-const ParticleBackground: React.FC = () => {
+// Navy/blue palette — no cyan
+const COLORS = ["#1d4ed8", "#2563eb", "#3b82f6", "#4f46e5", "#6366f1"];
+
+export default function ParticleBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particlesRef = useRef<Particle[]>([]);
-  const mouseRef = useRef({ x: 0, y: 0 });
-  const animationRef = useRef<number>(0);
+  const stateRef = useRef<{ particles: Particle[]; animId: number; width: number; height: number }>({
+    particles: [], animId: 0, width: 0, height: 0,
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    const state = stateRef.current;
 
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    const init = () => {
+      state.width = canvas.width = window.innerWidth;
+      state.height = canvas.height = window.innerHeight;
+      const count = Math.min(40, Math.floor(state.width / 30));
+      state.particles = Array.from({ length: count }, () => ({
+        x: Math.random() * state.width,
+        y: Math.random() * state.height,
+        speedX: (Math.random() - 0.5) * 0.4,
+        speedY: (Math.random() - 0.5) * 0.4,
+        opacity: Math.random() * 0.35 + 0.1,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      }));
     };
 
-    const colors = ["#06b6d4", "#3b82f6", "#8b5cf6", "#22d3ee", "#a855f7"];
+    const CONNECT_SQ = 100 * 100;
 
-    const createParticles = () => {
-      const particleCount = Math.min(80, Math.floor(window.innerWidth / 20));
-      particlesRef.current = [];
+    const draw = () => {
+      ctx.clearRect(0, 0, state.width, state.height);
+      const pts = state.particles;
+      const n = pts.length;
 
-      for (let i = 0; i < particleCount; i++) {
-        particlesRef.current.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          size: Math.random() * 2 + 0.5,
-          speedX: (Math.random() - 0.5) * 0.5,
-          speedY: (Math.random() - 0.5) * 0.5,
-          opacity: Math.random() * 0.5 + 0.2,
-          color: colors[Math.floor(Math.random() * colors.length)],
-        });
-      }
-    };
+      for (let i = 0; i < n; i++) {
+        const p = pts[i];
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < 0) p.x = state.width;
+        else if (p.x > state.width) p.x = 0;
+        if (p.y < 0) p.y = state.height;
+        else if (p.y > state.height) p.y = 0;
 
-    const drawParticles = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particlesRef.current.forEach((particle, i) => {
-        // Update position
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-
-        // Mouse interaction
-        const dx = mouseRef.current.x - particle.x;
-        const dy = mouseRef.current.y - particle.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < 150) {
-          const force = (150 - distance) / 150;
-          particle.x -= dx * force * 0.02;
-          particle.y -= dy * force * 0.02;
-        }
-
-        // Wrap around screen
-        if (particle.x < 0) particle.x = canvas.width;
-        if (particle.x > canvas.width) particle.x = 0;
-        if (particle.y < 0) particle.y = canvas.height;
-        if (particle.y > canvas.height) particle.y = 0;
-
-        // Draw particle
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = particle.color;
-        ctx.globalAlpha = particle.opacity;
+        ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.opacity;
         ctx.fill();
+      }
 
-        // Draw connections
-        particlesRef.current.slice(i + 1).forEach((otherParticle) => {
-          const dx = particle.x - otherParticle.x;
-          const dy = particle.y - otherParticle.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 120) {
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < n - 1; i++) {
+        const a = pts[i];
+        for (let j = i + 1; j < n; j++) {
+          const b = pts[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const dSq = dx * dx + dy * dy;
+          if (dSq < CONNECT_SQ) {
             ctx.beginPath();
-            ctx.moveTo(particle.x, particle.y);
-            ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.strokeStyle = particle.color;
-            ctx.globalAlpha = (1 - distance / 120) * 0.15;
-            ctx.lineWidth = 0.5;
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = a.color;
+            ctx.globalAlpha = (1 - dSq / CONNECT_SQ) * 0.1;
             ctx.stroke();
           }
-        });
-      });
+        }
+      }
 
       ctx.globalAlpha = 1;
-      animationRef.current = requestAnimationFrame(drawParticles);
+      state.animId = requestAnimationFrame(draw);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
-    };
-
-    resizeCanvas();
-    createParticles();
-    drawParticles();
-
-    window.addEventListener("resize", () => {
-      resizeCanvas();
-      createParticles();
-    });
-    window.addEventListener("mousemove", handleMouseMove);
-
+    init();
+    draw();
+    window.addEventListener("resize", init);
     return () => {
-      cancelAnimationFrame(animationRef.current);
-      window.removeEventListener("resize", resizeCanvas);
-      window.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(state.animId);
+      window.removeEventListener("resize", init);
     };
   }, []);
 
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
-      {/* Floating Orbs */}
-      <motion.div
-        style={{
-          position: "fixed",
-          top: "10%",
-          left: "5%",
-          width: "300px",
-          height: "300px",
-          background: "radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(40px)",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-        animate={{
-          x: [0, 50, 0],
-          y: [0, 30, 0],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        style={{
-          position: "fixed",
-          bottom: "10%",
-          right: "5%",
-          width: "350px",
-          height: "350px",
-          background: "radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(40px)",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-        animate={{
-          x: [0, -40, 0],
-          y: [0, -20, 0],
-          scale: [1.1, 1, 1.1],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2,
-        }}
-      />
-      <motion.div
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          width: "400px",
-          height: "400px",
-          background: "radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(60px)",
-          pointerEvents: "none",
-          zIndex: 0,
-          transform: "translate(-50%, -50%)",
-        }}
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.5, 0.8, 0.5],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-    </>
+    <canvas
+      ref={canvasRef}
+      style={{ position: "fixed", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }}
+    />
   );
-};
-
-export default ParticleBackground;
+}

@@ -118,7 +118,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
 
           <div>
             <Group gap="xs" mb="sm">
-              <IconMap size={16} color="#3b82f6" />
+              <IconMap size={16} color="#3b82f6" />  {/* navy palette */}
               <Text size="sm" fw={600} c="blue.4">
                 Key Features
               </Text>

@@ -36,12 +36,13 @@ import { projects, experiences } from "../data/portfolioData";
 function getProjectAccent(project: (typeof projects)[0]) {
   const techs = project.technologies.join(" ").toLowerCase();
   if (techs.includes("flutter") || techs.includes("dart"))
-    return { primary: "#818cf8", secondary: "#6366f1", glow: "rgba(99,102,241,0.16)", border: "rgba(129,140,248,0.22)", badgeFrom: "indigo", badgeTo: "violet", icon: IconDeviceMobile };
+    return { primary: "#a5b4fc", secondary: "#6366f1", glow: "rgba(99,102,241,0.16)", border: "rgba(165,180,252,0.22)", badgeFrom: "indigo", badgeTo: "violet", icon: IconDeviceMobile };
   if (techs.includes("next") || techs.includes("i18n"))
     return { primary: "#34d399", secondary: "#10b981", glow: "rgba(16,185,129,0.14)", border: "rgba(52,211,153,0.22)", badgeFrom: "teal", badgeTo: "green", icon: IconCode };
   if (techs.includes("ai") || techs.includes("llm") || techs.includes("nlp"))
     return { primary: "#f472b6", secondary: "#ec4899", glow: "rgba(236,72,153,0.14)", border: "rgba(244,114,182,0.22)", badgeFrom: "pink", badgeTo: "violet", icon: IconSparkles };
-  return { primary: "#06b6d4", secondary: "#3b82f6", glow: "rgba(6,182,212,0.14)", border: "rgba(6,182,212,0.22)", badgeFrom: "cyan", badgeTo: "blue", icon: IconCode };
+  // Default → navy/blue
+  return { primary: "#3b82f6", secondary: "#1d4ed8", glow: "rgba(29,78,216,0.16)", border: "rgba(59,130,246,0.22)", badgeFrom: "blue", badgeTo: "indigo", icon: IconCode };
 }
 
 const statusConfig = {
@@ -51,9 +52,9 @@ const statusConfig = {
 
 // ─── Company themes ───────────────────────────────────────────────────────────
 const companyTheme = {
-  pharaon:  { accent: "#06b6d4", glow: "rgba(6,182,212,0.1)",   border: "rgba(6,182,212,0.18)",   badgeFrom: "cyan",   badgeTo: "blue"  },
-  soutify:  { accent: "#a78bfa", glow: "rgba(167,139,250,0.1)", border: "rgba(167,139,250,0.18)", badgeFrom: "violet", badgeTo: "pink"  },
-  freelance:{ accent: "#34d399", glow: "rgba(52,211,153,0.1)",  border: "rgba(52,211,153,0.18)",  badgeFrom: "teal",   badgeTo: "green" },
+  pharaon:  { accent: "#3b82f6", glow: "rgba(29,78,216,0.12)",  border: "rgba(59,130,246,0.2)",   badgeFrom: "blue",   badgeTo: "indigo" },
+  soutify:  { accent: "#a5b4fc", glow: "rgba(99,102,241,0.12)", border: "rgba(165,180,252,0.2)",  badgeFrom: "indigo", badgeTo: "violet" },
+  freelance:{ accent: "#34d399", glow: "rgba(52,211,153,0.1)",  border: "rgba(52,211,153,0.18)",  badgeFrom: "teal",   badgeTo: "green"  },
 };
 
 // ─── Spotlight card ───────────────────────────────────────────────────────────
@@ -468,7 +469,7 @@ export default function ProjectsSection() {
       <div style={{
         position: "absolute", top: "10%", left: "50%", transform: "translateX(-50%)",
         width: "1000px", height: "600px", borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(6,182,212,0.035) 0%, transparent 65%)",
+        background: "radial-gradient(ellipse, rgba(29,78,216,0.05) 0%, transparent 65%)",
         filter: "blur(60px)", pointerEvents: "none",
       }} />
 
@@ -482,12 +483,11 @@ export default function ProjectsSection() {
         >
           <Box mb={80} style={{ textAlign: "center" }}>
             <Badge
-              size="lg"
-              variant="gradient"
-              gradient={{ from: "cyan", to: "blue" }}
+              size="md"
+              variant="outline"
               mb="lg"
               leftSection={<IconSparkles size={14} />}
-              style={{ boxShadow: "0 4px 20px rgba(6,182,212,0.3)" }}
+              style={{ borderColor: "rgba(59,130,246,0.4)", color: "#93c5fd", background: "rgba(29,78,216,0.08)", fontFamily: "'Inter', sans-serif", letterSpacing: "0.06em" }}
             >
               Portfolio
             </Badge>
@@ -496,10 +496,11 @@ export default function ProjectsSection() {
               order={2}
               mb="md"
               style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontSize: "clamp(2rem, 5vw, 3.2rem)",
-                fontWeight: 900,
+                fontWeight: 800,
                 letterSpacing: "-0.025em",
-                background: "linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%)",
+                background: "linear-gradient(120deg, #93c5fd 0%, #3b82f6 45%, #a5b4fc 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
