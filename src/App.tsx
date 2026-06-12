@@ -24,7 +24,7 @@ export default function App() {
           background: "#09090b",
           color: "white",
           overflow: "hidden",
-          position: "relative",
+            position: "relative",
         }}
       >
         <ParticleBackground />
