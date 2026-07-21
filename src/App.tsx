@@ -2,15 +2,17 @@ import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { theme } from "./theme";
 
-import ParticleBackground from "./components/ParticleBackground";
 import Navigation from "./components/Navigation";
-import RecommendationsSection from "./components/RecommendationCard";
+import CustomCursor from "./components/CustomCursor";
+import AmbientBackground from "./components/AmbientBackground";
 
 import HeroSection from "./sections/HeroSection";
-import AboutSection from "./sections/AboutSection";
-import SkillsSection from "./sections/SkillsSection";
-import ExperienceSection from "./sections/ExperienceSection";
-import ProjectsSection from "./sections/ProjectsSection";
+import PhilosophySection from "./sections/PhilosophySection";
+import SelectedWorkSection from "./sections/SelectedWorkSection";
+import MoreWorkSection from "./sections/MoreWorkSection";
+import LeadershipSection from "./sections/LeadershipSection";
+import RecommendationsSection from "./sections/RecommendationsSection";
+import CraftSection from "./sections/CraftSection";
 import ContactSection from "./sections/ContactSection";
 import Footer from "./sections/Footer";
 
@@ -21,23 +23,26 @@ export default function App() {
       <div
         style={{
           minHeight: "100vh",
-          background: "#09090b",
+          background: "#08090b",
           color: "white",
-          overflow: "hidden",
-            position: "relative",
+          position: "relative",
         }}
       >
-        <ParticleBackground />
+        <AmbientBackground />
+        <CustomCursor />
         <Navigation />
 
-        <HeroSection />
-        <AboutSection />
-        <SkillsSection />
-        <ExperienceSection />
-        <ProjectsSection />
-        <RecommendationsSection />
-        <ContactSection />
-        <Footer />
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <HeroSection />
+          <PhilosophySection />
+          <SelectedWorkSection />
+          <MoreWorkSection />
+          <LeadershipSection />
+          <RecommendationsSection />
+          <CraftSection />
+          <ContactSection />
+          <Footer />
+        </div>
       </div>
     </MantineProvider>
   );

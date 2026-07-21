@@ -1,39 +1,29 @@
-"use client";
-
 import type React from "react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Group, Text, Button, Burger, Drawer, Stack, ThemeIcon } from "@mantine/core";
+import { Group, Text, Button, Burger, Drawer, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconHome, IconUser, IconBriefcase, IconCode,
-  IconMail, IconSparkles, IconStar,
-} from "@tabler/icons-react";
+import { COLOR, FONT, EASE, glass } from "../styles/tokens";
 
-const NAVY = "#1d4ed8";
-const BLUE = "#3b82f6";
-const BLUE_L = "#93c5fd";
+const navItems = [
+  { id: "home", label: "Home" },
+  { id: "philosophy", label: "Philosophy" },
+  { id: "work", label: "Work" },
+  { id: "leadership", label: "Leadership" },
+  { id: "craft", label: "Craft" },
+  { id: "contact", label: "Contact" },
+];
 
 const Navigation: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("home");
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [opened, { open, close }] = useDisclosure(false);
 
-  const navItems = [
-    { id: "home",            label: "Home",            icon: IconHome },
-    { id: "about",           label: "About",           icon: IconUser },
-    { id: "skills",          label: "Skills",          icon: IconSparkles },
-    { id: "experience",      label: "Experience",      icon: IconBriefcase },
-    { id: "projects",        label: "Projects",        icon: IconCode },
-    { id: "recommendations", label: "Recommendations", icon: IconStar },
-    { id: "contact",         label: "Contact",         icon: IconMail },
-  ];
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
       const sections = navItems.map((item) => document.getElementById(item.id));
-      const scrollPosition = window.scrollY + 100;
+      const scrollPosition = window.scrollY + 120;
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = sections[i];
         if (section && section.offsetTop <= scrollPosition) {
@@ -57,57 +47,94 @@ const Navigation: React.FC = () => {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.7, ease: EASE }}
         style={{
           position: "fixed",
-          top: 0, left: 0, right: 0,
+          top: 0,
+          left: 0,
+          right: 0,
           zIndex: 1000,
-          background: isScrolled ? "rgba(9,9,11,0.95)" : "transparent",
-          backdropFilter: isScrolled ? "blur(20px)" : "none",
-          borderBottom: isScrolled ? `1px solid ${NAVY}30` : "none",
-          transition: "all 0.3s ease",
-          padding: "1rem 0",
+          padding: "1.1rem clamp(1rem, 4vw, 2.5rem) 0",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 1.5rem" }}>
+        <div
+          style={{
+            maxWidth: "1440px",
+            margin: "0 auto",
+            borderRadius: 999,
+            background: isScrolled
+              ? glass.nav.background
+              : "rgba(17,24,38,0.35)",
+            backdropFilter: glass.nav.backdropFilter,
+            WebkitBackdropFilter: glass.nav.backdropFilter,
+            border: "1px solid rgba(255,255,255,0.1)",
+            boxShadow: isScrolled
+              ? `${glass.nav.boxShadow}, 0 12px 40px rgba(0,0,0,0.35)`
+              : glass.nav.boxShadow,
+            padding: "0.55rem 0.6rem 0.55rem 1.3rem",
+            transition: "background 0.3s ease, box-shadow 0.3s ease",
+          }}
+        >
           <Group justify="space-between" align="center">
-            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} style={{ cursor: "pointer" }} onClick={() => scrollToSection("home")}>
-              <Group gap="xs">
-                <ThemeIcon size={34} radius="xl" style={{ background: `linear-gradient(135deg, ${BLUE} 0%, ${NAVY} 100%)`, border: "none" }}>
-                  <IconCode size={18} />
-                </ThemeIcon>
-                <Text size="lg" fw={700} style={{ background: `linear-gradient(120deg, ${BLUE_L} 0%, ${BLUE} 100%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  NAZEM.MSOUTI
-                </Text>
-              </Group>
-            </motion.div>
+            <Text
+              onClick={() => scrollToSection("home")}
+              style={{
+                cursor: "pointer",
+                fontFamily: FONT.mono,
+                fontWeight: 600,
+                fontSize: "0.95rem",
+                letterSpacing: "0.02em",
+                color: COLOR.textPrimary,
+              }}
+            >
+              N.A<span style={{ color: COLOR.blue }}>.</span>
+            </Text>
 
-            <Group gap="xs" visibleFrom="md">
-              {navItems.slice(1).map((item, index) => (
-                <motion.div key={item.id} initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
-                  <Button
-                    size="sm"
-                    radius="xl"
-                    onClick={() => scrollToSection(item.id)}
-                    leftSection={<item.icon size={15} />}
-                    style={activeSection === item.id ? {
-                      background: `linear-gradient(135deg, ${BLUE} 0%, ${NAVY} 100%)`,
-                      color: "white",
-                      boxShadow: `0 4px 16px ${NAVY}44`,
-                      border: "none",
-                    } : {
+            <Group gap={4} visibleFrom="md">
+              {navItems.slice(1).map((item) => (
+                <Button
+                  key={item.id}
+                  size="sm"
+                  variant="subtle"
+                  radius="xl"
+                  onClick={() => scrollToSection(item.id)}
+                  styles={{
+                    root: {
+                      color:
+                        activeSection === item.id
+                          ? COLOR.textPrimary
+                          : COLOR.textMuted,
                       background: "transparent",
-                      color: "#64748b",
-                      border: "none",
-                    }}
-                  >
-                    {item.label}
-                  </Button>
-                </motion.div>
+                      fontWeight: 500,
+                      fontSize: "0.9rem",
+                    },
+                  }}
+                >
+                  {item.label}
+                </Button>
               ))}
+              <Button
+                size="sm"
+                radius="xl"
+                ml="sm"
+                onClick={() => scrollToSection("contact")}
+                style={{
+                  background: COLOR.textPrimary,
+                  color: COLOR.bg,
+                  fontWeight: 600,
+                }}
+              >
+                Let's Talk
+              </Button>
             </Group>
 
-            <Burger opened={opened} onClick={open} color={BLUE} size="sm" hiddenFrom="md" />
+            <Burger
+              opened={opened}
+              onClick={open}
+              color={COLOR.textPrimary}
+              size="sm"
+              hiddenFrom="md"
+            />
           </Group>
         </div>
       </motion.nav>
@@ -118,38 +145,40 @@ const Navigation: React.FC = () => {
         position="right"
         size="xs"
         styles={{
-          content: { background: "rgba(9,9,11,0.98)", backdropFilter: "blur(20px)" },
+          content: {
+            background: "rgba(8,9,11,0.7)",
+            backdropFilter: "blur(24px) saturate(180%)",
+            WebkitBackdropFilter: "blur(24px) saturate(180%)",
+            borderLeft: "1px solid rgba(255,255,255,0.08)",
+          },
           header: { background: "transparent" },
-          close: { color: BLUE },
+          close: { color: COLOR.blueLight },
         }}
       >
-        <Stack gap="md" p="md">
-          <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <Text size="lg" fw={700} mb="xl" style={{ background: `linear-gradient(120deg, ${BLUE_L} 0%, ${BLUE} 100%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-              NAZEM.MSOUTI
-            </Text>
-          </motion.div>
-
+        <Stack gap="xs" p="md">
           <AnimatePresence>
             {navItems.map((item, index) => (
-              <motion.div key={item.id} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} transition={{ delay: index * 0.07 }} whileHover={{ x: 8 }}>
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ delay: index * 0.06 }}
+              >
                 <Button
-                  fullWidth size="lg" radius="xl"
+                  fullWidth
+                  size="lg"
+                  variant="subtle"
                   onClick={() => scrollToSection(item.id)}
-                  leftSection={<item.icon size={20} />}
-                  style={activeSection === item.id ? {
-                    background: `linear-gradient(135deg, ${BLUE} 0%, ${NAVY} 100%)`,
-                    color: "white",
-                    justifyContent: "flex-start",
-                    paddingLeft: "1.5rem",
-                    boxShadow: `0 4px 16px ${NAVY}44`,
-                    border: "none",
-                  } : {
-                    background: "transparent",
-                    color: "#64748b",
-                    justifyContent: "flex-start",
-                    paddingLeft: "1.5rem",
-                    border: "none",
+                  styles={{
+                    inner: { justifyContent: "flex-start" },
+                    root: {
+                      color:
+                        activeSection === item.id
+                          ? COLOR.textPrimary
+                          : COLOR.textMuted,
+                      fontWeight: 500,
+                    },
                   }}
                 >
                   {item.label}

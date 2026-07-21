@@ -6,6 +6,7 @@ import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { Card, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconCode, IconDeviceMobile, IconServer, IconTool, IconUsers } from "@tabler/icons-react";
 import type { Skill } from "../types/portfolio";
+import { glass } from "../styles/tokens";
 
 interface SkillCardProps { skill: Skill; index: number; }
 
@@ -56,19 +57,22 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill, index }) => {
           padding="lg"
           radius="xl"
           style={{
-            background: "rgba(15,23,42,0.9)",
+            background: glass.card.background,
+            backdropFilter: glass.card.backdropFilter,
+            WebkitBackdropFilter: glass.card.WebkitBackdropFilter,
             border: `1px solid ${cfg.border}`,
             cursor: "pointer",
             overflow: "hidden",
             position: "relative",
+            boxShadow: glass.card.boxShadow,
             transition: "box-shadow 0.25s ease, border-color 0.25s ease",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.boxShadow = `0 10px 32px ${cfg.color}22`;
+            (e.currentTarget as HTMLElement).style.boxShadow = `${glass.card.boxShadow}, 0 10px 32px ${cfg.color}22`;
             (e.currentTarget as HTMLElement).style.borderColor = cfg.color + "55";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.boxShadow = "none";
+            (e.currentTarget as HTMLElement).style.boxShadow = glass.card.boxShadow;
             (e.currentTarget as HTMLElement).style.borderColor = cfg.border;
           }}
         >

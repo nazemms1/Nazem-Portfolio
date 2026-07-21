@@ -1,43 +1,43 @@
 import { createTheme } from "@mantine/core";
 
 /**
- * Color tokens — navy-based palette
+ * Color tokens — navy/blue palette, refined for a minimal-premium system.
  *
- * Primary:   Navy  #1d4ed8  (blue-700)
- * Highlight: Blue  #3b82f6  (blue-500)  — lighter end of gradients
- * Accent:    Indigo #6366f1              — replaces violet in primary contexts
+ * Background: near-black (#08090b) → card surface (#0d1117) → elevated (#111826)
+ * Primary:    Blue  #3b82f6 (blue-500)
+ * Deep:       Navy  #1d4ed8 (blue-700)
+ * Accent:     Indigo #6366f1 — used sparingly for secondary emphasis
  *
- * Use `cyan` color key in Mantine so all variant="gradient" + color="cyan"
- * calls resolve to these navy shades automatically.
+ * Same hues as before; contrast and application refined (fewer competing
+ * gradients, consistent border/glow opacities, higher body-text contrast).
  */
 export const theme = createTheme({
   primaryColor: "cyan",
 
   colors: {
     dark: [
-      "#e2e8f0", // 0 body text
+      "#eef1f5", // 0 body text (brighter for AA contrast on #08090b)
       "#cbd5e1", // 1
       "#94a3b8", // 2 dimmed
       "#64748b", // 3
       "#334155", // 4 subtle borders
-      "#1e293b", // 5 card borders
-      "#0f172a", // 6 card bg
-      "#09090b", // 7 page bg
-      "#09090b", // 8
+      "#1b2333", // 5 card borders
+      "#0d1117", // 6 card bg
+      "#08090b", // 7 page bg
+      "#08090b", // 8
       "#000000", // 9
     ],
-    // "cyan" key remapped to navy/blue scale
     cyan: [
       "#eff6ff", // 0
       "#dbeafe", // 1
       "#bfdbfe", // 2
       "#93c5fd", // 3
       "#60a5fa", // 4
-      "#3b82f6", // 5  — light end of gradients, text accents
-      "#2563eb", // 6  — primary button bg
-      "#1d4ed8", // 7  — primary (deep navy)
+      "#3b82f6", // 5 — primary accent
+      "#2563eb", // 6 — primary button bg
+      "#1d4ed8", // 7 — deep navy
       "#1e40af", // 8
-      "#1e3a8a", // 9  — darkest navy
+      "#1e3a8a", // 9 — darkest navy
     ],
   },
 
@@ -46,12 +46,12 @@ export const theme = createTheme({
   fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
 
   headings: {
-    fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
+    fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
     fontWeight: "700",
     sizes: {
-      h1: { fontSize: "clamp(2.4rem, 5vw, 3.6rem)", lineHeight: "1.1" },
-      h2: { fontSize: "clamp(1.1rem, 2.2vw, 1.6rem)", lineHeight: "1.3" },
-      h3: { fontSize: "1.25rem", lineHeight: "1.4" },
+      h1: { fontSize: "clamp(2.6rem, 6vw, 4.4rem)", lineHeight: "1.05" },
+      h2: { fontSize: "clamp(2rem, 4.4vw, 3.2rem)", lineHeight: "1.1" },
+      h3: { fontSize: "1.3rem", lineHeight: "1.35" },
     },
   },
 
@@ -64,24 +64,28 @@ export const theme = createTheme({
   },
 
   components: {
+    Container: {
+      // defaultProps: { px: { base: 24, sm: 40, lg: 64 } },
+    },
     Card: {
       defaultProps: { withBorder: false },
       styles: {
         root: {
-          background: "rgba(15,23,42,0.85)",
-          border: "1px solid rgba(30,41,59,0.8)",
-          transition: "border-color 180ms ease, box-shadow 180ms ease",
+          background: "rgba(13,17,23,0.85)",
+          border: "1px solid rgba(27,35,51,0.9)",
+          transition:
+            "border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease",
         },
       },
     },
     Badge: {
       styles: {
         root: {
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 600,
-          letterSpacing: "0.03em",
+          fontFamily: "'JetBrains Mono', monospace",
+          fontWeight: 500,
+          letterSpacing: "0.04em",
           textTransform: "uppercase",
-          fontSize: "0.7rem",
+          fontSize: "0.68rem",
         },
       },
     },
@@ -91,7 +95,8 @@ export const theme = createTheme({
           fontFamily: "'Inter', sans-serif",
           fontWeight: 600,
           letterSpacing: "0.01em",
-          transition: "transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease",
+          transition:
+            "transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease",
         },
       },
     },

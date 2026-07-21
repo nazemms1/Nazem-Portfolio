@@ -1,6 +1,6 @@
 /* ── Global baseline ─────────────────────────────────────────── */
 
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 *,
 *::before,
@@ -17,8 +17,8 @@ html {
 
 body {
   margin: 0;
-  background: #09090b;
-  color: #e2e8f0;
+  background: #08090b;
+  color: #eef1f5;
   font-family:
     "Inter",
     system-ui,
@@ -28,8 +28,8 @@ body {
 
 /* Selection */
 ::selection {
-  background: rgba(29, 78, 216, 0.35);
-  color: #e2e8f0;
+  background: rgba(59, 130, 246, 0.35);
+  color: #eef1f5;
 }
 
 /* Scrollbar */
@@ -37,10 +37,10 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: #08090b;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #1b2333;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -49,7 +49,40 @@ body {
 
 /* Focus visible — keyboard nav only */
 :focus-visible {
-  outline: 2px solid #0891b2;
+  outline: 2px solid #3b82f6;
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* Monospace utility class for labels / tags / code accents */
+.mono-label {
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Reduced motion support — respected globally */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Hide native cursor only on fine-pointer devices where custom cursor renders */
+@media (hover: hover) and (pointer: fine) {
+  body.custom-cursor-active {
+    cursor: none;
+  }
+  body.custom-cursor-active a,
+  body.custom-cursor-active button {
+    cursor: none;
+  }
 }
