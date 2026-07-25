@@ -1,8 +1,10 @@
+import { useState, useMemo } from "react";
 import { Container, Text, SimpleGrid, Box, Group, Badge, Image } from "@mantine/core";
 import { IconArrowUpRight, IconBrandGithub } from "@tabler/icons-react";
 import Reveal from "../components/Reveal";
 import SectionHeading from "../components/SectionHeading";
 import { projects } from "../data/portfolioData";
+import type { CompanyKey } from "../data/portfolioData";
 import { caseStudies } from "../data/caseStudies";
 import { COLOR, FONT, glass } from "../styles/tokens";
 
@@ -15,7 +17,26 @@ const companyLabel: Record<string, string> = {
   freelance: "Freelance",
 };
 
+type FilterKey = "all" | CompanyKey;
+
+const filters: { key: FilterKey; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "pharaon", label: "Pharaon Group" },
+  { key: "soutify", label: "Soutify" },
+  { key: "freelance", label: "Freelance" },
+];
+
 export default function MoreWorkSection() {
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
+
+  const visibleProjects = useMemo(
+    () =>
+      activeFilter === "all"
+        ? restProjects
+        : restProjects.filter((p) => p.company === activeFilter),
+    [activeFilter]
+  );
+
   return (
     <section id="more-work" style={{ padding: "6rem 0 8rem", position: "relative" }}>
       <Container size={1280} px={{ base: 24, sm: 48, lg: 72 }}>
@@ -25,8 +46,37 @@ export default function MoreWorkSection() {
           description="Additional projects across web, mobile, and dashboard products — smaller in scope, still shipped to production."
         />
 
+        <Group gap="xs" mb="xl">
+          {filters.map((f) => {
+            const active = activeFilter === f.key;
+            return (
+              <Box
+                key={f.key}
+                component="button"
+                onClick={() => setActiveFilter(f.key)}
+                style={{
+                  cursor: "pointer",
+                  border: active ? `1px solid ${COLOR.blue}55` : "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: 999,
+                  padding: "8px 18px",
+                  fontSize: "0.85rem",
+                  fontFamily: FONT.sans,
+                  fontWeight: 500,
+                  color: active ? COLOR.textPrimary : COLOR.textMuted,
+                  background: active ? `${COLOR.blue}1a` : glass.card.background,
+                  backdropFilter: glass.card.backdropFilter,
+                  WebkitBackdropFilter: glass.card.WebkitBackdropFilter,
+                  transition: "border-color 0.2s ease, color 0.2s ease, background 0.2s ease",
+                }}
+              >
+                {f.label}
+              </Box>
+            );
+          })}
+        </Group>
+
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
-          {restProjects.map((project, i) => {
+          {visibleProjects.map((project, i) => {
             const hasLink = project.demoUrl && project.demoUrl !== "#";
             const hasGithub = project.githubUrl && project.githubUrl !== "#";
             return (

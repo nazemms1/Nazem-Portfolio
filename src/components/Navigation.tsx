@@ -60,6 +60,9 @@ const Navigation: React.FC = () => {
         <div
           style={{
             maxWidth: "1440px",
+            height: "60px",
+            display: "flex",
+            alignItems: "center",
             margin: "0 auto",
             borderRadius: 999,
             background: isScrolled
@@ -71,11 +74,11 @@ const Navigation: React.FC = () => {
             boxShadow: isScrolled
               ? `${glass.nav.boxShadow}, 0 12px 40px rgba(0,0,0,0.35)`
               : glass.nav.boxShadow,
-            padding: "0.55rem 0.6rem 0.55rem 1.3rem",
+            padding: "0 0.6rem 0 1.3rem",
             transition: "background 0.3s ease, box-shadow 0.3s ease",
           }}
         >
-          <Group justify="space-between" align="center">
+          <Group justify="space-between" align="center" style={{ width: "100%" }}>
             <Text
               onClick={() => scrollToSection("home")}
               style={{
