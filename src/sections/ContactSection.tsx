@@ -3,10 +3,12 @@ import { IconMail, IconPhone, IconMapPin, IconBrandLinkedin, IconBrandGithub, Ic
 import ContactForm from "../components/ContactForm";
 import Reveal from "../components/Reveal";
 import Magnetic from "../components/Magnetic";
-import { contactInfo } from "../data/portfolioData";
+import { usePortfolio } from "../store/PortfolioProvider";
 import { COLOR, FONT } from "../styles/tokens";
 
 export default function ContactSection() {
+  const { contactInfo } = usePortfolio();
+
   return (
     <section id="contact" style={{ padding: "8rem 0 6rem", position: "relative" }}>
       <Container size={1280} px={{ base: 24, sm: 48, lg: 72 }}>

@@ -1,36 +1,32 @@
 import { Container, Text, SimpleGrid, Box, Group } from "@mantine/core";
 import Reveal from "../components/Reveal";
 import SectionHeading from "../components/SectionHeading";
+import { usePortfolio } from "../store/PortfolioProvider";
 import { COLOR, FONT } from "../styles/tokens";
 
-const domains = [
-  {
-    title: "Frontend Architecture",
-    items: ["React", "TypeScript", "Next.js", "Redux", "TanStack Query"],
-  },
-  {
-    title: "Motion & Interaction",
-    items: ["Framer Motion", "CSS Animations", "Responsive Design", "Accessibility"],
-  },
-  {
-    title: "Mobile & Cross-Platform",
-    items: ["Flutter", "Dart", "React Native"],
-  },
-  {
-    title: "Platform & Integration",
-    items: ["REST APIs", "WebSocket", "Node.js", "Firebase", "i18n / RTL"],
-  },
-  {
-    title: "UI Systems",
-    items: ["Mantine UI", "Tailwind CSS", "Material UI", "Design Systems"],
-  },
-  {
-    title: "Process & Tooling",
-    items: ["Git", "Code Review", "Figma", "Agile / Scrum"],
-  },
-];
+const categoryLabels: Record<string, string> = {
+  frontend: "Frontend Architecture",
+  mobile: "Mobile & Cross-Platform",
+  backend: "Backend & Platform",
+  tools: "Process & Tooling",
+  "soft-skills": "Ways of Working",
+};
+
+const categoryOrder = ["frontend", "mobile", "backend", "tools", "soft-skills"];
+
 
 export default function CraftSection() {
+  const { skills } = usePortfolio();
+
+  const domains = categoryOrder
+    .map((category) => ({
+      title: categoryLabels[category] ?? category,
+      items: skills.filter((s) => s.category === category).map((s) => s.name),
+    }))
+    .filter((domain) => domain.items.length > 0);
+
+  if (domains.length === 0) return null;
+
   return (
     <section id="craft" style={{ padding: "8rem 0", position: "relative" }}>
       <Container size={1280} px={{ base: 24, sm: 48, lg: 72 }}>

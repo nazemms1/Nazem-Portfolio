@@ -8,6 +8,8 @@ export interface Experience {
   description: string[]
   logo:string
   technologies?: string[]
+  /** Managed from the dashboard — hidden entries stay in the data but are not rendered. */
+  hidden?: boolean
 }
 
 export interface Project {
@@ -23,12 +25,14 @@ export interface Project {
   githubUrl?: string
   status: "completed" | "in-progress" | "planned"
   company: "pharaon" | "soutify" | "freelance"
+  hidden?: boolean
 }
 
 export interface Skill {
   name: string
   category: "frontend" | "mobile" | "backend" | "tools" | "soft-skills"
- }
+  hidden?: boolean
+}
 
 export interface ContactInfo {
   email: string
@@ -46,4 +50,5 @@ export interface Recommendation {
   period: string
   message: string
   linkedin?: string
+  hidden?: boolean
 }

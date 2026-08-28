@@ -2,8 +2,6 @@
 // Metrics marked (est.) are reasonable estimates drawn from project scope in
 // portfolioData.ts, not measured analytics — verify/replace before publishing.
 
-import { projects } from "./portfolioData";
-
 export interface CaseStudy {
   projectId: string;
   role: string;
@@ -11,6 +9,7 @@ export interface CaseStudy {
   approach: string;
   outcome: string;
   metrics: { label: string; value: string }[];
+  hidden?: boolean;
 }
 
 export const caseStudies: CaseStudy[] = [
@@ -71,8 +70,3 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
 ];
-
-export const caseStudyProjects = caseStudies.map((cs) => ({
-  ...cs,
-  project: projects.find((p) => p.id === cs.projectId)!,
-}));

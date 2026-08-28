@@ -2,10 +2,14 @@ import { Container, Text, Box, Stack, Anchor, Group } from "@mantine/core";
 import { IconQuote, IconBrandLinkedin } from "@tabler/icons-react";
 import Reveal from "../components/Reveal";
 import SectionHeading from "../components/SectionHeading";
-import { recommendations } from "../data/portfolioData";
+import { usePortfolio } from "../store/PortfolioProvider";
 import { COLOR, FONT } from "../styles/tokens";
 
 export default function RecommendationsSection() {
+  const { recommendations } = usePortfolio();
+
+  if (recommendations.length === 0) return null;
+
   return (
     <section id="recommendations" style={{ padding: "8rem 0", position: "relative" }}>
       <Container size={1280} px={{ base: 24, sm: 48, lg: 72 }}>

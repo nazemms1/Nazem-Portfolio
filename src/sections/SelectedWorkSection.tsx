@@ -3,10 +3,14 @@ import { IconArrowUpRight } from "@tabler/icons-react";
 import Reveal from "../components/Reveal";
 import Magnetic from "../components/Magnetic";
 import SectionHeading from "../components/SectionHeading";
-import { caseStudyProjects } from "../data/caseStudies";
+import { usePortfolio } from "../store/PortfolioProvider";
 import { COLOR, FONT } from "../styles/tokens";
 
 export default function SelectedWorkSection() {
+  const { caseStudies } = usePortfolio();
+
+  if (caseStudies.length === 0) return null;
+
   return (
     <section id="work" style={{ padding: "8rem 0", position: "relative" }}>
       <Container size={1280} px={{ base: 24, sm: 48, lg: 72 }}>
@@ -17,7 +21,7 @@ export default function SelectedWorkSection() {
         />
 
         <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-          {caseStudyProjects.map((cs, i) => (
+          {caseStudies.map((cs, i) => (
             <Reveal key={cs.projectId} delay={0} distance={40}>
               <div
                 style={{

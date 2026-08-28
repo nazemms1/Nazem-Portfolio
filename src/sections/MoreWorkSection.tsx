@@ -3,13 +3,9 @@ import { Container, Text, SimpleGrid, Box, Group, Badge, Image } from "@mantine/
 import { IconArrowUpRight, IconBrandGithub } from "@tabler/icons-react";
 import Reveal from "../components/Reveal";
 import SectionHeading from "../components/SectionHeading";
-import { projects } from "../data/portfolioData";
 import type { CompanyKey } from "../data/portfolioData";
-import { caseStudies } from "../data/caseStudies";
+import { usePortfolio } from "../store/PortfolioProvider";
 import { COLOR, FONT, glass } from "../styles/tokens";
-
-const featuredIds = new Set(caseStudies.map((cs) => cs.projectId));
-const restProjects = projects.filter((p) => !featuredIds.has(p.id));
 
 const companyLabel: Record<string, string> = {
   pharaon: "Pharaon Group",
@@ -27,14 +23,15 @@ const filters: { key: FilterKey; label: string }[] = [
 ];
 
 export default function MoreWorkSection() {
+  const { archiveProjects } = usePortfolio();
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
 
   const visibleProjects = useMemo(
     () =>
       activeFilter === "all"
-        ? restProjects
-        : restProjects.filter((p) => p.company === activeFilter),
-    [activeFilter]
+        ? archiveProjects
+        : archiveProjects.filter((p) => p.company === activeFilter),
+    [activeFilter, archiveProjects]
   );
 
   return (

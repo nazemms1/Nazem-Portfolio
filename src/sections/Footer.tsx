@@ -9,9 +9,19 @@ export default function Footer() {
           <Text style={{ fontFamily: FONT.mono, fontSize: "0.85rem", color: COLOR.textFaint }}>
             Nazem Almsouti — Senior Frontend Engineer
           </Text>
-          <Text style={{ fontFamily: FONT.mono, fontSize: "0.8rem", color: COLOR.textFaint }}>
-            © 2026
-          </Text>
+          <Group gap="lg">
+            {/* Discreet entry point to the content dashboard. */}
+            <a
+              href="#/admin"
+              title="Dashboard"
+              style={{ fontFamily: FONT.mono, fontSize: "0.8rem", color: COLOR.textFaint, textDecoration: "none" }}
+            >
+              ·
+            </a>
+            <Text style={{ fontFamily: FONT.mono, fontSize: "0.8rem", color: COLOR.textFaint }}>
+              © 2026
+            </Text>
+          </Group>
         </Group>
       </Container>
     </footer>

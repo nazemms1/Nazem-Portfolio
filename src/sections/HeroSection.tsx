@@ -4,7 +4,7 @@ import { IconArrowDown } from "@tabler/icons-react";
 import Magnetic from "../components/Magnetic";
 import TerminalPanel from "../components/TerminalPanel";
 import CountUp from "../components/CountUp";
-import { contactInfo } from "../data/portfolioData";
+import { usePortfolio } from "../store/PortfolioProvider";
 import cvFile from "../assets/files/Nazem_Almsouti_CV.pdf";
 import { COLOR, FONT, EASE, gradientText, glass } from "../styles/tokens";
 
@@ -15,6 +15,7 @@ const fadeUp = (d = 0) => ({
 });
 
 export default function HeroSection() {
+  const { contactInfo } = usePortfolio();
   const handleDownloadCV = () => {
     const link = document.createElement("a");
     link.href = cvFile;
