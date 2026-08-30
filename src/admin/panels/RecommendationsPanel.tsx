@@ -1,27 +1,12 @@
 import { useState } from "react";
-import { Button, Group, Stack, TextInput, Textarea } from "@mantine/core";
+import { Button, Stack } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconPlus } from "@tabler/icons-react";
-import type { Recommendation } from "../../types/portfolio";
 import { usePortfolioStore } from "../../store/PortfolioProvider";
-import {
-  EmptyState,
-  FieldGroup,
-  FormDrawer,
-  ListRow,
-  PanelHeader,
-  move,
-} from "../ui";
-
-const emptyRecommendation = (): Recommendation => ({
-  id: "",
-  name: "",
-  role: "",
-  expertise: "",
-  period: "",
-  message: "",
-  linkedin: "",
-});
+import type { Recommendation } from "../../types/portfolio";
+import { RecommendationFormDrawer } from "../forms/RecommendationFormDrawer";
+import { EmptyState, ListRow, PanelHeader } from "../ui";
+import { emptyRecommendation, move } from "../utils/adminHelpers";
 
 export default function RecommendationsPanel() {
   const { content, updateSection } = usePortfolioStore();
@@ -120,75 +105,13 @@ export default function RecommendationsPanel() {
         </Stack>
       )}
 
-      <FormDrawer
-        opened={editing !== null}
+      <RecommendationFormDrawer
+        editing={editing}
+        isNew={isNew}
         onClose={() => setEditing(null)}
-        title={isNew ? "New recommendation" : "Edit recommendation"}
-        subtitle={editing?.name || undefined}
+        onChange={setEditing}
         onSubmit={commit}
-        submitLabel={isNew ? "Add recommendation" : "Save changes"}
-      >
-        {editing && (
-          <Stack gap={28}>
-            <FieldGroup label="Who">
-              <Group grow>
-                <TextInput
-                  label="Name"
-                  required
-                  value={editing.name}
-                  onChange={(e) =>
-                    setEditing({ ...editing, name: e.currentTarget.value })
-                  }
-                />
-                <TextInput
-                  label="Role"
-                  placeholder="Project Manager at …"
-                  value={editing.role}
-                  onChange={(e) =>
-                    setEditing({ ...editing, role: e.currentTarget.value })
-                  }
-                />
-              </Group>
-              <Group grow>
-                <TextInput
-                  label="Expertise"
-                  value={editing.expertise}
-                  onChange={(e) =>
-                    setEditing({ ...editing, expertise: e.currentTarget.value })
-                  }
-                />
-                <TextInput
-                  label="Period"
-                  value={editing.period}
-                  onChange={(e) =>
-                    setEditing({ ...editing, period: e.currentTarget.value })
-                  }
-                />
-              </Group>
-              <TextInput
-                label="LinkedIn URL"
-                value={editing.linkedin ?? ""}
-                onChange={(e) =>
-                  setEditing({ ...editing, linkedin: e.currentTarget.value })
-                }
-              />
-            </FieldGroup>
-
-            <FieldGroup label="Testimonial">
-              <Textarea
-                label="Message"
-                required
-                autosize
-                minRows={8}
-                value={editing.message}
-                onChange={(e) =>
-                  setEditing({ ...editing, message: e.currentTarget.value })
-                }
-              />
-            </FieldGroup>
-          </Stack>
-        )}
-      </FormDrawer>
+      />
     </>
   );
 }

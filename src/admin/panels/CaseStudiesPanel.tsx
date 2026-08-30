@@ -1,38 +1,12 @@
 import { useState } from "react";
-import {
-  ActionIcon,
-  Alert,
-  Badge,
-  Button,
-  Group,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-  Textarea,
-} from "@mantine/core";
+import { Badge, Button, Stack } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconInfoCircle, IconPlus, IconX } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 import type { CaseStudy } from "../../data/caseStudies";
 import { usePortfolioStore } from "../../store/PortfolioProvider";
-import {
-  EmptyState,
-  FieldGroup,
-  FormDrawer,
-  ListRow,
-  PanelHeader,
-  move,
-} from "../ui";
-import { AD } from "../tokens";
-
-const emptyCaseStudy = (): CaseStudy => ({
-  projectId: "",
-  role: "",
-  problem: "",
-  approach: "",
-  outcome: "",
-  metrics: [],
-});
+import { CaseStudyFormDrawer } from "../forms/CaseStudyFormDrawer";
+import { EmptyState, ListRow, PanelHeader } from "../ui";
+import { emptyCaseStudy, move } from "../utils/adminHelpers";
 
 export default function CaseStudiesPanel() {
   const { content, updateSection } = usePortfolioStore();
@@ -160,135 +134,15 @@ export default function CaseStudiesPanel() {
         </Stack>
       )}
 
-      <FormDrawer
-        opened={editing !== null}
+      <CaseStudyFormDrawer
+        editing={editing}
+        editingIndex={editingIndex}
+        projects={projects}
         onClose={() => setEditing(null)}
-        title={editingIndex < 0 ? "New case study" : "Edit case study"}
-        subtitle={editing?.projectId ? projectTitle(editing.projectId) : undefined}
+        onChange={setEditing}
         onSubmit={commit}
-        submitLabel={editingIndex < 0 ? "Add case study" : "Save changes"}
-      >
-        {editing && (
-          <Stack gap={28}>
-            <FieldGroup label="Subject">
-              <Select
-                label="Project"
-                required
-                searchable
-                data={projects.map((p) => ({ value: p.id, label: p.title }))}
-                value={editing.projectId || null}
-                onChange={(value) =>
-                  setEditing({ ...editing, projectId: value ?? "" })
-                }
-              />
-              <TextInput
-                label="Your role"
-                placeholder="Frontend Lead"
-                value={editing.role}
-                onChange={(e) =>
-                  setEditing({ ...editing, role: e.currentTarget.value })
-                }
-              />
-            </FieldGroup>
-
-            <FieldGroup label="Narrative">
-              <Textarea
-                label="Problem"
-                autosize
-                minRows={3}
-                value={editing.problem}
-                onChange={(e) =>
-                  setEditing({ ...editing, problem: e.currentTarget.value })
-                }
-              />
-              <Textarea
-                label="Approach"
-                autosize
-                minRows={3}
-                value={editing.approach}
-                onChange={(e) =>
-                  setEditing({ ...editing, approach: e.currentTarget.value })
-                }
-              />
-              <Textarea
-                label="Outcome"
-                autosize
-                minRows={3}
-                value={editing.outcome}
-                onChange={(e) =>
-                  setEditing({ ...editing, outcome: e.currentTarget.value })
-                }
-              />
-            </FieldGroup>
-
-            <FieldGroup label="Metrics">
-              <Stack gap={8}>
-                {editing.metrics.map((metric, i) => (
-                  <Group key={i} gap={8} wrap="nowrap">
-                    <TextInput
-                      placeholder="Label"
-                      value={metric.label}
-                      style={{ flex: 1 }}
-                      onChange={(e) => {
-                        const metrics = [...editing.metrics];
-                        metrics[i] = { ...metric, label: e.currentTarget.value };
-                        setEditing({ ...editing, metrics });
-                      }}
-                    />
-                    <TextInput
-                      placeholder="Value"
-                      value={metric.value}
-                      style={{ flex: 1 }}
-                      onChange={(e) => {
-                        const metrics = [...editing.metrics];
-                        metrics[i] = { ...metric, value: e.currentTarget.value };
-                        setEditing({ ...editing, metrics });
-                      }}
-                    />
-                    <ActionIcon
-                      variant="subtle"
-                      color="red"
-                      onClick={() =>
-                        setEditing({
-                          ...editing,
-                          metrics: editing.metrics.filter((_, index) => index !== i),
-                        })
-                      }
-                      aria-label="Remove metric"
-                    >
-                      <IconX size={15} />
-                    </ActionIcon>
-                  </Group>
-                ))}
-                {editing.metrics.length === 0 && (
-                  <Text size="xs" c={AD.textFaint}>
-                    No metrics yet — two short ones read best.
-                  </Text>
-                )}
-                <Button
-                  variant="light"
-                  size="xs"
-                  w="fit-content"
-                  leftSection={<IconPlus size={14} />}
-                  onClick={() =>
-                    setEditing({
-                      ...editing,
-                      metrics: [...editing.metrics, { label: "", value: "" }],
-                    })
-                  }
-                >
-                  Add metric
-                </Button>
-              </Stack>
-            </FieldGroup>
-
-            <Alert icon={<IconInfoCircle size={16} />} color="blue" variant="light">
-              Featured projects are removed from the “More shipped work” archive
-              automatically.
-            </Alert>
-          </Stack>
-        )}
-      </FormDrawer>
+        projectTitle={projectTitle}
+      />
     </>
   );
 }

@@ -1,37 +1,12 @@
 import { useState } from "react";
-import { Badge, Button, Group, Select, Stack, TextInput } from "@mantine/core";
+import { Badge, Button, Stack } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconPlus } from "@tabler/icons-react";
-import type { Experience } from "../../types/portfolio";
 import { usePortfolioStore } from "../../store/PortfolioProvider";
-import {
-  EmptyState,
-  FieldGroup,
-  FormDrawer,
-  ImageField,
-  ListRow,
-  PanelHeader,
-  StringListField,
-  move,
-} from "../ui";
-
-const typeOptions = [
-  { value: "Fulltime", label: "Fulltime" },
-  { value: "Freelance", label: "Freelance" },
-  { value: "Contract", label: "Contract" },
-];
-
-const emptyExperience = (): Experience => ({
-  id: "",
-  title: "",
-  company: "",
-  period: "",
-  location: "",
-  type: "Fulltime",
-  description: [],
-  logo: "",
-  technologies: [],
-});
+import type { Experience } from "../../types/portfolio";
+import { ExperienceFormDrawer } from "../forms/ExperienceFormDrawer";
+import { EmptyState, ListRow, PanelHeader } from "../ui";
+import { emptyExperience, move } from "../utils/adminHelpers";
 
 export default function ExperiencesPanel() {
   const { content, updateSection } = usePortfolioStore();
@@ -141,102 +116,13 @@ export default function ExperiencesPanel() {
         </Stack>
       )}
 
-      <FormDrawer
-        opened={editing !== null}
+      <ExperienceFormDrawer
+        editing={editing}
+        isNew={isNew}
         onClose={() => setEditing(null)}
-        title={isNew ? "New role" : "Edit role"}
-        subtitle={editing?.company || undefined}
+        onChange={setEditing}
         onSubmit={commit}
-        submitLabel={isNew ? "Add role" : "Save changes"}
-      >
-        {editing && (
-          <Stack gap={28}>
-            <FieldGroup label="Position">
-              <TextInput
-                label="Title"
-                required
-                value={editing.title}
-                onChange={(e) =>
-                  setEditing({ ...editing, title: e.currentTarget.value })
-                }
-              />
-              <Group grow>
-                <TextInput
-                  label="Company"
-                  required
-                  value={editing.company}
-                  onChange={(e) =>
-                    setEditing({ ...editing, company: e.currentTarget.value })
-                  }
-                />
-                <Select
-                  label="Type"
-                  data={typeOptions}
-                  value={editing.type}
-                  allowDeselect={false}
-                  onChange={(value) =>
-                    setEditing({
-                      ...editing,
-                      type: (value ?? "Fulltime") as Experience["type"],
-                    })
-                  }
-                />
-              </Group>
-              <Group grow>
-                <TextInput
-                  label="Period"
-                  placeholder="Jul 2025 – Present"
-                  value={editing.period}
-                  onChange={(e) =>
-                    setEditing({ ...editing, period: e.currentTarget.value })
-                  }
-                />
-                <TextInput
-                  label="Location"
-                  value={editing.location}
-                  onChange={(e) =>
-                    setEditing({ ...editing, location: e.currentTarget.value })
-                  }
-                />
-              </Group>
-              <TextInput
-                label="Id"
-                description="Leave blank to generate one."
-                value={editing.id}
-                onChange={(e) =>
-                  setEditing({ ...editing, id: e.currentTarget.value })
-                }
-              />
-            </FieldGroup>
-
-            <FieldGroup label="Branding">
-              <ImageField
-                label="Company logo"
-                value={editing.logo}
-                onChange={(logo) => setEditing({ ...editing, logo })}
-                onError={(message) =>
-                  notifications.show({ color: "red", message, autoClose: 8000 })
-                }
-              />
-            </FieldGroup>
-
-            <FieldGroup label="Details">
-              <StringListField
-                label="Responsibilities"
-                value={editing.description}
-                onChange={(description) => setEditing({ ...editing, description })}
-                placeholder="What you did in this role"
-              />
-              <StringListField
-                label="Technologies"
-                value={editing.technologies ?? []}
-                onChange={(technologies) => setEditing({ ...editing, technologies })}
-                placeholder="React"
-              />
-            </FieldGroup>
-          </Stack>
-        )}
-      </FormDrawer>
+      />
     </>
   );
 }

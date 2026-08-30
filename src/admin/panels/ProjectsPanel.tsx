@@ -1,65 +1,20 @@
 import { useMemo, useState } from "react";
-import {
-  Badge,
-  Button,
-  Group,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-  Textarea,
-} from "@mantine/core";
+import { Badge, Button, Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconPlus } from "@tabler/icons-react";
-import type { Project } from "../../types/portfolio";
 import { usePortfolioStore } from "../../store/PortfolioProvider";
+import type { Project } from "../../types/portfolio";
+import { companyOptions, statusOptions } from "../constants";
+import { ProjectFormDrawer } from "../forms/ProjectFormDrawer";
+import { AD } from "../tokens";
 import {
   EmptyState,
-  FieldGroup,
   FilterChips,
-  FormDrawer,
-  ImageField,
   ListRow,
   PanelHeader,
-  StringListField,
   Toolbar,
-  move,
 } from "../ui";
-import { AD } from "../tokens";
-
-const companyOptions = [
-  { value: "pharaon", label: "Pharaon Group" },
-  { value: "soutify", label: "Soutify" },
-  { value: "freelance", label: "Freelance" },
-];
-
-const statusOptions = [
-  { value: "completed", label: "Completed" },
-  { value: "in-progress", label: "In progress" },
-  { value: "planned", label: "Planned" },
-];
-
-const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 48) || `project-${Date.now()}`;
-
-const emptyProject = (): Project => ({
-  id: "",
-  title: "",
-  period: "",
-  description: "",
-  features: [],
-  technologies: [],
-  image: "",
-  images: [],
-  demoUrl: "",
-  githubUrl: "",
-  status: "completed",
-  company: "freelance",
-});
+import { emptyProject, move, slugify } from "../utils/adminHelpers";
 
 type CompanyFilter = "all" | Project["company"];
 
@@ -244,134 +199,13 @@ export default function ProjectsPanel() {
         </Stack>
       )}
 
-      <FormDrawer
-        opened={editing !== null}
+      <ProjectFormDrawer
+        editing={editing}
+        isNew={isNew}
         onClose={() => setEditing(null)}
-        title={isNew ? "New project" : "Edit project"}
-        subtitle={editing?.title || undefined}
+        onChange={setEditing}
         onSubmit={commit}
-        submitLabel={isNew ? "Add project" : "Save changes"}
-      >
-        {editing && (
-          <Stack gap={28}>
-            <FieldGroup label="Basics">
-              <TextInput
-                label="Title"
-                required
-                value={editing.title}
-                onChange={(e) =>
-                  setEditing({ ...editing, title: e.currentTarget.value })
-                }
-              />
-              <Group grow align="flex-start">
-                <TextInput
-                  label="Id"
-                  description="Used by case studies. Blank generates one from the title."
-                  value={editing.id}
-                  onChange={(e) =>
-                    setEditing({ ...editing, id: e.currentTarget.value })
-                  }
-                />
-                <TextInput
-                  label="Period"
-                  placeholder="Jan 2026 – Present"
-                  value={editing.period}
-                  onChange={(e) =>
-                    setEditing({ ...editing, period: e.currentTarget.value })
-                  }
-                />
-              </Group>
-              <Group grow>
-                <Select
-                  label="Company"
-                  data={companyOptions}
-                  value={editing.company}
-                  allowDeselect={false}
-                  onChange={(value) =>
-                    setEditing({
-                      ...editing,
-                      company: (value ?? "freelance") as Project["company"],
-                    })
-                  }
-                />
-                <Select
-                  label="Status"
-                  data={statusOptions}
-                  value={editing.status}
-                  allowDeselect={false}
-                  onChange={(value) =>
-                    setEditing({
-                      ...editing,
-                      status: (value ?? "completed") as Project["status"],
-                    })
-                  }
-                />
-              </Group>
-              <Textarea
-                label="Description"
-                autosize
-                minRows={4}
-                value={editing.description}
-                onChange={(e) =>
-                  setEditing({ ...editing, description: e.currentTarget.value })
-                }
-              />
-            </FieldGroup>
-
-            <FieldGroup label="Links">
-              <TextInput
-                label="Live URL"
-                placeholder="https://…  (or # for none)"
-                value={editing.demoUrl ?? ""}
-                onChange={(e) =>
-                  setEditing({ ...editing, demoUrl: e.currentTarget.value })
-                }
-              />
-              <TextInput
-                label="Repository URL"
-                placeholder="https://github.com/…  (or # for none)"
-                value={editing.githubUrl ?? ""}
-                onChange={(e) =>
-                  setEditing({ ...editing, githubUrl: e.currentTarget.value })
-                }
-              />
-            </FieldGroup>
-
-            <FieldGroup label="Media">
-              <ImageField
-                label="Cover image"
-                value={editing.image}
-                onChange={(image) => setEditing({ ...editing, image })}
-                onError={(message) =>
-                  notifications.show({ color: "red", message, autoClose: 8000 })
-                }
-              />
-              <StringListField
-                label="Gallery images"
-                description="Extra image paths or URLs."
-                value={editing.images ?? []}
-                onChange={(images) => setEditing({ ...editing, images })}
-                placeholder="/images/shot.png"
-              />
-            </FieldGroup>
-
-            <FieldGroup label="Details">
-              <StringListField
-                label="Features"
-                value={editing.features}
-                onChange={(features) => setEditing({ ...editing, features })}
-                placeholder="What the project does"
-              />
-              <StringListField
-                label="Technologies"
-                value={editing.technologies}
-                onChange={(technologies) => setEditing({ ...editing, technologies })}
-                placeholder="React"
-              />
-            </FieldGroup>
-          </Stack>
-        )}
-      </FormDrawer>
+      />
     </>
   );
 }

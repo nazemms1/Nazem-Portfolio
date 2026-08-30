@@ -78,10 +78,22 @@ export function normalizeContent(raw: unknown): PortfolioContent {
         ? {
             ...base.contactInfo,
             ...input.contactInfo,
-            name: input.contactInfo.name || base.contactInfo.name,
-            title: input.contactInfo.title || base.contactInfo.title,
-            subtitle: input.contactInfo.subtitle || base.contactInfo.subtitle,
-            badge: input.contactInfo.badge || base.contactInfo.badge,
+            name:
+              typeof input.contactInfo.name === "string" && input.contactInfo.name.trim()
+                ? input.contactInfo.name
+                : base.contactInfo.name,
+            title:
+              typeof input.contactInfo.title === "string" && input.contactInfo.title.trim()
+                ? input.contactInfo.title
+                : base.contactInfo.title,
+            subtitle:
+              typeof input.contactInfo.subtitle === "string" && input.contactInfo.subtitle.trim()
+                ? input.contactInfo.subtitle
+                : base.contactInfo.subtitle,
+            badge:
+              typeof input.contactInfo.badge === "string" && input.contactInfo.badge.trim()
+                ? input.contactInfo.badge
+                : base.contactInfo.badge,
             yearsExperience:
               typeof input.contactInfo.yearsExperience === "number"
                 ? input.contactInfo.yearsExperience
@@ -95,6 +107,11 @@ export function normalizeContent(raw: unknown): PortfolioContent {
                 ? input.contactInfo.teamsLed
                 : base.contactInfo.teamsLed,
             cvUrl: input.contactInfo.cvUrl ?? base.contactInfo.cvUrl,
+            email: input.contactInfo.email ?? base.contactInfo.email,
+            phone: input.contactInfo.phone ?? base.contactInfo.phone,
+            location: input.contactInfo.location ?? base.contactInfo.location,
+            linkedin: input.contactInfo.linkedin ?? base.contactInfo.linkedin,
+            github: input.contactInfo.github ?? base.contactInfo.github,
           }
         : base.contactInfo,
   };

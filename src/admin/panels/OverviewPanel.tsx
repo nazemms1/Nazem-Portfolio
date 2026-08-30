@@ -12,10 +12,11 @@ import {
   IconStar,
   IconTools,
 } from "@tabler/icons-react";
+import type { Icon as TablerIcon } from "@tabler/icons-react";
 import { usePortfolioStore } from "../../store/PortfolioProvider";
-import type { RouteKey } from "../AdminApp";
-import { PanelHeader, SectionCard } from "../ui";
 import { AD, AD_FONT } from "../tokens";
+import type { RouteKey } from "../types";
+import { PanelHeader, SectionCard } from "../ui";
 
 function StatCard({
   label,
@@ -27,7 +28,7 @@ function StatCard({
   label: string;
   value: number;
   hidden: number;
-  icon: typeof IconStack2;
+  icon: TablerIcon;
   onClick: () => void;
 }) {
   return (

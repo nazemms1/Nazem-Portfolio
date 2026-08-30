@@ -1,13 +1,5 @@
 import { useRef } from "react";
-import {
-  Badge,
-  Box,
-  Button,
-  Group,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Badge, Box, Button, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
   IconCloudCheck,
@@ -19,8 +11,8 @@ import {
 import { usePortfolioStore } from "../../store/PortfolioProvider";
 import { normalizeContent } from "../../store/content";
 import { getCurrentAdmin } from "../auth";
-import { PanelHeader, SectionCard } from "../ui";
 import { AD, AD_FONT } from "../tokens";
+import { PanelHeader, SectionCard } from "../ui";
 
 export default function DataPanel() {
   const { content, isFirebaseSynced, replaceContent } = usePortfolioStore();
@@ -104,7 +96,7 @@ export default function DataPanel() {
         }
       />
 
-      <Stack gap="md" maw={860}>
+      <Stack gap="md">
         <SectionCard title="Portfolio Data Summary">
           <SimpleGrid cols={{ base: 2, sm: 3, lg: 6 }} spacing="md">
             {stats.map((stat) => (

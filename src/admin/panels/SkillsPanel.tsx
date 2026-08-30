@@ -20,18 +20,13 @@ import {
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
-import type { Skill } from "../../types/portfolio";
 import { usePortfolioStore } from "../../store/PortfolioProvider";
-import { PanelHeader, SectionCard } from "../ui";
+import type { Skill } from "../../types/portfolio";
+import { skillCategories } from "../constants";
 import { AD, AD_FONT } from "../tokens";
+import { PanelHeader, SectionCard } from "../ui";
 
-export const skillCategories: { value: Skill["category"]; label: string }[] = [
-  { value: "frontend", label: "Frontend Architecture" },
-  { value: "mobile", label: "Mobile & Cross-Platform" },
-  { value: "backend", label: "Backend & Platform" },
-  { value: "tools", label: "Process & Tooling" },
-  { value: "soft-skills", label: "Ways of Working" },
-];
+export { skillCategories };
 
 export default function SkillsPanel() {
   const { content, updateSection } = usePortfolioStore();
@@ -106,7 +101,7 @@ export default function SkillsPanel() {
         </SectionCard>
       </Box>
 
-      <SimpleGrid cols={{ base: 1, lg: 2 }} spacing="md">
+      <SimpleGrid cols={{ base: 1, md: 2, xl: 3 }} spacing="md">
         {skillCategories.map(({ value, label }) => {
           const group = skills.filter((s) => s.category === value);
           const visible = group.filter((s) => !s.hidden).length;
