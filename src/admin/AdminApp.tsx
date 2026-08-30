@@ -12,7 +12,6 @@ import {
   Text,
   TextInput,
   Tooltip,
-  UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -36,7 +35,6 @@ import { usePortfolioStore } from "../store/PortfolioProvider";
 import {
   loginAdmin,
   logoutAdmin,
-  registerAdmin,
   subscribeToAuthState,
 } from "./auth";
 import OverviewPanel from "./panels/OverviewPanel";
@@ -104,10 +102,8 @@ const routeTitles: Record<RouteKey, string> = {
 /* ── Firebase Auth Gate ────────────────────────────────────────── */
 
 function Gate() {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
   const submit = async (e?: React.FormEvent) => {
@@ -117,22 +113,12 @@ function Gate() {
       return;
     }
 
-    if (isSignUp && password !== confirmPassword) {
-      notifications.show({ color: "red", message: "Passwords do not match." });
-      return;
-    }
-
     setBusy(true);
     try {
-      if (isSignUp) {
-        await registerAdmin(email.trim(), password);
-        notifications.show({ color: "blue", message: "Admin account created successfully!" });
-      } else {
-        await loginAdmin(email.trim(), password);
-        notifications.show({ color: "blue", message: "Logged in to Firebase." });
-      }
+      await loginAdmin(email.trim(), password);
+      notifications.show({ color: "blue", message: "Logged in successfully." });
     } catch (err: any) {
-      console.error("Firebase auth error:", err);
+      console.error("Auth error:", err);
       const msg = err?.message || "Authentication failed. Check your email and password.";
       notifications.show({ color: "red", message: msg, autoClose: 6000 });
     } finally {
@@ -178,12 +164,10 @@ function Gate() {
               </Box>
               <div>
                 <Text fw={700} c={AD.text} style={{ fontSize: "1.15rem" }}>
-                  {isSignUp ? "Create Admin Account" : "Firebase Admin Dashboard"}
+                  Portfolio Dashboard
                 </Text>
                 <Text size="xs" c={AD.textMuted}>
-                  {isSignUp
-                    ? "Register a new admin user in Firebase Auth."
-                    : "Sign in with your Firebase credentials."}
+                  Sign in with your admin account.
                 </Text>
               </div>
             </Group>
@@ -206,33 +190,11 @@ function Gate() {
               onChange={(e) => setPassword(e.currentTarget.value)}
             />
 
-            {isSignUp && (
-              <PasswordInput
-                label="Confirm Password"
-                placeholder="••••••••"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.currentTarget.value)}
-              />
-            )}
-
             <Button fullWidth loading={busy} type="submit">
-              {isSignUp ? "Create Account & Enter" : "Sign In with Firebase"}
+              Sign In
             </Button>
 
-            <Group justify="space-between" align="center">
-              <UnstyledButton
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setPassword("");
-                  setConfirmPassword("");
-                }}
-              >
-                <Text size="xs" c={AD.accent} style={{ textDecoration: "underline" }}>
-                  {isSignUp ? "Already have an account? Sign in" : "Need to create an admin account?"}
-                </Text>
-              </UnstyledButton>
-
+            <Group justify="flex-end" align="center">
               <Button variant="subtle" color="gray" size="xs" component="a" href="#/">
                 Back to site
               </Button>
@@ -333,7 +295,7 @@ export default function AdminApp() {
         }}
       >
         <Text size="sm" c={AD.textMuted}>
-          Connecting to Firebase...
+          Connecting to System...
         </Text>
       </Box>
     );
@@ -400,7 +362,7 @@ export default function AdminApp() {
               color={isFirebaseSynced ? "teal" : "orange"}
               style={{ textTransform: "none" }}
             >
-              {isFirebaseSynced ? "Firebase Firestore Live" : "Local / Offline"}
+              {isFirebaseSynced ? "Live Synced" : "Local / Offline"}
             </Badge>
           </Group>
 
@@ -425,7 +387,7 @@ export default function AdminApp() {
               leftSection={<IconCloudCheck size={14} />}
               onClick={() => go("data")}
             >
-              Firestore Status
+              System Status
             </Button>
             <Tooltip label={`Sign out (${user.email})`} withArrow>
               <Button
@@ -435,7 +397,7 @@ export default function AdminApp() {
                 px={9}
                 onClick={async () => {
                   await logoutAdmin();
-                  notifications.show({ color: "blue", message: "Signed out of Firebase." });
+                  notifications.show({ color: "blue", message: "Signed out of session." });
                 }}
                 aria-label="Sign out"
               >

@@ -13,6 +13,7 @@ import AmbientBackground from "./components/AmbientBackground";
 import HeroSection from "./sections/HeroSection";
 import PhilosophySection from "./sections/PhilosophySection";
 import SelectedWorkSection from "./sections/SelectedWorkSection";
+import ExperienceSection from "./sections/ExperienceSection";
 import MoreWorkSection from "./sections/MoreWorkSection";
 import LeadershipSection from "./sections/LeadershipSection";
 import RecommendationsSection from "./sections/RecommendationsSection";
@@ -52,6 +53,7 @@ function SiteApp() {
       <div style={{ position: "relative", zIndex: 1 }}>
         <HeroSection />
         <PhilosophySection />
+        <ExperienceSection />
         <SelectedWorkSection />
         <MoreWorkSection />
         <LeadershipSection />

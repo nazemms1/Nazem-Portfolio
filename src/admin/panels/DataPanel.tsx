@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import {
-  Alert,
   Badge,
   Box,
   Button,
@@ -11,12 +10,10 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
-  IconAlertTriangle,
   IconCloudCheck,
   IconCloudUpload,
   IconCopy,
   IconDownload,
-  IconRotate,
   IconUpload,
 } from "@tabler/icons-react";
 import { usePortfolioStore } from "../../store/PortfolioProvider";
@@ -26,30 +23,24 @@ import { PanelHeader, SectionCard } from "../ui";
 import { AD, AD_FONT } from "../tokens";
 
 export default function DataPanel() {
-  const {
-    content,
-    isFirebaseSynced,
-    replaceContent,
-    discardDraft,
-    resetToSeed,
-  } = usePortfolioStore();
+  const { content, isFirebaseSynced, replaceContent } = usePortfolioStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const currentAdmin = getCurrentAdmin();
 
   const json = JSON.stringify(content, null, 2);
   const sizeKb = (new Blob([json]).size / 1024).toFixed(1);
 
-  const syncToFirebase = async () => {
+  const syncToCloud = async () => {
     try {
       await replaceContent(content);
       notifications.show({
         color: "teal",
-        message: "Successfully pushed data to Firebase Firestore!",
+        message: "Successfully pushed data to cloud storage!",
       });
     } catch {
       notifications.show({
         color: "red",
-        message: "Failed to push to Firebase.",
+        message: "Failed to push to cloud storage.",
       });
     }
   };
@@ -75,7 +66,7 @@ export default function DataPanel() {
         await replaceContent(normalizeContent(parsed));
         notifications.show({
           color: "teal",
-          message: `Imported ${file.name} and synced with Firebase.`,
+          message: `Imported ${file.name} and synced with cloud database.`,
         });
       } catch {
         notifications.show({
@@ -99,8 +90,8 @@ export default function DataPanel() {
   return (
     <>
       <PanelHeader
-        title="Data & Firebase Sync"
-        description="Your portfolio changes are automatically synchronized in real-time with Firebase Firestore and Firebase Storage."
+        title="Data & System Sync"
+        description="Your portfolio changes are automatically synchronized in real-time with the cloud database."
         action={
           <Badge
             size="lg"
@@ -108,7 +99,7 @@ export default function DataPanel() {
             color={isFirebaseSynced ? "teal" : "orange"}
             style={{ textTransform: "none" }}
           >
-            {isFirebaseSynced ? "Firebase Live Synced" : "Local Draft"}
+            {isFirebaseSynced ? "Live Synced" : "Local Draft"}
           </Badge>
         }
       />
@@ -137,16 +128,16 @@ export default function DataPanel() {
         </SectionCard>
 
         <SectionCard
-          title="Firebase Realtime Sync"
-          description="Edits made in the CMS are immediately reflected across the website via Firebase Firestore."
+          title="Cloud Realtime Sync"
+          description="Edits made in the CMS are immediately reflected across the website in real-time."
         >
           <Group gap={10}>
             <Button
               color="teal"
               leftSection={<IconCloudUpload size={16} />}
-              onClick={syncToFirebase}
+              onClick={syncToCloud}
             >
-              Push Current Data to Firebase
+              Push Current Data to Cloud
             </Button>
             <Button
               variant="light"
@@ -197,8 +188,8 @@ export default function DataPanel() {
         </SectionCard>
 
         <SectionCard
-          title="Firebase Auth Account"
-          description="Authenticated admin account controlling the dashboard."
+          title="Admin Account Session"
+          description="Authenticated admin user controlling the system."
         >
           <Group gap={12} align="center">
             <Box
@@ -217,55 +208,8 @@ export default function DataPanel() {
               </Text>
             </Box>
             <Badge size="md" color="teal" variant="light" leftSection={<IconCloudCheck size={12} />}>
-              Firebase Auth Active
+              Session Active
             </Badge>
-          </Group>
-        </SectionCard>
-
-        <SectionCard title="Reset & Fallbacks">
-          <Alert
-            icon={<IconAlertTriangle size={16} />}
-            color="orange"
-            variant="light"
-            mb="md"
-          >
-            Resetting content will push the default seed data to Firebase Firestore.
-          </Alert>
-          <Group gap={10}>
-            <Button
-              variant="light"
-              color="orange"
-              leftSection={<IconRotate size={16} />}
-              onClick={() => {
-                discardDraft();
-                notifications.show({
-                  color: "blue",
-                  message: "Cleared local draft cache.",
-                });
-              }}
-            >
-              Clear Local Cache
-            </Button>
-            <Button
-              variant="light"
-              color="red"
-              leftSection={<IconRotate size={16} />}
-              onClick={async () => {
-                if (
-                  window.confirm(
-                    "Reset everything to seed data and update Firebase?"
-                  )
-                ) {
-                  await resetToSeed();
-                  notifications.show({
-                    color: "teal",
-                    message: "Reset to seed data in Firebase.",
-                  });
-                }
-              }}
-            >
-              Reset Firebase to Seed Data
-            </Button>
           </Group>
         </SectionCard>
       </Stack>

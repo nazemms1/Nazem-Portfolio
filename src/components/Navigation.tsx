@@ -8,6 +8,7 @@ import { COLOR, FONT, EASE, glass } from "../styles/tokens";
 const navItems = [
   { id: "home", label: "Home" },
   { id: "philosophy", label: "Philosophy" },
+  { id: "experience", label: "Experience" },
   { id: "work", label: "Work" },
   { id: "leadership", label: "Leadership" },
   { id: "craft", label: "Craft" },

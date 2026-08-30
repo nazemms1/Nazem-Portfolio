@@ -18,12 +18,21 @@ export default function HeroSection() {
   const { contactInfo } = usePortfolio();
   const handleDownloadCV = () => {
     const link = document.createElement("a");
-    link.href = cvFile;
+    link.href = contactInfo.cvUrl || cvFile;
     link.download = "Nazem_Almsouti_CV.pdf";
+    if (contactInfo.cvUrl) link.target = "_blank";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
+
+  const name = contactInfo.name || "Nazem Almsouti";
+  const title = contactInfo.title || "Frontend Engineer.";
+  const subtitle = contactInfo.subtitle || "Pharaon Group · React & TypeScript";
+  const badgeText = contactInfo.badge || "Available for select projects";
+  const yearsExp = contactInfo.yearsExperience ?? 4;
+  const platforms = contactInfo.platformsShipped ?? 15;
+  const teams = contactInfo.teamsLed ?? 3;
 
   return (
     <section id="home" style={{ minHeight: "100vh", display: "flex", alignItems: "center", paddingTop: 90, position: "relative", zIndex: 1 }}>
@@ -88,7 +97,7 @@ export default function HeroSection() {
                   fontFamily: FONT.mono,
                 }}
               >
-                Available for select projects
+                {badgeText}
               </Badge>
             </motion.div>
 
@@ -104,15 +113,15 @@ export default function HeroSection() {
                   fontSize: "clamp(2.6rem, 5.6vw, 4.6rem)",
                 }}
               >
-                Nazem Almsouti
+                {name}
                 <br />
-                <span style={gradientText}>Frontend Engineer.</span>
+                <span style={gradientText}>{title}</span>
               </Title>
             </motion.div>
 
             <motion.div {...fadeUp(0.22)}>
               <Text mb={40} maw={520} style={{ color: COLOR.textSecondary, lineHeight: 1.85, fontSize: "1.1rem" }}>
-                Pharaon Group · React & TypeScript
+                {subtitle}
               </Text>
             </motion.div>
 
@@ -175,9 +184,9 @@ export default function HeroSection() {
                 }}
               >
                 {[
-                  { value: 4, suffix: "+", label: "Years shipping production code" },
-                  { value: 15, suffix: "+", label: "Platforms shipped to production" },
-                  { value: 3, suffix: "", label: "Teams led on client delivery" },
+                  { value: yearsExp, suffix: "+", label: "Years shipping production code" },
+                  { value: platforms, suffix: "+", label: "Platforms shipped to production" },
+                  { value: teams, suffix: "", label: "Teams led on client delivery" },
                 ].map((stat) => (
                   <div key={stat.label}>
                     <Text

@@ -6,7 +6,7 @@ export interface Experience {
   location: string
   type: "Fulltime" | "Freelance" | "Contract"
   description: string[]
-  logo:string
+  logo: string
   technologies?: string[]
   /** Managed from the dashboard — hidden entries stay in the data but are not rendered. */
   hidden?: boolean
@@ -35,6 +35,14 @@ export interface Skill {
 }
 
 export interface ContactInfo {
+  name?: string
+  title?: string
+  subtitle?: string
+  badge?: string
+  yearsExperience?: number
+  platformsShipped?: number
+  teamsLed?: number
+  cvUrl?: string
   email: string
   phone: string
   location: string

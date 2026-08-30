@@ -99,11 +99,11 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
         setIsFirebaseSynced(false);
         if (error.code === "permission-denied") {
           setLastError(
-            "Firebase Firestore error: Permission denied. Please enable Read & Write rules in your Firebase Console -> Firestore Database -> Rules."
+            "Database error: Permission denied. Please check cloud database security rules."
           );
         } else {
           setLastError(
-            `Firebase Firestore error (${error.message || error.code}). Using local fallback.`
+            `Cloud database error (${error.message || error.code}). Using local fallback.`
           );
         }
       }
@@ -126,10 +126,10 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
         setIsFirebaseSynced(true);
         setLastError(null);
       } catch (err) {
-        console.error("Error persisting to Firestore:", err);
+        console.error("Error persisting to database:", err);
         setIsFirebaseSynced(false);
         setLastError(
-          "Could not save to Firebase Firestore. Saved locally in browser."
+          "Could not save to cloud database. Saved locally in browser."
         );
       }
     },

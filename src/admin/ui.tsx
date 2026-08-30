@@ -30,12 +30,9 @@ import {
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../firebase";
 import { AD, AD_FONT, cardStyle } from "./tokens";
 
 
-/* ── page scaffolding ─────────────────────────────────────────── */
 
 export function PanelHeader({
   title,
@@ -591,10 +588,6 @@ export function StringListField({
     </Stack>
   );
 }
-
-/* ── image: paste a URL or embed a local file as a data URL ───── */
-
-const MAX_INLINE_IMAGE = 400 * 1024; // keeps localStorage well under quota
 
 export function ImageField({
   label,

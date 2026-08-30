@@ -703,6 +703,14 @@ export const recommendations: Recommendation[] = [
 ];
 
 export const contactInfo: ContactInfo = {
+  name: "Nazem Almsouti",
+  title: "Frontend Engineer.",
+  subtitle: "Pharaon Group · React & TypeScript",
+  badge: "Available for select projects",
+  yearsExperience: 4,
+  platformsShipped: 15,
+  teamsLed: 3,
+  cvUrl: "",
   email: "nazem.msouti@gmail.com",
   phone: "+963-9928-13014",
   location: "Damascus, Syria",
