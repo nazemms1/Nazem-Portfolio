@@ -11,7 +11,7 @@ export default function ExperienceSection() {
   if (!experiences || experiences.length === 0) return null;
 
   return (
-    <section id="experience" style={{ padding: "8rem 0", position: "relative" }}>
+    <section id="experience" style={{ padding: "8rem 0", position: "relative", overflow: "hidden" }}>
       {/* Background ambient lighting */}
       <div
         aria-hidden

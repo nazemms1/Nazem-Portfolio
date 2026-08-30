@@ -44,6 +44,8 @@ function SiteApp() {
         background: "#08090b",
         color: "white",
         position: "relative",
+        overflowX: "hidden",
+        width: "100%",
       }}
     >
       <AmbientBackground />

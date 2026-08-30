@@ -17,13 +17,32 @@ import { usePortfolioStore } from "../../store/PortfolioProvider";
 import { PanelHeader, SectionCard } from "../ui";
 import { AD } from "../tokens";
 
+const defaultHeroContact = {
+  name: "Nazem Almsouti",
+  title: "Frontend Engineer.",
+  subtitle: "Pharaon Group · React & TypeScript",
+  badge: "Available for select projects",
+  yearsExperience: 4,
+  platformsShipped: 15,
+  teamsLed: 3,
+  cvUrl: "",
+};
+
 export default function ContactPanel() {
   const { content, updateSection } = usePortfolioStore();
-  const [draft, setDraft] = useState(content.contactInfo);
+  const [draft, setDraft] = useState(() => ({
+    ...defaultHeroContact,
+    ...content.contactInfo,
+  }));
 
-  useEffect(() => setDraft(content.contactInfo), [content.contactInfo]);
+  useEffect(() => {
+    setDraft({
+      ...defaultHeroContact,
+      ...content.contactInfo,
+    });
+  }, [content.contactInfo]);
 
-  const dirty = JSON.stringify(draft) !== JSON.stringify(content.contactInfo);
+  const dirty = JSON.stringify(draft) !== JSON.stringify({ ...defaultHeroContact, ...content.contactInfo });
 
   return (
     <>

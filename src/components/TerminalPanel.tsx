@@ -1,27 +1,31 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { usePortfolio } from "../store/PortfolioProvider";
 import { COLOR, FONT, glass } from "../styles/tokens";
 
-const LINES: { text: string; color?: string }[] = [
-  { text: "$ whoami", color: COLOR.textMuted },
-  { text: "nazem_almsouti — senior frontend engineer / team lead", color: COLOR.blueLight },
-  { text: "$ stack --primary", color: COLOR.textMuted },
-  { text: "React · TypeScript · Next.js", color: COLOR.textSecondary },
-  { text: "$ leads", color: COLOR.textMuted },
-  { text: "frontend team @ Pharaon Group", color: COLOR.textSecondary },
-  { text: "$ status", color: COLOR.textMuted },
-  { text: "shipping. mentoring. owning outcomes.", color: COLOR.indigoLight },
-];
-
 export default function TerminalPanel() {
+  const { contactInfo } = usePortfolio();
   const [visibleLines, setVisibleLines] = useState(0);
+
+  const nameSlug = (contactInfo.name || "Nazem Almsouti").toLowerCase().replace(/\s+/g, "_");
+  const titleClean = (contactInfo.title || "Frontend Engineer.").toLowerCase();
+  const subtitleClean = contactInfo.subtitle || "Pharaon Group · React & TypeScript";
+
+  const LINES: { text: string; color?: string }[] = [
+    { text: "$ whoami", color: COLOR.textMuted },
+    { text: `${nameSlug} — ${titleClean}`, color: COLOR.blueLight },
+    { text: "$ stack --primary", color: COLOR.textMuted },
+    { text: subtitleClean, color: COLOR.textSecondary },
+    { text: "$ status", color: COLOR.textMuted },
+    { text: contactInfo.badge || "shipping. mentoring. owning outcomes.", color: COLOR.indigoLight },
+  ];
 
   useEffect(() => {
     if (visibleLines >= LINES.length) return;
     const delay = LINES[visibleLines].text.startsWith("$") ? 420 : 620;
     const t = setTimeout(() => setVisibleLines((v) => v + 1), delay);
     return () => clearTimeout(t);
-  }, [visibleLines]);
+  }, [visibleLines, LINES.length]);
 
   return (
     <div
@@ -52,7 +56,7 @@ export default function TerminalPanel() {
           <span key={c} style={{ width: 10, height: 10, borderRadius: "50%", background: c, opacity: 0.7 }} />
         ))}
         <span style={{ marginLeft: 8, fontFamily: FONT.mono, fontSize: "0.7rem", color: COLOR.textFaint }}>
-          zsh — nazem
+          zsh — {nameSlug.split("_")[0]}
         </span>
       </div>
 

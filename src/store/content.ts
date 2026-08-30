@@ -75,7 +75,27 @@ export function normalizeContent(raw: unknown): PortfolioContent {
     caseStudies: list(input.caseStudies, base.caseStudies),
     contactInfo:
       input.contactInfo && typeof input.contactInfo === "object"
-        ? { ...base.contactInfo, ...input.contactInfo }
+        ? {
+            ...base.contactInfo,
+            ...input.contactInfo,
+            name: input.contactInfo.name || base.contactInfo.name,
+            title: input.contactInfo.title || base.contactInfo.title,
+            subtitle: input.contactInfo.subtitle || base.contactInfo.subtitle,
+            badge: input.contactInfo.badge || base.contactInfo.badge,
+            yearsExperience:
+              typeof input.contactInfo.yearsExperience === "number"
+                ? input.contactInfo.yearsExperience
+                : base.contactInfo.yearsExperience,
+            platformsShipped:
+              typeof input.contactInfo.platformsShipped === "number"
+                ? input.contactInfo.platformsShipped
+                : base.contactInfo.platformsShipped,
+            teamsLed:
+              typeof input.contactInfo.teamsLed === "number"
+                ? input.contactInfo.teamsLed
+                : base.contactInfo.teamsLed,
+            cvUrl: input.contactInfo.cvUrl ?? base.contactInfo.cvUrl,
+          }
         : base.contactInfo,
   };
 }
