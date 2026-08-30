@@ -1,22 +1,14 @@
-// ── Runtime content store ───────────────────────────────────────
-// Resolution order (highest wins):
-//   1. local draft in localStorage  → edits made in the dashboard on this device
-//   2. public/portfolio.json        → the published snapshot, committed to git
-//   3. src/data/*.ts                → seed data shipped with the code
-//
-// Publishing = export the JSON from the dashboard, drop it in public/portfolio.json,
-// commit, redeploy. Everything else stays a local draft.
-
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import type { ReactNode } from "react";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
 import {
   defaultContent,
   normalizeContent,
@@ -25,6 +17,7 @@ import {
 import type { ContentKey, PortfolioContent, PublicContent } from "./content";
 
 const DRAFT_KEY = "nazem.portfolio.draft.v1";
+const PORTFOLIO_DOC_REF = doc(db, "portfolio", "content");
 
 function readDraft(): PortfolioContent | null {
   try {
@@ -40,7 +33,6 @@ function writeDraft(content: PortfolioContent) {
     localStorage.setItem(DRAFT_KEY, JSON.stringify(content));
     return { ok: true as const };
   } catch (error) {
-    // Most likely the 5 MB quota — usually a base64 image that is too large.
     return { ok: false as const, error: error as Error };
   }
 }
@@ -49,17 +41,19 @@ interface PortfolioContextValue {
   content: PortfolioContent;
   publicContent: PublicContent;
   hasDraft: boolean;
-  /** Replace one top-level section and persist. */
+  isFirebaseSynced: boolean;
+  isLoading: boolean;
+  /** Replace one top-level section and persist to Firestore. */
   updateSection: <K extends ContentKey>(
     key: K,
     value: PortfolioContent[K]
-  ) => void;
-  /** Replace the whole document (import / restore). */
-  replaceContent: (next: PortfolioContent) => void;
-  /** Drop the local draft and fall back to the published/seed content. */
+  ) => Promise<void>;
+  /** Replace the whole document in Firestore. */
+  replaceContent: (next: PortfolioContent) => Promise<void>;
+  /** Drop local overrides and re-sync with Firestore document. */
   discardDraft: () => void;
-  /** Drop everything and go back to the code-level seed data. */
-  resetToSeed: () => void;
+  /** Reset Firestore and local data to seed defaults. */
+  resetToSeed: () => Promise<void>;
   lastError: string | null;
 }
 
@@ -70,94 +64,114 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
     () => readDraft() ?? defaultContent()
   );
   const [hasDraft, setHasDraft] = useState(() => readDraft() !== null);
+  const [isFirebaseSynced, setIsFirebaseSynced] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [lastError, setLastError] = useState<string | null>(null);
-  const publishedRef = useRef<PortfolioContent | null>(null);
 
-  // Pull the published snapshot once. It only takes effect when there is no
-  // local draft — a draft always represents newer, intentional edits.
+  // Subscribe to real-time updates from Firestore
   useEffect(() => {
-    let cancelled = false;
-    const url = `${import.meta.env.BASE_URL}portfolio.json`;
-
-    fetch(url, { cache: "no-cache" })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
-      .then((json) => {
-        if (cancelled) return;
-        const published = normalizeContent(json);
-        publishedRef.current = published;
-        if (!readDraft()) setContent(published);
-      })
-      .catch(() => {
-        // No published snapshot yet — seed data is the correct fallback.
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const persist = useCallback((next: PortfolioContent) => {
-    setContent(next);
-    const result = writeDraft(next);
-    if (result.ok) {
-      setHasDraft(true);
-      setLastError(null);
-    } else {
-      setLastError(
-        "Could not save locally — browser storage is full. Large images stored as base64 are the usual cause; use an image URL or a file under /public instead."
-      );
-    }
-  }, []);
-
-  const updateSection = useCallback<PortfolioContextValue["updateSection"]>(
-    (key, value) => {
-      setContent((current) => {
-        const next = {
-          ...current,
-          [key]: value,
-          updatedAt: new Date().toISOString(),
-        };
-        const result = writeDraft(next);
-        if (result.ok) {
-          setHasDraft(true);
+    setIsLoading(true);
+    const unsubscribe = onSnapshot(
+      PORTFOLIO_DOC_REF,
+      async (snapshot) => {
+        setIsLoading(false);
+        if (snapshot.exists()) {
+          const remoteData = normalizeContent(snapshot.data());
+          setContent(remoteData);
+          setIsFirebaseSynced(true);
           setLastError(null);
         } else {
+          // First initialization: push default content to Firestore
+          try {
+            const seed = defaultContent();
+            await setDoc(PORTFOLIO_DOC_REF, seed);
+            setContent(seed);
+            setIsFirebaseSynced(true);
+          } catch (err) {
+            console.error("Error initializing Firestore content:", err);
+            setLastError("Failed to initialize remote database. Using local fallback.");
+          }
+        }
+      },
+      (error) => {
+        console.warn("Firestore snapshot error (using local fallback):", error);
+        setIsLoading(false);
+        setIsFirebaseSynced(false);
+        if (error.code === "permission-denied") {
           setLastError(
-            "Could not save locally — browser storage is full. Large images stored as base64 are the usual cause; use an image URL or a file under /public instead."
+            "Firebase Firestore error: Permission denied. Please enable Read & Write rules in your Firebase Console -> Firestore Database -> Rules."
+          );
+        } else {
+          setLastError(
+            `Firebase Firestore error (${error.message || error.code}). Using local fallback.`
           );
         }
-        return next;
-      });
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  const saveToFirestoreAndLocal = useCallback(
+    async (next: PortfolioContent) => {
+      const updated = {
+        ...normalizeContent(next),
+        updatedAt: new Date().toISOString(),
+      };
+      setContent(updated);
+      writeDraft(updated);
+
+      try {
+        await setDoc(PORTFOLIO_DOC_REF, updated);
+        setIsFirebaseSynced(true);
+        setLastError(null);
+      } catch (err) {
+        console.error("Error persisting to Firestore:", err);
+        setIsFirebaseSynced(false);
+        setLastError(
+          "Could not save to Firebase Firestore. Saved locally in browser."
+        );
+      }
     },
     []
   );
 
-  const replaceContent = useCallback(
-    (next: PortfolioContent) => {
-      persist({ ...normalizeContent(next), updatedAt: new Date().toISOString() });
+  const updateSection = useCallback<PortfolioContextValue["updateSection"]>(
+    async (key, value) => {
+      const next = {
+        ...content,
+        [key]: value,
+      };
+      await saveToFirestoreAndLocal(next);
     },
-    [persist]
+    [content, saveToFirestoreAndLocal]
+  );
+
+  const replaceContent = useCallback(
+    async (next: PortfolioContent) => {
+      await saveToFirestoreAndLocal(next);
+    },
+    [saveToFirestoreAndLocal]
   );
 
   const discardDraft = useCallback(() => {
     localStorage.removeItem(DRAFT_KEY);
     setHasDraft(false);
     setLastError(null);
-    setContent(publishedRef.current ?? defaultContent());
   }, []);
 
-  const resetToSeed = useCallback(() => {
-    localStorage.removeItem(DRAFT_KEY);
-    setHasDraft(false);
-    setLastError(null);
-    setContent(defaultContent());
-  }, []);
+  const resetToSeed = useCallback(async () => {
+    const seed = defaultContent();
+    await saveToFirestoreAndLocal(seed);
+  }, [saveToFirestoreAndLocal]);
 
   const value = useMemo<PortfolioContextValue>(
     () => ({
       content,
       publicContent: toPublicContent(content),
       hasDraft,
+      isFirebaseSynced,
+      isLoading,
       updateSection,
       replaceContent,
       discardDraft,
@@ -167,6 +181,8 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
     [
       content,
       hasDraft,
+      isFirebaseSynced,
+      isLoading,
       updateSection,
       replaceContent,
       discardDraft,

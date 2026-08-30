@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   AppShell,
@@ -10,7 +10,9 @@ import {
   PasswordInput,
   Stack,
   Text,
+  TextInput,
   Tooltip,
+  UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -18,10 +20,10 @@ import {
   IconAlertTriangle,
   IconArrowUpRight,
   IconBriefcase,
-  IconCloudUpload,
+  IconCloudCheck,
   IconDatabase,
   IconLayoutDashboard,
-  IconLock,
+  IconLogout,
   IconMessage2,
   IconShieldLock,
   IconStack2,
@@ -29,8 +31,14 @@ import {
   IconTools,
   IconUser,
 } from "@tabler/icons-react";
+import type { User } from "firebase/auth";
 import { usePortfolioStore } from "../store/PortfolioProvider";
-import { isPasscodeSet, isUnlocked, lock, setPasscode, verifyPasscode } from "./auth";
+import {
+  loginAdmin,
+  logoutAdmin,
+  registerAdmin,
+  subscribeToAuthState,
+} from "./auth";
 import OverviewPanel from "./panels/OverviewPanel";
 import ProjectsPanel from "./panels/ProjectsPanel";
 import CaseStudiesPanel from "./panels/CaseStudiesPanel";
@@ -93,36 +101,40 @@ const routeTitles: Record<RouteKey, string> = {
   data: "Data & publishing",
 };
 
-/* ── passcode gate ────────────────────────────────────────────── */
+/* ── Firebase Auth Gate ────────────────────────────────────────── */
 
-function Gate({ onUnlock }: { onUnlock: () => void }) {
-  const firstRun = !isPasscodeSet();
-  const [value, setValue] = useState("");
-  const [confirm, setConfirm] = useState("");
+function Gate() {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
-  const submit = async () => {
+  const submit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!email.trim() || !password.trim()) {
+      notifications.show({ color: "red", message: "Please enter email and password." });
+      return;
+    }
+
+    if (isSignUp && password !== confirmPassword) {
+      notifications.show({ color: "red", message: "Passwords do not match." });
+      return;
+    }
+
     setBusy(true);
     try {
-      if (firstRun) {
-        if (value.length < 4) {
-          notifications.show({ color: "red", message: "Use at least 4 characters." });
-          return;
-        }
-        if (value !== confirm) {
-          notifications.show({ color: "red", message: "The two entries differ." });
-          return;
-        }
-        await setPasscode(value);
-        onUnlock();
-        return;
-      }
-      if (await verifyPasscode(value)) {
-        onUnlock();
+      if (isSignUp) {
+        await registerAdmin(email.trim(), password);
+        notifications.show({ color: "blue", message: "Admin account created successfully!" });
       } else {
-        notifications.show({ color: "red", message: "Wrong passcode." });
-        setValue("");
+        await loginAdmin(email.trim(), password);
+        notifications.show({ color: "blue", message: "Logged in to Firebase." });
       }
+    } catch (err: any) {
+      console.error("Firebase auth error:", err);
+      const msg = err?.message || "Authentication failed. Check your email and password.";
+      notifications.show({ color: "red", message: msg, autoClose: 6000 });
     } finally {
       setBusy(false);
     }
@@ -148,67 +160,85 @@ function Gate({ onUnlock }: { onUnlock: () => void }) {
           padding: 32,
         }}
       >
-        <Stack gap="lg">
-          <Group gap={12}>
-            <Box
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 11,
-                background: AD.accentSoft,
-                border: `1px solid ${AD.accentBorder}`,
-                display: "grid",
-                placeItems: "center",
-              }}
-            >
-              <IconShieldLock size={20} color={AD.accent} />
-            </Box>
-            <div>
-              <Text fw={700} c={AD.text} style={{ fontSize: "1.15rem" }}>
-                {firstRun ? "Create a passcode" : "Portfolio dashboard"}
-              </Text>
-              <Text size="xs" c={AD.textMuted}>
-                {firstRun
-                  ? "Set once — asked for on every new session."
-                  : "Enter your passcode to continue."}
-              </Text>
-            </div>
-          </Group>
+        <form onSubmit={submit}>
+          <Stack gap="lg">
+            <Group gap={12}>
+              <Box
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 11,
+                  background: AD.accentSoft,
+                  border: `1px solid ${AD.accentBorder}`,
+                  display: "grid",
+                  placeItems: "center",
+                }}
+              >
+                <IconShieldLock size={20} color={AD.accent} />
+              </Box>
+              <div>
+                <Text fw={700} c={AD.text} style={{ fontSize: "1.15rem" }}>
+                  {isSignUp ? "Create Admin Account" : "Firebase Admin Dashboard"}
+                </Text>
+                <Text size="xs" c={AD.textMuted}>
+                  {isSignUp
+                    ? "Register a new admin user in Firebase Auth."
+                    : "Sign in with your Firebase credentials."}
+                </Text>
+              </div>
+            </Group>
 
-          <PasswordInput
-            label={firstRun ? "New passcode" : "Passcode"}
-            value={value}
-            autoFocus
-            onChange={(e) => setValue(e.currentTarget.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !firstRun) submit();
-            }}
-          />
-          {firstRun && (
-            <PasswordInput
-              label="Confirm passcode"
-              value={confirm}
-              onChange={(e) => setConfirm(e.currentTarget.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") submit();
-              }}
+            <TextInput
+              label="Email"
+              placeholder="admin@example.com"
+              type="email"
+              required
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
             />
-          )}
 
-          <Button fullWidth loading={busy} onClick={submit}>
-            {firstRun ? "Create & enter" : "Unlock"}
-          </Button>
+            <PasswordInput
+              label="Password"
+              placeholder="••••••••"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.currentTarget.value)}
+            />
 
-          <Text size="xs" c={AD.textFaint} style={{ lineHeight: 1.6 }}>
-            A local lock for this browser, not server security. The site is
-            static, so published content is public by design — never store
-            secrets here.
-          </Text>
+            {isSignUp && (
+              <PasswordInput
+                label="Confirm Password"
+                placeholder="••••••••"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.currentTarget.value)}
+              />
+            )}
 
-          <Button variant="subtle" color="gray" size="xs" component="a" href="#/">
-            Back to site
-          </Button>
-        </Stack>
+            <Button fullWidth loading={busy} type="submit">
+              {isSignUp ? "Create Account & Enter" : "Sign In with Firebase"}
+            </Button>
+
+            <Group justify="space-between" align="center">
+              <UnstyledButton
+                onClick={() => {
+                  setIsSignUp(!isSignUp);
+                  setPassword("");
+                  setConfirmPassword("");
+                }}
+              >
+                <Text size="xs" c={AD.accent} style={{ textDecoration: "underline" }}>
+                  {isSignUp ? "Already have an account? Sign in" : "Need to create an admin account?"}
+                </Text>
+              </UnstyledButton>
+
+              <Button variant="subtle" color="gray" size="xs" component="a" href="#/">
+                Back to site
+              </Button>
+            </Group>
+          </Stack>
+        </form>
       </Box>
     </Box>
   );
@@ -277,13 +307,39 @@ function NavItem({
 /* ── shell ────────────────────────────────────────────────────── */
 
 export default function AdminApp() {
-  const [unlocked, setUnlocked] = useState(() => isUnlocked());
+  const [user, setUser] = useState<User | null>(null);
+  const [authInitializing, setAuthInitializing] = useState(true);
   const [route, setRoute] = useState<RouteKey>("overview");
   const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] =
     useDisclosure(false);
-  const { hasDraft, lastError, content } = usePortfolioStore();
+  const { isFirebaseSynced, lastError, content } = usePortfolioStore();
 
-  if (!unlocked) return <Gate onUnlock={() => setUnlocked(true)} />;
+  useEffect(() => {
+    const unsub = subscribeToAuthState((currentUser) => {
+      setUser(currentUser);
+      setAuthInitializing(false);
+    });
+    return () => unsub();
+  }, []);
+
+  if (authInitializing) {
+    return (
+      <Box
+        style={{
+          minHeight: "100vh",
+          background: AD.bg,
+          display: "grid",
+          placeItems: "center",
+        }}
+      >
+        <Text size="sm" c={AD.textMuted}>
+          Connecting to Firebase...
+        </Text>
+      </Box>
+    );
+  }
+
+  if (!user) return <Gate />;
 
   const counts: Partial<Record<RouteKey, number>> = {
     projects: content.projects.length,
@@ -341,10 +397,10 @@ export default function AdminApp() {
             <Badge
               size="sm"
               variant="light"
-              color={hasDraft ? "blue" : "gray"}
+              color={isFirebaseSynced ? "teal" : "orange"}
               style={{ textTransform: "none" }}
             >
-              {hasDraft ? "Unpublished draft" : "In sync"}
+              {isFirebaseSynced ? "Firebase Firestore Live" : "Local / Offline"}
             </Badge>
           </Group>
 
@@ -364,25 +420,26 @@ export default function AdminApp() {
             </Tooltip>
             <Button
               size="xs"
-              variant={hasDraft ? "filled" : "light"}
-              leftSection={<IconCloudUpload size={14} />}
+              variant="light"
+              color="teal"
+              leftSection={<IconCloudCheck size={14} />}
               onClick={() => go("data")}
             >
-              Publish
+              Firestore Status
             </Button>
-            <Tooltip label="Lock the dashboard" withArrow>
+            <Tooltip label={`Sign out (${user.email})`} withArrow>
               <Button
                 size="xs"
                 variant="subtle"
-                color="gray"
+                color="red"
                 px={9}
-                onClick={() => {
-                  lock();
-                  setUnlocked(false);
+                onClick={async () => {
+                  await logoutAdmin();
+                  notifications.show({ color: "blue", message: "Signed out of Firebase." });
                 }}
-                aria-label="Lock"
+                aria-label="Sign out"
               >
-                <IconLock size={15} />
+                <IconLogout size={15} />
               </Button>
             </Tooltip>
           </Group>
@@ -411,8 +468,8 @@ export default function AdminApp() {
               <Text size="sm" fw={700} c={AD.text} lh={1.2}>
                 Portfolio CMS
               </Text>
-              <Text size="xs" c={AD.textFaint} lh={1.2}>
-                nazem almsouti
+              <Text size="xs" c={AD.textFaint} lh={1.2} style={{ maxWidth: 140 }} truncate>
+                {user.email || "nazem almsouti"}
               </Text>
             </div>
           </Group>

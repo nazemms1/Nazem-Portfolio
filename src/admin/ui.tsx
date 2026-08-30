@@ -30,7 +30,10 @@ import {
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase";
 import { AD, AD_FONT, cardStyle } from "./tokens";
+
 
 /* ── page scaffolding ─────────────────────────────────────────── */
 
@@ -608,14 +611,15 @@ export function ImageField({
 
   const pick = (file: File | undefined) => {
     if (!file) return;
-    if (file.size > MAX_INLINE_IMAGE) {
-      onError?.(
-        `"${file.name}" is ${(file.size / 1024).toFixed(0)} KB. Embedded images must stay under 400 KB — put larger files in /public/images and reference them by path instead.`
-      );
-      return;
-    }
+
+    // Convert file directly to Data URL (Base64) to save in Firestore
     const reader = new FileReader();
-    reader.onload = () => onChange(String(reader.result));
+    reader.onload = () => {
+      onChange(String(reader.result));
+    };
+    reader.onerror = () => {
+      onError?.("Failed to read image file.");
+    };
     reader.readAsDataURL(file);
   };
 
@@ -649,7 +653,7 @@ export function ImageField({
         <Stack gap={8} style={{ flex: 1 }}>
           <TextInput
             value={value}
-            placeholder="/images/project.png or https://…"
+            placeholder="https://... or /images/project.png"
             onChange={(e) => onChange(e.currentTarget.value)}
           />
           <Group gap={8}>
@@ -659,15 +663,21 @@ export function ImageField({
               leftSection={<IconUpload size={14} />}
               onClick={() => fileRef.current?.click()}
             >
-              Upload
+              Choose Image File
             </Button>
+
             {value && (
-              <Button size="xs" variant="subtle" color="gray" onClick={() => onChange("")}>
+              <Button
+                size="xs"
+                variant="subtle"
+                color="gray"
+                onClick={() => onChange("")}
+              >
                 Clear
               </Button>
             )}
             <Text size="xs" c={AD.textFaint}>
-              max 400 KB inline
+              URL or local file (100% Free)
             </Text>
           </Group>
           <input
